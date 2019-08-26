@@ -1,4 +1,5 @@
-﻿using Project.Service.Model;
+﻿using PagedList;
+using Project.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Project.Service.Services
     {
         #region Vehicle Make
         VehicleMake GetVehicleMake(int id);
-        IEnumerable<VehicleMake> GetAllVehicleMake();
+        IPagedList<VehicleMake> GetAllVehicleMake(string searchString, string sorting, int pageSize, int pageNumber);
 
         void AddVehicleMake(VehicleMake make);
 
@@ -21,7 +22,7 @@ namespace Project.Service.Services
 
         #region Vehicle Model
         VehicleModel GetVehicleModel(int id);
-        IEnumerable<VehicleModel> GetAllVehicleModels();
+        IPagedList<VehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber);
 
         void AddVehicleModel(VehicleModel model);
 
