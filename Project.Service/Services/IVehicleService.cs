@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Services
 {
-    public interface IVehicleService
+    public interface IVehicleService : IDisposable
     {
         #region Vehicle Make
         VehicleMake GetVehicleMake(int id);
@@ -30,5 +30,7 @@ namespace Project.Service.Services
         #endregion
 
         int SaveChanges();
+
+        IEnumerable<int> GetPageSizeParamList();
     }
 }

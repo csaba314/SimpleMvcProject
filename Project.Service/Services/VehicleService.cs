@@ -17,10 +17,6 @@ namespace Project.Service.Services
             _context = ProjectDbContext.GetDbContext();
         }
 
-        public static VehicleService GetInstance()
-        {
-            return new VehicleService();
-        }
 
         #region Vehicle Make CRUD
         public VehicleMake GetVehicleMake(int id)
@@ -119,15 +115,25 @@ namespace Project.Service.Services
         }
         #endregion
 
+
+        private IQueryable<IVehicle> FilterRecords(IQueryable<IVehicle> list, string searchString)
+        {
+            return list.Where(x => x.Name.ToLower().Contains(searchString.ToLower()));
+        }
+
         public int SaveChanges()
         {
             return _context.SaveChanges();
         }
 
-
-        private IQueryable<IVehicle> FilterRecords(IQueryable<IVehicle> list, string searchString)
+        public void Dispose()
         {
-            return list.Where(x => x.Name.ToLower().Contains(searchString.ToLower()));
+            _context.Dispose();
+        }
+
+        public IEnumerable<int> GetPageSizeParamList()
+        {
+            return new List<int> { 5, 10, 20, 40 };
         }
     }
 }
