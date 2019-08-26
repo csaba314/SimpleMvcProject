@@ -1,0 +1,42 @@
+﻿@model MvcProject.MVC.Models.MakeIndexViewModel
+@{
+    int makeId = Model.VehicleMake == null ? 0 : Model.VehicleMake.Id;
+}
+@using PagedList.Mvc
+
+Page @(Model.MakeList.PageCount < Model.MakeList.PageNumber ? 0 : Model.MakeList.PageNumber) of @Model.MakeList.PageCount
+
+
+<table>
+    <tr>
+        @using (Html.BeginForm("Index", "Make", FormMethod.Get))
+        {
+            <td>
+                <strong>Page Size</strong>
+            </td>
+            <td>
+
+                @Html.DropDownList("pageSize", Model.PageSizeDropdown, new { @class = "form-control", style = "width: 65px;" })
+
+                @Html.Hidden("sorting", Model.Sorting)
+                @Html.Hidden("currentFilter", Model.CurrentFilter)
+                @Html.Hidden("id", makeId)
+                @Html.Hidden("pageNumber", Model.PageNumber)
+            </td>
+            <td style="column-width:15px;"></td>
+            <td>
+                <input type="submit" value="Select" class="btn btn-default" />
+            </td>
+            <td style="width:70px;"></td>
+            <td>
+                @Html.PagedListPager(Model.MakeList,
+                                        pageNumber => Url.Action("Index","Make", new { pageNumber ,
+                                                                                       sorting = Model.Sorting,
+                                                                                       currentFilter = Model.CurrentFilter,
+                                                                                       pageSize = Model.PageSize,
+                                                                                       id = makeId }) )
+            </td>
+        }
+    </tr>
+</table>
+
