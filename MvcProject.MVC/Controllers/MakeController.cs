@@ -3,8 +3,11 @@ using Project.Service.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
+using Project.Service.Model;
 
 namespace MvcProject.MVC.Controllers
 {
@@ -29,7 +32,7 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = MakeIndexViewModel.GetModel();
+            var model = new MakeIndexViewModel();
             model.MakeList = _service.GetAllVehicleMake(searchString, sorting, pageSize, pageNumber);
 
             if (id > 0)
@@ -50,6 +53,95 @@ namespace MvcProject.MVC.Controllers
         }
 
         
+        // GET: /Make/Create
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View(new MakeCreateEditViewModel());
+        }
+
+        // POST: /Make/Create
+        [HttpPost]
+        public ActionResult Create([Bind(Include = "Name, Abrv")] MakeCreateEditViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            _service.AddVehicleMake(Mapper.Map<VehicleMake>(model));
+            _service.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        // GET: /Make/Edit/1
+        [HttpGet]
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var selectedMake = _service.GetVehicleMake((int)id);
+
+            if (selectedMake is null)
+            {
+                return HttpNotFound();
+            }
+
+            var model = Mapper.Map<MakeCreateEditViewModel>(selectedMake);
+            
+            return View(model);
+        }
+
+        //POST: /Make/Edit/1
+        [HttpPost]
+        public ActionResult Edit([Bind(Include = "Id, Name, Abrv")] MakeCreateEditViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            Mapper.Map(model, _service.GetVehicleMake(model.Id));
+            _service.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        //GET: /Make/Delete/1
+        [HttpGet]
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var selectedMake = _service.GetVehicleMake((int)id);
+
+            if (selectedMake is null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(Mapper.Map<MakeCreateEditViewModel>(selectedMake));
+        }
+
+        //GET: /Make/Delete/
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            var modelList = _service.GetAllModels(id);
+            _service.RemoveVehicleModels(modelList);
+            var makeToRemove = _service.GetVehicleMake(id);
+            _service.RemoveVehicleMake(makeToRemove);
+            _service.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
 
         protected override void Dispose(bool disposing)
         {

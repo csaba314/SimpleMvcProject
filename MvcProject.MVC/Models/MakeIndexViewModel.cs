@@ -18,11 +18,5 @@ namespace MvcProject.MVC.Models
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public SelectList PageSizeDropdown { get; set; }
-
-
-        public static MakeIndexViewModel GetModel()
-        {
-            return new MakeIndexViewModel();
-        }
     }
 }

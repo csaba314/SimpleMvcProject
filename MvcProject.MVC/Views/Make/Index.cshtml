@@ -5,6 +5,8 @@
 
 <h2>@ViewBag.Title</h2>
 
+@Html.ActionLink("Add New Vehicle Make", "Create", null, new { @class="btn btn-primary"})
+
 <div class="container">
     <div class="row">
         <div class="col-md-7">
@@ -45,7 +47,10 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Abrv)
                             </td>
-                            <td></td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })
+                            </td>
                         </tr>
                     }
                 </tbody>

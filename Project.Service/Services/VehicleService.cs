@@ -31,7 +31,7 @@ namespace Project.Service.Services
             // Filtering
             if (!String.IsNullOrEmpty(searchString))
             {
-                makeList = FilterRecords(makeList, searchString) as IQueryable<VehicleMake>;
+                makeList = makeList.Where(x => x.Name.ToLower().Contains(searchString.ToLower()));
             }
 
             // Sorting and Paging
@@ -72,6 +72,11 @@ namespace Project.Service.Services
             return _context.VehicleModels.Find(id);
         }
 
+        public IEnumerable<VehicleModel> GetAllModels(int makeId)
+        {
+            return _context.VehicleModels.Where(m => m.VehicleMakeId == makeId).ToList();
+        }
+
         public IPagedList<VehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber)
         {
             IQueryable<VehicleModel> modelList = _context.VehicleModels;
@@ -79,7 +84,7 @@ namespace Project.Service.Services
             // Filtering
             if (!String.IsNullOrEmpty(searchString))
             {
-                modelList = FilterRecords(modelList, searchString) as IQueryable<VehicleModel>;
+                modelList = modelList.Where(x => x.Name.ToLower().Contains(searchString.ToLower()));
             }
 
             // Sorting and Paging
@@ -113,13 +118,12 @@ namespace Project.Service.Services
         {
             _context.VehicleModels.Remove(model);
         }
-        #endregion
 
-
-        private IQueryable<IVehicle> FilterRecords(IQueryable<IVehicle> list, string searchString)
+        public void RemoveVehicleModels(IEnumerable<VehicleModel> modelList)
         {
-            return list.Where(x => x.Name.ToLower().Contains(searchString.ToLower()));
+            _context.VehicleModels.RemoveRange(modelList);
         }
+        #endregion
 
         public int SaveChanges()
         {

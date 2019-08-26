@@ -58,7 +58,6 @@
       <DependentUpon>201908261449071_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model\IVehicle.cs" />
     <Compile Include="Model\IVehicleMake.cs" />
     <Compile Include="Model\IVehicleModel.cs" />
     <Compile Include="Model\VehicleMake.cs" />

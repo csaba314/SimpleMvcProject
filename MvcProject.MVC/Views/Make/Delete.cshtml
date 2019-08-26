@@ -1,0 +1,41 @@
+﻿@model MvcProject.MVC.Models.MakeCreateEditViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>If you delete this Make, all the models referred to this make will be deleted too.</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Abrv)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Abrv)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm("Delete", "Make", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
