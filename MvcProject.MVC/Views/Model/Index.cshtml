@@ -1,0 +1,77 @@
+﻿@model MvcProject.MVC.Models.ModelIndexViewModel
+@{
+    ViewBag.Title = "Vehicle Models";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ActionLink("Add New Vehicle Model", "Create", null, new { @class = "btn btn-primary" })
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-7">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.ActionLink("Id", "Index", new { sorting = ViewBag.IdSorting,
+                                                                  currentFilter = Model.CurrentFilter,
+                                                                  pageSize = Model.PageSize,
+                                                                  pageNumber = Model.PageNumber })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Name", "Index", new { sorting = ViewBag.NameSorting,
+                                                                    currentFilter = Model.CurrentFilter,
+                                                                    pageSize = Model.PageSize,
+                                                                    pageNumber = Model.PageNumber })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Abbreviation", "Index", new { sorting = ViewBag.AbrvSorting,
+                                                                            currentFilter = Model.CurrentFilter,
+                                                                            pageSize = Model.PageSize,
+                                                                            pageNumber = Model.PageNumber })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Vehicle Make", "Index", new { sorting = ViewBag.MakeSorting,
+                                                                            currentFilter = Model.CurrentFilter,
+                                                                            pageSize = Model.PageSize,
+                                                                            pageNumber = Model.PageNumber })
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ModelList)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Abrv)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.VehicleMake.Name)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-5"></div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @{ Html.RenderPartial("_ModelPaging", Model); }
+        </div>
+    </div>
+</div>
+
+

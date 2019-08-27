@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PagedList;
 using Project.Service.Model;
+using System.Data.Entity;
 
 namespace Project.Service.Services
 {
@@ -22,6 +23,11 @@ namespace Project.Service.Services
         public VehicleMake GetVehicleMake(int id)
         {
             return _context.VehicleMakes.Find(id);
+        }
+
+        public IEnumerable<VehicleMake> GetAllVehicleMake()
+        {
+            return _context.VehicleMakes.ToList();
         }
 
         public IPagedList<VehicleMake> GetAllVehicleMake(string searchString, string sorting, int pageSize, int pageNumber)
@@ -79,7 +85,7 @@ namespace Project.Service.Services
 
         public IPagedList<VehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber)
         {
-            IQueryable<VehicleModel> modelList = _context.VehicleModels;
+            IQueryable<VehicleModel> modelList = _context.VehicleModels.Include(m => m.VehicleMake);
 
             // Filtering
             if (!String.IsNullOrEmpty(searchString))

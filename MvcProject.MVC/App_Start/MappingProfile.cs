@@ -14,6 +14,9 @@ namespace MvcProject.MVC.App_Start
         {
             Mapper.CreateMap<MakeCreateEditViewModel, VehicleMake>().ForMember(m => m.Id, opt => opt.Ignore());
             Mapper.CreateMap<VehicleMake, MakeCreateEditViewModel>();
+
+            Mapper.CreateMap<ModelCreateEditViewModel, VehicleModel>().ForMember(m => m.Id, opt => opt.Ignore());
+            Mapper.CreateMap<VehicleModel, ModelCreateEditViewModel>();
         }
     }
 }

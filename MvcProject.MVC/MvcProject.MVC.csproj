@@ -136,11 +136,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MakeController.cs" />
+    <Compile Include="Controllers\ModelController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\MakeCreateEditViewModel.cs" />
     <Compile Include="Models\MakeIndexViewModel.cs" />
+    <Compile Include="Models\ModelCreateEditViewModel.cs" />
+    <Compile Include="Models\ModelIndexViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +188,9 @@
     <Content Include="Views\Make\Create.cshtml" />
     <Content Include="Views\Make\Edit.cshtml" />
     <Content Include="Views\Make\Delete.cshtml" />
+    <Content Include="Views\Model\Index.cshtml" />
+    <Content Include="Views\Model\_ModelPaging.cshtml" />
+    <Content Include="Views\Model\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

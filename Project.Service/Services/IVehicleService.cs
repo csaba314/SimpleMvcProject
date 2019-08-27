@@ -13,6 +13,7 @@ namespace Project.Service.Services
         #region Vehicle Make
         VehicleMake GetVehicleMake(int id);
         IPagedList<VehicleMake> GetAllVehicleMake(string searchString, string sorting, int pageSize, int pageNumber);
+        IEnumerable<VehicleMake> GetAllVehicleMake();
 
         void AddVehicleMake(VehicleMake make);
 
