@@ -35,19 +35,22 @@ namespace MvcProject.MVC.Controllers
             var model = new MakeIndexViewModel();
             model.MakeList = _service.GetAllVehicleMake(searchString, sorting, pageSize, pageNumber);
 
+            if (model.MakeList.PageCount < model.MakeList.PageNumber)
+            {
+                model.MakeList = _service.GetAllVehicleMake(searchString, sorting, pageSize, 1);
+            }
+
+
             if (id > 0)
             {
                 model.VehicleMake = _service.GetVehicleMake(id);
             }
 
             model.CurrentFilter = searchString;
-            model.PageSize = pageSize;
-            model.PageNumber = pageNumber;
             model.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
-
 
             return View(model);
         }

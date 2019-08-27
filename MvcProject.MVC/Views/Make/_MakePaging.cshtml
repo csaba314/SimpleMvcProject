@@ -4,9 +4,6 @@
 }
 @using PagedList.Mvc
 
-Page @(Model.MakeList.PageCount < Model.MakeList.PageNumber ? 0 : Model.MakeList.PageNumber) of @Model.MakeList.PageCount
-
-
 <table>
     <tr>
         @using (Html.BeginForm("Index", "Make", FormMethod.Get))
@@ -21,7 +18,7 @@ Page @(Model.MakeList.PageCount < Model.MakeList.PageNumber ? 0 : Model.MakeList
                 @Html.Hidden("sorting", Model.Sorting)
                 @Html.Hidden("currentFilter", Model.CurrentFilter)
                 @Html.Hidden("id", makeId)
-                @Html.Hidden("pageNumber", Model.PageNumber)
+                @Html.Hidden("pageNumber", Request.QueryString["pageNumber"])
             </td>
             <td style="column-width:15px;"></td>
             <td>
@@ -29,12 +26,12 @@ Page @(Model.MakeList.PageCount < Model.MakeList.PageNumber ? 0 : Model.MakeList
             </td>
             <td style="width:70px;"></td>
             <td>
-                @Html.PagedListPager(Model.MakeList,
-                                        pageNumber => Url.Action("Index","Make", new { pageNumber ,
-                                                                                       sorting = Model.Sorting,
-                                                                                       currentFilter = Model.CurrentFilter,
-                                                                                       pageSize = Model.PageSize,
-                                                                                       id = makeId }) )
+                @Html.PagedListPager(Model.MakeList, pageNumber => Url.Action("Index","Make", new { pageNumber ,
+                                                                                                    sorting = Model.Sorting,
+                                                                                                    currentFilter = Model.CurrentFilter,
+                                                                                                    pageSize = Request.QueryString["pageSize"],
+                                                                                                    id = makeId }),
+                                                                new PagedListRenderOptions { DisplayPageCountAndCurrentLocation = true } )
             </td>
         }
     </tr>

@@ -20,6 +20,7 @@ namespace Project.Service.Services
 
 
         #region Vehicle Make CRUD
+
         public VehicleMake GetVehicleMake(int id)
         {
             return _context.VehicleMakes.Find(id);
@@ -73,12 +74,10 @@ namespace Project.Service.Services
 
 
         #region Vehicle Model CRUD
+
         public VehicleModel GetVehicleModel(int id)
         {
-            var model = _context.VehicleModels.Find(id);
-            model.VehicleMake = GetVehicleMake(model.VehicleMakeId);
-            return model;
-            
+            return _context.VehicleModels.Find(id);
         }
 
         public IEnumerable<VehicleModel> GetAllModels(int makeId)
@@ -120,6 +119,7 @@ namespace Project.Service.Services
 
         public void AddVehicleModel(VehicleModel model)
         {
+            model.Abrv = _context.VehicleMakes.Find(model.VehicleMakeId).Abrv;
             _context.VehicleModels.Add(model);
         }
 

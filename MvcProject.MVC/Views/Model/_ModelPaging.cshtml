@@ -1,11 +1,6 @@
 ﻿@model MvcProject.MVC.Models.ModelIndexViewModel
-@{
-    int modelId = Model.VehicleModel == null ? 0 : Model.VehicleModel.Id;
-}
+
 @using PagedList.Mvc
-
-Page @(Model.ModelList.PageCount < Model.ModelList.PageNumber ? 0 : Model.ModelList.PageNumber) of @Model.ModelList.PageCount
-
 
 <table>
     <tr>
@@ -18,10 +13,9 @@ Page @(Model.ModelList.PageCount < Model.ModelList.PageNumber ? 0 : Model.ModelL
 
                 @Html.DropDownList("pageSize", Model.PageSizeDropdown, new { @class = "form-control", style = "width: 65px;" })
 
-                @Html.Hidden("sorting", Model.Sorting)
-                @Html.Hidden("currentFilter", Model.CurrentFilter)
-                @Html.Hidden("id", modelId)
-                @Html.Hidden("pageNumber", Model.PageNumber)
+                @Html.Hidden("sorting", Request.QueryString["sorting"])
+                @Html.Hidden("currentFilter", Request.QueryString["currentFilter"])
+                @Html.Hidden("pageNumber", Request.QueryString["pageNumber"])
             </td>
             <td style="column-width:15px;"></td>
             <td>
@@ -30,11 +24,12 @@ Page @(Model.ModelList.PageCount < Model.ModelList.PageNumber ? 0 : Model.ModelL
             <td style="width:70px;"></td>
             <td>
                 @Html.PagedListPager(Model.ModelList,
-                                        pageNumber => Url.Action("Index","Model", new { pageNumber ,
-                                                                                       sorting = Model.Sorting,
-                                                                                       currentFilter = Model.CurrentFilter,
-                                                                                       pageSize = Model.PageSize,
-                                                                                       id = modelId }) )
+                                            pageNumber => Url.Action("Index","Model",
+                                            new { pageNumber ,
+                                                  sorting = Request.QueryString["sorting"],
+                                                  currentFilter = Request.QueryString["currentFilter"],
+                                                  pageSize = Request.QueryString["pageSize"] }),
+                                            new PagedListRenderOptions { DisplayPageCountAndCurrentLocation = true })
             </td>
         }
     </tr>

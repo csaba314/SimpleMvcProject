@@ -15,8 +15,6 @@ namespace MvcProject.MVC.Models
 
         public string Sorting { get; set; }
         public string CurrentFilter { get; set; }
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
         public SelectList PageSizeDropdown { get; set; }
     }
 }

@@ -23,8 +23,7 @@ namespace MvcProject.MVC.Controllers
         // GET: /Model
         [HttpGet]
         public ActionResult Index(string searchString, string currentFilter,
-                                  string sorting, int id = 0,
-                                  int pageSize = 10, int pageNumber = 1)
+                                  string sorting, int pageSize = 10, int pageNumber = 1)
         {
             if (String.IsNullOrEmpty(searchString))
             {
@@ -34,14 +33,12 @@ namespace MvcProject.MVC.Controllers
             var model = new ModelIndexViewModel();
             model.ModelList = _service.GetAllVehicleModels(searchString, sorting, pageSize, pageNumber);
 
-            if (id > 0)
+            if (model.ModelList.PageCount < model.ModelList.PageNumber)
             {
-                model.VehicleModel = _service.GetVehicleModel(id);
+                model.ModelList = _service.GetAllVehicleModels(searchString, sorting, pageSize, 1);
             }
 
             model.CurrentFilter = searchString;
-            model.PageSize = pageSize;
-            model.PageNumber = pageNumber;
             model.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
@@ -63,7 +60,7 @@ namespace MvcProject.MVC.Controllers
 
         // POST: /Model/Create
         [HttpPost]
-        public ActionResult Create([Bind(Include = "Name, Abrv, VehicleMakeId")] ModelCreateEditViewModel model)
+        public ActionResult Create([Bind(Include = "Name, VehicleMakeId")] ModelCreateEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -100,14 +97,16 @@ namespace MvcProject.MVC.Controllers
 
         //POST: /Model/Edit/1
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id, Name, Abrv, VehicleMakeId")] ModelCreateEditViewModel model)
+        public ActionResult Edit([Bind(Include = "Id, Name, VehicleMakeId")] ModelCreateEditViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            Mapper.Map(model, _service.GetVehicleModel(model.Id));
+            var editedModel = _service.GetVehicleModel(model.Id);
+            Mapper.Map(model, editedModel);
+            editedModel.Abrv = _service.GetVehicleMake(editedModel.VehicleMakeId).Abrv;
             _service.SaveChanges();
 
             return RedirectToAction("Index");
