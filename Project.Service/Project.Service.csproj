@@ -57,6 +57,10 @@
     <Compile Include="Migrations\201908261449071_InitialMigration.Designer.cs">
       <DependentUpon>201908261449071_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908270938278_seedDbWithTestData.cs" />
+    <Compile Include="Migrations\201908270938278_seedDbWithTestData.Designer.cs">
+      <DependentUpon>201908270938278_seedDbWithTestData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\IVehicleMake.cs" />
     <Compile Include="Model\IVehicleModel.cs" />
@@ -74,6 +78,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201908261449071_InitialMigration.resx">
       <DependentUpon>201908261449071_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908270938278_seedDbWithTestData.resx">
+      <DependentUpon>201908270938278_seedDbWithTestData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
