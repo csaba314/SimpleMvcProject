@@ -21,6 +21,8 @@ namespace MvcProject.MVC.Models
         [Required, Display(Name = "Vehicle Make")]
         public int VehicleMakeId { get; set; }
 
+        public IVehicleMake VehicleMake { get; set; }
+
         public SelectList MakeDropdown { get; set; }
     }
 }

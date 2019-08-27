@@ -1,0 +1,47 @@
+﻿@model MvcProject.MVC.Models.ModelCreateEditViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete @Model.Name</h2>
+
+<h3>Are you sure you want to delete this model?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Abrv)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Abrv)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VehicleMakeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VehicleMake.Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm("Delete", "Model", FormMethod.Post)) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

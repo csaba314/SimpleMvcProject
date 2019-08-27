@@ -75,7 +75,10 @@ namespace Project.Service.Services
         #region Vehicle Model CRUD
         public VehicleModel GetVehicleModel(int id)
         {
-            return _context.VehicleModels.Find(id);
+            var model = _context.VehicleModels.Find(id);
+            model.VehicleMake = GetVehicleMake(model.VehicleMakeId);
+            return model;
+            
         }
 
         public IEnumerable<VehicleModel> GetAllModels(int makeId)
