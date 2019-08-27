@@ -8,7 +8,7 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>If you delete this Make, all the models referred to this make will be deleted too.</h4>
+
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -29,13 +29,42 @@
 
     </dl>
 
+    <div class="row">
+        <div class="col-md-5">
+            <p><strong>Relaed Vehicle Models</strong></p>
+            <table class="table table-hover">
+                <tr>
+                    <th>
+                        Model Name
+                    </th>
+                    <th>
+                        Model Id
+                    </th>
+                </tr>
+                @foreach (var item in Model.VehicleModels)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+    <h4>If you delete this Make, all the models referred to this make will be deleted too.</h4>
+
     @using (Html.BeginForm("Delete", "Make", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.Id)
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+    <div class="form-actions no-color">
+
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-success" })
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </div>
     }
 </div>

@@ -24,7 +24,7 @@ namespace Project.Service.Services
         #region Vehicle Model
         VehicleModel GetVehicleModel(int id);
         IPagedList<VehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber);
-        IEnumerable<VehicleModel> GetAllModels(int makeId);
+        IEnumerable<VehicleModel> GetAllModelsByMake(int makeId);
 
         void AddVehicleModel(VehicleModel model);
 

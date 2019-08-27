@@ -5,8 +5,16 @@
 
 <h2>@ViewBag.Title</h2>
 
-@Html.ActionLink("Add New Vehicle Make", "Create", null, new { @class="btn btn-primary"})
-
+@Html.ActionLink("Add New Vehicle Make", "Create", null, new { @class = "btn btn-primary" })
+<br />
+@using (Html.BeginForm("Index", "Make", FormMethod.Get))
+{
+    <p>
+        <strong>Search by Name</strong>
+        @Html.TextBox("searchString")
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </p>
+}
 <div class="container">
     <div class="row">
         <div class="col-md-7">
@@ -48,6 +56,11 @@
                                 @Html.DisplayFor(modelItem => item.Abrv)
                             </td>
                             <td>
+                                @Html.ActionLink("Details", "Index", new { id = item.Id,
+                                                                           currentFilter = Model.CurrentFilter,
+                                                                           pageSize = Request.QueryString["pageSize"],
+                                                                           pageNumber = Request.QueryString["pageNumber"] }
+                                                                    , new { @class = "btn btn-sm btn-default" })
                                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })
                                 @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })
                             </td>
@@ -55,6 +68,22 @@
                     }
                 </tbody>
             </table>
+        </div>
+        <div class="col-md-5 table-bordered">
+            @if (Model.VehicleModels != null)
+            {
+                <h3>Vehicle Models belonging to @Model.VehicleMake.Name</h3>
+
+            <table class="table table-hover" style="width:150px;">
+                @foreach (var item in Model.VehicleModels)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    </tr>
+                }
+
+            </table>
+            }
         </div>
         <div class="col-md-5"></div>
     </div>

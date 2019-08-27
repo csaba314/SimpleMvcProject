@@ -80,7 +80,7 @@ namespace Project.Service.Services
             return _context.VehicleModels.Find(id);
         }
 
-        public IEnumerable<VehicleModel> GetAllModels(int makeId)
+        public IEnumerable<VehicleModel> GetAllModelsByMake(int makeId)
         {
             return _context.VehicleModels.Where(m => m.VehicleMakeId == makeId).ToList();
         }
@@ -92,7 +92,7 @@ namespace Project.Service.Services
             // Filtering
             if (!String.IsNullOrEmpty(searchString))
             {
-                modelList = modelList.Where(x => x.Name.ToLower().Contains(searchString.ToLower()));
+                modelList = modelList.Where(x => x.VehicleMake.Name.ToLower().Contains(searchString.ToLower()));
             }
 
             // Sorting and Paging

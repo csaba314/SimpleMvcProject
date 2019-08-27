@@ -6,7 +6,15 @@
 <h2>@ViewBag.Title</h2>
 
 @Html.ActionLink("Add New Vehicle Model", "Create", null, new { @class = "btn btn-primary" })
-
+<br />
+@using (Html.BeginForm("Index", "Model", FormMethod.Get))
+{
+    <p>
+        <strong>Search by Make</strong>
+        @Html.TextBox("searchString")
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </p>
+}
 <div class="container">
     <div class="row">
         <div class="col-md-7">

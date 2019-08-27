@@ -84,7 +84,7 @@ namespace MvcProject.MVC.Controllers
 
             var selectedModel = _service.GetVehicleModel((int)id);
 
-            if (selectedModel is null)
+            if (selectedModel == null)
             {
                 return HttpNotFound();
             }
@@ -123,7 +123,7 @@ namespace MvcProject.MVC.Controllers
 
             var selectedModel = _service.GetVehicleModel((int)id);
 
-            if (selectedModel is null)
+            if (selectedModel == null)
             {
                 return HttpNotFound();
             }

@@ -13,6 +13,8 @@ namespace MvcProject.MVC.Models
         public IPagedList<IVehicleMake> MakeList { get; set; }
         public IVehicleMake VehicleMake { get; set; }
 
+        public IEnumerable<IVehicleModel> VehicleModels { get; set; }
+
         public string Sorting { get; set; }
         public string CurrentFilter { get; set; }
         public SelectList PageSizeDropdown { get; set; }

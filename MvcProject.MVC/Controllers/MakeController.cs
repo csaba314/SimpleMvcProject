@@ -44,6 +44,7 @@ namespace MvcProject.MVC.Controllers
             if (id > 0)
             {
                 model.VehicleMake = _service.GetVehicleMake(id);
+                model.VehicleModels = _service.GetAllModelsByMake(id);
             }
 
             model.CurrentFilter = searchString;
@@ -89,14 +90,12 @@ namespace MvcProject.MVC.Controllers
 
             var selectedMake = _service.GetVehicleMake((int)id);
 
-            if (selectedMake is null)
+            if (selectedMake == null)
             {
                 return HttpNotFound();
             }
-
-            var model = Mapper.Map<MakeCreateEditViewModel>(selectedMake);
             
-            return View(model);
+            return View(Mapper.Map<MakeCreateEditViewModel>(selectedMake));
         }
 
         //POST: /Make/Edit/1
@@ -130,17 +129,22 @@ namespace MvcProject.MVC.Controllers
                 return HttpNotFound();
             }
 
-            return View(Mapper.Map<MakeCreateEditViewModel>(selectedMake));
+            var model = Mapper.Map<MakeCreateEditViewModel>(selectedMake);
+            model.VehicleModels = _service.GetAllModelsByMake(model.Id);
+
+            return View(model);
         }
 
         //GET: /Make/Delete/
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var modelList = _service.GetAllModels(id);
+            var modelList = _service.GetAllModelsByMake(id);
             _service.RemoveVehicleModels(modelList);
+
             var makeToRemove = _service.GetVehicleMake(id);
             _service.RemoveVehicleMake(makeToRemove);
+
             _service.SaveChanges();
 
             return RedirectToAction("Index");

@@ -19,5 +19,7 @@ namespace MvcProject.MVC.Models
         [Display(Name= "Abbreviation"),
             StringLength(10)]
         public string Abrv { get; set; }
+
+        public IEnumerable<IVehicleModel> VehicleModels { get; set; }
     }
 }
