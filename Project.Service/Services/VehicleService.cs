@@ -21,17 +21,17 @@ namespace Project.Service.Services
 
         #region Vehicle Make CRUD
 
-        public VehicleMake GetVehicleMake(int id)
+        public IVehicleMake GetVehicleMake(int id)
         {
             return _context.VehicleMakes.Find(id);
         }
 
-        public IEnumerable<VehicleMake> GetAllVehicleMake()
+        public IEnumerable<IVehicleMake> GetAllVehicleMake()
         {
             return _context.VehicleMakes.ToList();
         }
 
-        public IPagedList<VehicleMake> GetAllVehicleMake(string searchString, string sorting, int pageSize, int pageNumber)
+        public IPagedList<IVehicleMake> GetAllVehicleMake(string searchString, string sorting, int pageSize, int pageNumber)
         {
             IQueryable<VehicleMake> makeList = _context.VehicleMakes;
 
@@ -59,14 +59,30 @@ namespace Project.Service.Services
             }
         }
 
-        public void AddVehicleMake(VehicleMake make)
+        public void AddVehicleMake(IVehicleMake make)
         {
-            _context.VehicleMakes.Add(make);
+            if (make is VehicleMake)
+            {
+                _context.VehicleMakes.Add(make as VehicleMake);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+
         }
 
-        public void RemoveVehicleMake(VehicleMake make)
+        public void RemoveVehicleMake(IVehicleMake make)
         {
-            _context.VehicleMakes.Remove(make);
+            if (make is VehicleMake)
+            {
+                _context.VehicleMakes.Remove(make as VehicleMake);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+
         }
         #endregion
 
@@ -75,17 +91,17 @@ namespace Project.Service.Services
 
         #region Vehicle Model CRUD
 
-        public VehicleModel GetVehicleModel(int id)
+        public IVehicleModel GetVehicleModel(int id)
         {
             return _context.VehicleModels.Find(id);
         }
 
-        public IEnumerable<VehicleModel> GetAllModelsByMake(int makeId)
+        public IEnumerable<IVehicleModel> GetAllModelsByMake(int makeId)
         {
             return _context.VehicleModels.Where(m => m.VehicleMakeId == makeId).ToList();
         }
 
-        public IPagedList<VehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber)
+        public IPagedList<IVehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber)
         {
             IQueryable<VehicleModel> modelList = _context.VehicleModels.Include(m => m.VehicleMake);
 
@@ -117,20 +133,45 @@ namespace Project.Service.Services
             }
         }
 
-        public void AddVehicleModel(VehicleModel model)
+        public void AddVehicleModel(IVehicleModel model)
         {
             model.Abrv = _context.VehicleMakes.Find(model.VehicleMakeId).Abrv;
-            _context.VehicleModels.Add(model);
+
+            if (model is VehicleModel)
+            {
+                _context.VehicleModels.Add(model as VehicleModel);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+
         }
 
-        public void RemoveVehicleModel(VehicleModel model)
+        public void RemoveVehicleModel(IVehicleModel model)
         {
-            _context.VehicleModels.Remove(model);
+            if (model is VehicleModel)
+            {
+                _context.VehicleModels.Remove(model as VehicleModel);
+
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
         }
 
-        public void RemoveVehicleModels(IEnumerable<VehicleModel> modelList)
+        public void RemoveVehicleModels(IEnumerable<IVehicleModel> modelList)
         {
-            _context.VehicleModels.RemoveRange(modelList);
+            if (modelList is IEnumerable<VehicleModel>)
+            {
+                _context.VehicleModels.RemoveRange(modelList as IEnumerable<VehicleModel>);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+
         }
         #endregion
 

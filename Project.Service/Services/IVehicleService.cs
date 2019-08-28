@@ -11,25 +11,25 @@ namespace Project.Service.Services
     public interface IVehicleService : IDisposable
     {
         #region Vehicle Make
-        VehicleMake GetVehicleMake(int id);
-        IPagedList<VehicleMake> GetAllVehicleMake(string searchString, string sorting, int pageSize, int pageNumber);
-        IEnumerable<VehicleMake> GetAllVehicleMake();
+        IVehicleMake GetVehicleMake(int id);
+        IPagedList<IVehicleMake> GetAllVehicleMake(string searchString, string sorting, int pageSize, int pageNumber);
+        IEnumerable<IVehicleMake> GetAllVehicleMake();
 
-        void AddVehicleMake(VehicleMake make);
+        void AddVehicleMake(IVehicleMake make);
 
-        void RemoveVehicleMake(VehicleMake make);
+        void RemoveVehicleMake(IVehicleMake make);
         #endregion
 
 
         #region Vehicle Model
-        VehicleModel GetVehicleModel(int id);
-        IPagedList<VehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber);
-        IEnumerable<VehicleModel> GetAllModelsByMake(int makeId);
+        IVehicleModel GetVehicleModel(int id);
+        IPagedList<IVehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber);
+        IEnumerable<IVehicleModel> GetAllModelsByMake(int makeId);
 
-        void AddVehicleModel(VehicleModel model);
+        void AddVehicleModel(IVehicleModel model);
 
-        void RemoveVehicleModel(VehicleModel model);
-        void RemoveVehicleModels(IEnumerable<VehicleModel> modelList);
+        void RemoveVehicleModel(IVehicleModel model);
+        void RemoveVehicleModels(IEnumerable<IVehicleModel> modelList);
         #endregion
 
         int SaveChanges();

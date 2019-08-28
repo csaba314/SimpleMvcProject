@@ -44,6 +44,7 @@ namespace MvcProject.MVC.Controllers
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
             ViewBag.MakeSorting = sorting == "make" ? "make_desc" : "make";
+            model.Sorting = sorting;
 
             return View(model);
         }
@@ -67,7 +68,7 @@ namespace MvcProject.MVC.Controllers
                 return View(model);
             }
 
-            _service.AddVehicleModel(Mapper.Map<VehicleModel>(model));
+            _service.AddVehicleModel(Mapper.Map<IVehicleModel>(model));
             _service.SaveChanges();
 
             return RedirectToAction("Index");

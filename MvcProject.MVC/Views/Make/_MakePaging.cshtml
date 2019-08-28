@@ -18,7 +18,7 @@
                 @Html.Hidden("sorting", Model.Sorting)
                 @Html.Hidden("currentFilter", Model.CurrentFilter)
                 @Html.Hidden("id", makeId)
-                @Html.Hidden("pageNumber", Request.QueryString["pageNumber"])
+                @Html.Hidden("pageNumber", Model.MakeList.PageNumber)
             </td>
             <td style="column-width:15px;"></td>
             <td>
@@ -29,7 +29,7 @@
                 @Html.PagedListPager(Model.MakeList, pageNumber => Url.Action("Index","Make", new { pageNumber ,
                                                                                                     sorting = Model.Sorting,
                                                                                                     currentFilter = Model.CurrentFilter,
-                                                                                                    pageSize = Request.QueryString["pageSize"],
+                                                                                                    pageSize = Model.MakeList.PageSize,
                                                                                                     id = makeId }),
                                                                 new PagedListRenderOptions { DisplayPageCountAndCurrentLocation = true } )
             </td>

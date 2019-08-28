@@ -13,9 +13,9 @@
 
                 @Html.DropDownList("pageSize", Model.PageSizeDropdown, new { @class = "form-control", style = "width: 65px;" })
 
-                @Html.Hidden("sorting", Request.QueryString["sorting"])
-                @Html.Hidden("currentFilter", Request.QueryString["currentFilter"])
-                @Html.Hidden("pageNumber", Request.QueryString["pageNumber"])
+                @Html.Hidden("sorting", Model.Sorting)
+                @Html.Hidden("currentFilter", Model.CurrentFilter)
+                @Html.Hidden("pageNumber", Model.ModelList.PageNumber)
             </td>
             <td style="column-width:15px;"></td>
             <td>
@@ -26,9 +26,9 @@
                 @Html.PagedListPager(Model.ModelList,
                                             pageNumber => Url.Action("Index","Model",
                                             new { pageNumber ,
-                                                  sorting = Request.QueryString["sorting"],
-                                                  currentFilter = Request.QueryString["currentFilter"],
-                                                  pageSize = Request.QueryString["pageSize"] }),
+                                                  sorting = Model.Sorting,
+                                                  currentFilter = Model.CurrentFilter,
+                                                  pageSize = Model.ModelList.PageSize }),
                                             new PagedListRenderOptions { DisplayPageCountAndCurrentLocation = true })
             </td>
         }

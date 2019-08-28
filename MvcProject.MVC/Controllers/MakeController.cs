@@ -52,6 +52,7 @@ namespace MvcProject.MVC.Controllers
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
+            model.Sorting = sorting;
 
             return View(model);
         }
@@ -73,7 +74,7 @@ namespace MvcProject.MVC.Controllers
                 return View(model);
             }
 
-            _service.AddVehicleMake(Mapper.Map<VehicleMake>(model));
+            _service.AddVehicleMake(Mapper.Map<IVehicleMake>(model));
             _service.SaveChanges();
 
             return RedirectToAction("Index");
@@ -124,7 +125,7 @@ namespace MvcProject.MVC.Controllers
 
             var selectedMake = _service.GetVehicleMake((int)id);
 
-            if (selectedMake is null)
+            if (selectedMake == null)
             {
                 return HttpNotFound();
             }
