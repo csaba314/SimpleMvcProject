@@ -140,10 +140,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\MakeCreateEditViewModel.cs" />
+    <Compile Include="Models\DtoMapping.cs" />
     <Compile Include="Models\MakeIndexViewModel.cs" />
-    <Compile Include="Models\ModelCreateEditViewModel.cs" />
     <Compile Include="Models\ModelIndexViewModel.cs" />
+    <Compile Include="Models\VehicleMakeDTO.cs" />
+    <Compile Include="Models\VehicleModelDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

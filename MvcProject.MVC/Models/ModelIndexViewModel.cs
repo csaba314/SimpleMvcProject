@@ -10,9 +10,9 @@ namespace MvcProject.MVC.Models
 {
     public class ModelIndexViewModel
     {
-        public IPagedList<IVehicleModel> ModelList { get; set; }
+        public IPagedList<VehicleModelDTO> ModelList { get; set; }
 
-        public IVehicleModel VehicleModel { get; set; }
+        public VehicleModelDTO VehicleModel { get; set; }
 
         public string Sorting { get; set; }
         public string CurrentFilter { get; set; }

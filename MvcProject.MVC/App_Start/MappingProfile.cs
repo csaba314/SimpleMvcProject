@@ -12,11 +12,11 @@ namespace MvcProject.MVC.App_Start
     {
         public MappingProfile()
         {
-            Mapper.CreateMap<MakeCreateEditViewModel, IVehicleMake>().ForMember(m => m.Id, opt => opt.Ignore());
-            Mapper.CreateMap<IVehicleMake, MakeCreateEditViewModel>();
+            Mapper.CreateMap<VehicleMakeDTO, IVehicleMake>().ForMember(m => m.Id, opt => opt.Ignore());
+            Mapper.CreateMap<IVehicleMake, VehicleMakeDTO>();
 
-            Mapper.CreateMap<ModelCreateEditViewModel, IVehicleModel>().ForMember(m => m.Id, opt => opt.Ignore());
-            Mapper.CreateMap<IVehicleModel, ModelCreateEditViewModel>();
+            Mapper.CreateMap<VehicleModelDTO, IVehicleModel>().ForMember(m => m.Id, opt => opt.Ignore());
+            Mapper.CreateMap<IVehicleModel, VehicleModelDTO>();
         }
     }
 }

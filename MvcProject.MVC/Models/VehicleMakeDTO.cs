@@ -7,7 +7,7 @@ using Project.Service.Model;
 
 namespace MvcProject.MVC.Models
 {
-    public class MakeCreateEditViewModel
+    public class VehicleMakeDTO
     {
         public int Id { get; set; }
 

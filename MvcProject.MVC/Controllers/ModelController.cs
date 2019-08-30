@@ -31,7 +31,8 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new ModelIndexViewModel();
-            model.ModelList = _service.GetAllVehicleModels(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
+            var modelList = _service.GetAllVehicleModels(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
+            model.ModelList = DtoMapping.MapToVehicleModelDTO(modelList, modelList.PageSize, modelList.PageNumber);
 
             model.CurrentFilter = searchString;
             model.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());
@@ -49,21 +50,22 @@ namespace MvcProject.MVC.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var model = new ModelCreateEditViewModel();
+            var model = new VehicleModelDTO();
             model.MakeDropdown = GetMakeDropDown();
             return View(model);
         }
 
         // POST: /Model/Create
         [HttpPost]
-        public ActionResult Create([Bind(Include = "Name, VehicleMakeId")] ModelCreateEditViewModel model)
+        public ActionResult Create([Bind(Include = "Name, VehicleMakeId")] VehicleModelDTO model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            _service.AddVehicleModel(Mapper.Map<IVehicleModel>(model));
+            var newModel = new VehicleModel();
+            Mapper.Map(model, newModel);
+            _service.AddVehicleModel(newModel);
             _service.SaveChanges();
 
             return RedirectToAction("Index");
@@ -85,7 +87,7 @@ namespace MvcProject.MVC.Controllers
                 return HttpNotFound();
             }
 
-            var model = Mapper.Map<ModelCreateEditViewModel>(selectedModel);
+            var model = Mapper.Map<VehicleModelDTO>(selectedModel);
             model.MakeDropdown = GetMakeDropDown();
 
             return View(model);
@@ -93,7 +95,7 @@ namespace MvcProject.MVC.Controllers
 
         //POST: /Model/Edit/1
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id, Name, VehicleMakeId")] ModelCreateEditViewModel model)
+        public ActionResult Edit([Bind(Include = "Id, Name, VehicleMakeId")] VehicleModelDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -123,7 +125,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(Mapper.Map<ModelCreateEditViewModel>(selectedModel));
+            return View(Mapper.Map<VehicleModelDTO>(selectedModel));
         }
 
         //GET: /Model/Delete/1

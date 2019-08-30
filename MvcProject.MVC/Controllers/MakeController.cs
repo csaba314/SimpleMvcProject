@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using Project.Service.Model;
+using PagedList;
 
 namespace MvcProject.MVC.Controllers
 {
@@ -33,12 +34,13 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new MakeIndexViewModel();
-            model.MakeList = _service.GetAllVehicleMake(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
+            var list = _service.GetAllVehicleMake(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
+            model.MakeList = DtoMapping.MapToVehicleMakeDTO(list, list.PageSize, list.PageNumber);
 
             if (id > 0)
             {
-                model.VehicleMake = _service.GetVehicleMake(id);
-                model.VehicleModels = _service.GetAllModelsByMake(id);
+                model.VehicleMake = Mapper.Map<VehicleMakeDTO>(_service.GetVehicleMake(id));
+                model.VehicleModels = DtoMapping.MapToVehicleModelDTO(_service.GetAllModelsByMake(id));
             }
 
             model.CurrentFilter = searchString;
@@ -56,19 +58,20 @@ namespace MvcProject.MVC.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return View(new MakeCreateEditViewModel());
+            return View(new VehicleMakeDTO());
         }
 
         // POST: /Make/Create
         [HttpPost]
-        public ActionResult Create([Bind(Include = "Name, Abrv")] MakeCreateEditViewModel model)
+        public ActionResult Create([Bind(Include = "Name, Abrv")] VehicleMakeDTO model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-
-            _service.AddVehicleMake(Mapper.Map<IVehicleMake>(model));
+            var newMake = new VehicleMake();
+            Mapper.Map(model, newMake);
+            _service.AddVehicleMake(newMake);
             _service.SaveChanges();
 
             return RedirectToAction("Index");
@@ -90,12 +93,12 @@ namespace MvcProject.MVC.Controllers
                 return HttpNotFound();
             }
             
-            return View(Mapper.Map<MakeCreateEditViewModel>(selectedMake));
+            return View(Mapper.Map<VehicleMakeDTO>(selectedMake));
         }
 
         //POST: /Make/Edit/1
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id, Name, Abrv")] MakeCreateEditViewModel model)
+        public ActionResult Edit([Bind(Include = "Id, Name, Abrv")] VehicleMakeDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -125,7 +128,7 @@ namespace MvcProject.MVC.Controllers
                 return HttpNotFound();
             }
 
-            var model = Mapper.Map<MakeCreateEditViewModel>(selectedMake);
+            var model = Mapper.Map<VehicleMakeDTO>(selectedMake);
             model.VehicleModels = _service.GetAllModelsByMake(model.Id);
 
             return View(model);

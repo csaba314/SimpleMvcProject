@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace MvcProject.MVC.Models
 {
-    public class ModelCreateEditViewModel
+    public class VehicleModelDTO
     {
         public int Id { get; set; }
 

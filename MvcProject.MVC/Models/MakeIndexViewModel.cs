@@ -10,10 +10,10 @@ namespace MvcProject.MVC.Models
 {
     public class MakeIndexViewModel
     {
-        public IPagedList<IVehicleMake> MakeList { get; set; }
-        public IVehicleMake VehicleMake { get; set; }
+        public IPagedList<VehicleMakeDTO> MakeList { get; set; }
+        public VehicleMakeDTO VehicleMake { get; set; }
 
-        public IEnumerable<IVehicleModel> VehicleModels { get; set; }
+        public IEnumerable<VehicleModelDTO> VehicleModels { get; set; }
 
         public string Sorting { get; set; }
         public string CurrentFilter { get; set; }
