@@ -68,6 +68,7 @@
     <Compile Include="Model\VehicleModel.cs" />
     <Compile Include="Model\ProjectDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ControllerParams.cs" />
     <Compile Include="Services\IVehicleService.cs" />
     <Compile Include="Services\VehicleService.cs" />
   </ItemGroup>

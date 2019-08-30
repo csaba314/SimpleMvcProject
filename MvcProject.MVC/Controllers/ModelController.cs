@@ -31,12 +31,7 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new ModelIndexViewModel();
-            model.ModelList = _service.GetAllVehicleModels(searchString, sorting, pageSize, pageNumber);
-
-            if (model.ModelList.PageCount < model.ModelList.PageNumber)
-            {
-                model.ModelList = _service.GetAllVehicleModels(searchString, sorting, pageSize, 1);
-            }
+            model.ModelList = _service.GetAllVehicleModels(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
 
             model.CurrentFilter = searchString;
             model.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());

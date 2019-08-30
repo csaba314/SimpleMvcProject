@@ -31,32 +31,46 @@ namespace Project.Service.Services
             return _context.VehicleMakes.ToList();
         }
 
-        public IPagedList<IVehicleMake> GetAllVehicleMake(string searchString, string sorting, int pageSize, int pageNumber)
+        public IPagedList<IVehicleMake> GetAllVehicleMake(ControllerParameters parameters)
         {
             IQueryable<VehicleMake> makeList = _context.VehicleMakes;
 
             // Filtering
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(parameters.SearchString))
             {
-                makeList = makeList.Where(x => x.Name.ToLower().Contains(searchString.ToLower()));
+                makeList = makeList.Where(x => x.Name.ToLower().Contains(parameters.SearchString.ToLower()));
             }
 
-            // Sorting and Paging
-            switch (sorting)
+            switch (parameters.Sorting)
             {
                 case "name_desc":
-                    return makeList.OrderByDescending(x => x.Name).ToPagedList(pageNumber, pageSize);
+                    makeList = makeList.OrderByDescending(x => x.Name);
+                    break;
                 case "id":
-                    return makeList.OrderBy(x => x.Id).ToPagedList(pageNumber, pageSize);
+                    makeList = makeList.OrderBy(x => x.Id);
+                    break;
                 case "id_desc":
-                    return makeList.OrderByDescending(x => x.Id).ToPagedList(pageNumber, pageSize);
+                    makeList = makeList.OrderByDescending(x => x.Id);
+                    break;
                 case "abrv":
-                    return makeList.OrderBy(x => x.Abrv).ToPagedList(pageNumber, pageSize);
+                    makeList = makeList.OrderBy(x => x.Abrv);
+                    break;
                 case "abrv_desc":
-                    return makeList.OrderByDescending(x => x.Abrv).ToPagedList(pageNumber, pageSize);
+                    makeList = makeList.OrderByDescending(x => x.Abrv);
+                    break;
                 default:
-                    return makeList.OrderBy(x => x.Name).ToPagedList(pageNumber, pageSize);
+                    makeList = makeList.OrderBy(x => x.Name);
+                    break;
             }
+
+            var list = makeList.ToPagedList(parameters.PageNumber, parameters.PageSize);
+
+            if (list.PageCount < list.PageNumber)
+            {
+                return makeList.ToPagedList(1, parameters.PageSize);
+            }
+
+            return list;
         }
 
         public void AddVehicleMake(IVehicleMake make)
@@ -101,36 +115,53 @@ namespace Project.Service.Services
             return _context.VehicleModels.Where(m => m.VehicleMakeId == makeId).ToList();
         }
 
-        public IPagedList<IVehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber)
+        public IPagedList<IVehicleModel> GetAllVehicleModels(ControllerParameters parameters)
         {
             IQueryable<VehicleModel> modelList = _context.VehicleModels.Include(m => m.VehicleMake);
 
             // Filtering
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(parameters.SearchString))
             {
-                modelList = modelList.Where(x => x.VehicleMake.Name.ToLower().Contains(searchString.ToLower()));
+                modelList = modelList.Where(x => x.VehicleMake.Name.ToLower().Contains(parameters.SearchString.ToLower()));
             }
 
             // Sorting and Paging
-            switch (sorting)
+            switch (parameters.Sorting)
             {
                 case "name_desc":
-                    return modelList.OrderByDescending(x => x.Name).ToPagedList(pageNumber, pageSize);
+                    modelList = modelList.OrderByDescending(x => x.Name);
+                    break;
                 case "id":
-                    return modelList.OrderBy(x => x.Id).ToPagedList(pageNumber, pageSize);
+                    modelList = modelList.OrderBy(x => x.Id);
+                    break;
                 case "id_desc":
-                    return modelList.OrderByDescending(x => x.Id).ToPagedList(pageNumber, pageSize);
+                    modelList = modelList.OrderByDescending(x => x.Id);
+                    break;
                 case "abrv":
-                    return modelList.OrderBy(x => x.Abrv).ToPagedList(pageNumber, pageSize);
+                    modelList = modelList.OrderBy(x => x.Abrv);
+                    break;
                 case "abrv_desc":
-                    return modelList.OrderByDescending(x => x.Abrv).ToPagedList(pageNumber, pageSize);
+                    modelList = modelList.OrderByDescending(x => x.Abrv);
+                    break;
                 case "make":
-                    return modelList.OrderBy(x => x.VehicleMake.Name).ToPagedList(pageNumber, pageSize);
+                    modelList = modelList.OrderBy(x => x.VehicleMake.Name);
+                    break;
                 case "make_desc":
-                    return modelList.OrderByDescending(x => x.VehicleMake.Name).ToPagedList(pageNumber, pageSize);
+                    modelList = modelList.OrderByDescending(x => x.VehicleMake.Name);
+                    break;
                 default:
-                    return modelList.OrderBy(x => x.Name).ToPagedList(pageNumber, pageSize);
+                    modelList = modelList.OrderBy(x => x.Name);
+                    break;
             }
+
+            var list = modelList.ToPagedList(parameters.PageNumber, parameters.PageSize);
+
+            if (list.PageCount < list.PageNumber)
+            {
+                return modelList.ToPagedList(1, parameters.PageSize);
+            }
+
+            return list;
         }
 
         public void AddVehicleModel(IVehicleModel model)
@@ -188,6 +219,20 @@ namespace Project.Service.Services
         public IEnumerable<int> GetPageSizeParamList()
         {
             return new List<int> { 5, 10, 20, 40 };
+        }
+
+        public ControllerParameters SetControllerParameters(string sorting, string searchString, int pageSize, int pageNumber)
+        {
+            var parameters = new ControllerParameters
+            {
+                Sorting = sorting,
+                SearchString = searchString,
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
+
+
+            return parameters;
         }
     }
 }

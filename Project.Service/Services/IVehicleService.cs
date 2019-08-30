@@ -12,7 +12,7 @@ namespace Project.Service.Services
     {
         #region Vehicle Make
         IVehicleMake GetVehicleMake(int id);
-        IPagedList<IVehicleMake> GetAllVehicleMake(string searchString, string sorting, int pageSize, int pageNumber);
+        IPagedList<IVehicleMake> GetAllVehicleMake(ControllerParameters parameters);
         IEnumerable<IVehicleMake> GetAllVehicleMake();
 
         void AddVehicleMake(IVehicleMake make);
@@ -23,10 +23,12 @@ namespace Project.Service.Services
 
         #region Vehicle Model
         IVehicleModel GetVehicleModel(int id);
-        IPagedList<IVehicleModel> GetAllVehicleModels(string searchString, string sorting, int pageSize, int pageNumber);
+        IPagedList<IVehicleModel> GetAllVehicleModels(ControllerParameters parameters);
         IEnumerable<IVehicleModel> GetAllModelsByMake(int makeId);
 
         void AddVehicleModel(IVehicleModel model);
+
+
 
         void RemoveVehicleModel(IVehicleModel model);
         void RemoveVehicleModels(IEnumerable<IVehicleModel> modelList);
@@ -35,5 +37,7 @@ namespace Project.Service.Services
         int SaveChanges();
 
         IEnumerable<int> GetPageSizeParamList();
+
+        ControllerParameters SetControllerParameters(string sorting, string searchString, int pageSize, int pageNumber);
     }
 }

@@ -33,13 +33,7 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new MakeIndexViewModel();
-            model.MakeList = _service.GetAllVehicleMake(searchString, sorting, pageSize, pageNumber);
-
-            if (model.MakeList.PageCount < model.MakeList.PageNumber)
-            {
-                model.MakeList = _service.GetAllVehicleMake(searchString, sorting, pageSize, 1);
-            }
-
+            model.MakeList = _service.GetAllVehicleMake(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
 
             if (id > 0)
             {
