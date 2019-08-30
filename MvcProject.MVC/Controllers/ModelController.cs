@@ -102,7 +102,7 @@ namespace MvcProject.MVC.Controllers
 
             var editedModel = _service.GetVehicleModel(model.Id);
             Mapper.Map(model, editedModel);
-            editedModel.Abrv = _service.GetVehicleMake(editedModel.VehicleMakeId).Abrv;
+            _service.UpdateVehicleModel(editedModel);
             _service.SaveChanges();
 
             return RedirectToAction("Index");

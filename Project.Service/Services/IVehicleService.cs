@@ -16,7 +16,7 @@ namespace Project.Service.Services
         IEnumerable<IVehicleMake> GetAllVehicleMake();
 
         void AddVehicleMake(IVehicleMake make);
-
+        void UpdateVehicleMake(IVehicleMake make);
         void RemoveVehicleMake(IVehicleMake make);
         #endregion
 
@@ -27,9 +27,7 @@ namespace Project.Service.Services
         IEnumerable<IVehicleModel> GetAllModelsByMake(int makeId);
 
         void AddVehicleModel(IVehicleModel model);
-
-
-
+        void UpdateVehicleModel(IVehicleModel model);
         void RemoveVehicleModel(IVehicleModel model);
         void RemoveVehicleModels(IEnumerable<IVehicleModel> modelList);
         #endregion

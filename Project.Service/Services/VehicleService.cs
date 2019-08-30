@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using PagedList;
 using Project.Service.Model;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace Project.Service.Services
 {
@@ -84,6 +85,33 @@ namespace Project.Service.Services
                 throw new ArgumentException();
             }
 
+        }
+
+        public void UpdateVehicleMake(IVehicleMake make)
+        {
+            if (make is VehicleMake)
+            {
+
+                DbEntityEntry makeEntry = _context.Entry(make);
+
+                if (makeEntry.State == EntityState.Detached)
+                {
+                    _context.VehicleMakes.Attach((VehicleMake)make);
+                }
+
+                makeEntry.State = EntityState.Modified;
+
+                var childModels = GetAllModelsByMake(make.Id);
+                foreach (var item in childModels)
+                {
+                    item.Abrv = make.Abrv;
+                    UpdateVehicleModel(item);
+                }
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
         }
 
         public void RemoveVehicleMake(IVehicleMake make)
@@ -178,6 +206,30 @@ namespace Project.Service.Services
             }
 
         }
+
+
+        public void UpdateVehicleModel(IVehicleModel model)
+        {
+            if (model is VehicleModel)
+            {
+                model.Abrv = GetVehicleMake(model.VehicleMakeId).Abrv;
+
+                DbEntityEntry modelEntry = _context.Entry(model);
+
+                if (modelEntry.State == EntityState.Detached)
+                {
+                    _context.VehicleModels.Attach((VehicleModel)model);
+                }
+
+                modelEntry.State = EntityState.Modified;
+
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
 
         public void RemoveVehicleModel(IVehicleModel model)
         {

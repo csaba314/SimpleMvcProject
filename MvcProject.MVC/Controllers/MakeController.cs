@@ -101,8 +101,9 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-
-            Mapper.Map(model, _service.GetVehicleMake(model.Id));
+            var makeToUpdate = _service.GetVehicleMake(model.Id);
+            Mapper.Map(model, makeToUpdate);
+            _service.UpdateVehicleMake(makeToUpdate);
             _service.SaveChanges();
 
             return RedirectToAction("Index");
