@@ -1,5 +1,8 @@
-﻿@model MvcProject.MVC.Models.MakeIndexViewModel
+﻿@model MvcProject.MVC.Models.IndexViewModel<VehicleMakeDTO, VehicleModelDTO>
+@using MvcProject.MVC.Models
+
 @{
+    
     ViewBag.Title = "Vehicle Make";
 }
 
@@ -24,26 +27,26 @@
                         <th>
                             @Html.ActionLink("Id", "Index", new { sorting = ViewBag.IdSorting,
                                                                   currentFilter = Model.CurrentFilter,
-                                                                  pageSize = Model.MakeList.PageSize,
-                                                                  pageNumber = Model.MakeList.PageNumber })
+                                                                  pageSize = Model.EntityList.PageSize,
+                                                                  pageNumber = Model.EntityList.PageNumber })
                         </th>
                         <th>
                             @Html.ActionLink("Name", "Index", new { sorting = ViewBag.NameSorting,
                                                                     currentFilter = Model.CurrentFilter,
-                                                                    pageSize = Model.MakeList.PageSize,
-                                                                    pageNumber = Model.MakeList.PageNumber })
+                                                                    pageSize = Model.EntityList.PageSize,
+                                                                    pageNumber = Model.EntityList.PageNumber })
                         </th>
                         <th>
                             @Html.ActionLink("Abbreviation", "Index", new { sorting = ViewBag.AbrvSorting,
                                                                             currentFilter = Model.CurrentFilter,
-                                                                            pageSize = Model.MakeList.PageSize,
-                                                                            pageNumber = Model.MakeList.PageNumber })
+                                                                            pageSize = Model.EntityList.PageSize,
+                                                                            pageNumber = Model.EntityList.PageNumber })
                         </th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.MakeList)
+                    @foreach (var item in Model.EntityList)
                     {
                         <tr>
                             <td>
@@ -58,8 +61,8 @@
                             <td>
                                 @Html.ActionLink("Details", "Index", new { id = item.Id,
                                                                            currentFilter = Model.CurrentFilter,
-                                                                           pageSize = Model.MakeList.PageSize,
-                                                                           Model.MakeList.PageNumber }
+                                                                           pageSize = Model.EntityList.PageSize,
+                                                                           Model.EntityList.PageNumber }
                                                                     , new { @class = "btn btn-sm btn-default" })
                                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-warning" })
                                 @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-sm btn-danger" })
@@ -70,12 +73,12 @@
             </table>
         </div>
         <div class="col-md-5 table-bordered">
-            @if (Model.VehicleModels != null)
+            @if (Model.ChildEntityList != null)
             {
-                <h3>Vehicle Models belonging to @Model.VehicleMake.Name</h3>
+                <h3>Vehicle Models belonging to @Model.Entity.Name</h3>
 
             <table class="table table-hover" style="width:150px;">
-                @foreach (var item in Model.VehicleModels)
+                @foreach (var item in Model.ChildEntityList)
                 {
                     <tr>
                         <td>@Html.DisplayFor(modelItem => item.Name)</td>

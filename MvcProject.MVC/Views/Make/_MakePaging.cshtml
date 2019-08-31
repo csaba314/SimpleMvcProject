@@ -1,6 +1,7 @@
-﻿@model MvcProject.MVC.Models.MakeIndexViewModel
+﻿@model MvcProject.MVC.Models.IndexViewModel<VehicleMakeDTO, VehicleModelDTO>
+@using MvcProject.MVC.Models
 @{
-    int makeId = Model.VehicleMake == null ? 0 : Model.VehicleMake.Id;
+    int makeId = Model.Entity == null ? 0 : Model.Entity.Id;
 }
 @using PagedList.Mvc
 
@@ -18,7 +19,7 @@
                 @Html.Hidden("sorting", Model.Sorting)
                 @Html.Hidden("currentFilter", Model.CurrentFilter)
                 @Html.Hidden("id", makeId)
-                @Html.Hidden("pageNumber", Model.MakeList.PageNumber)
+                @Html.Hidden("pageNumber", Model.EntityList.PageNumber)
             </td>
             <td style="column-width:15px;"></td>
             <td>
@@ -26,10 +27,10 @@
             </td>
             <td style="width:70px;"></td>
             <td>
-                @Html.PagedListPager(Model.MakeList, pageNumber => Url.Action("Index","Make", new { pageNumber ,
+                @Html.PagedListPager(Model.EntityList, pageNumber => Url.Action("Index","Make", new { pageNumber ,
                                                                                                     sorting = Model.Sorting,
                                                                                                     currentFilter = Model.CurrentFilter,
-                                                                                                    pageSize = Model.MakeList.PageSize,
+                                                                                                    pageSize = Model.EntityList.PageSize,
                                                                                                     id = makeId }),
                                                                 new PagedListRenderOptions { DisplayPageCountAndCurrentLocation = true } )
             </td>

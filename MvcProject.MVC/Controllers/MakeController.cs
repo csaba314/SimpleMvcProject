@@ -33,14 +33,19 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = new MakeIndexViewModel();
+            var model = new IndexViewModel<VehicleMakeDTO, VehicleModelDTO>();
             var list = _service.GetAllVehicleMake(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
-            model.MakeList = DtoMapping.MapToVehicleMakeDTO(list, list.PageSize, list.PageNumber);
+            model.EntityList = DtoMapping.MapToVehicleMakeDTO(list, list.PageSize, list.PageNumber);
+
+            //var model = new MakeIndexViewModel();
+            //var list = _service.GetAllVehicleMake(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
+            //model.MakeList = DtoMapping.MapToVehicleMakeDTO(list, list.PageSize, list.PageNumber);
 
             if (id > 0)
             {
-                model.VehicleMake = Mapper.Map<VehicleMakeDTO>(_service.GetVehicleMake(id));
-                model.VehicleModels = DtoMapping.MapToVehicleModelDTO(_service.GetAllModelsByMake(id));
+                model.Entity = Mapper.Map<VehicleMakeDTO>(_service.GetVehicleMake(id));
+                var modelsList = _service.GetAllModelsByMake(id);
+                model.ChildEntityList = DtoMapping.MapToVehicleModelDTO(modelsList);
             }
 
             model.CurrentFilter = searchString;
