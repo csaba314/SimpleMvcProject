@@ -1,4 +1,5 @@
-﻿@model MvcProject.MVC.Models.ModelIndexViewModel
+﻿@model MvcProject.MVC.Models.IndexViewModel<VehicleModelDTO, string>
+@using MvcProject.MVC.Models
 
 @using PagedList.Mvc
 
@@ -15,7 +16,7 @@
 
                 @Html.Hidden("sorting", Model.Sorting)
                 @Html.Hidden("currentFilter", Model.CurrentFilter)
-                @Html.Hidden("pageNumber", Model.ModelList.PageNumber)
+                @Html.Hidden("pageNumber", Model.EntityList.PageNumber)
             </td>
             <td style="column-width:15px;"></td>
             <td>
@@ -23,12 +24,12 @@
             </td>
             <td style="width:70px;"></td>
             <td>
-                @Html.PagedListPager(Model.ModelList,
+                @Html.PagedListPager(Model.EntityList,
                                             pageNumber => Url.Action("Index","Model",
                                             new { pageNumber ,
                                                   sorting = Model.Sorting,
                                                   currentFilter = Model.CurrentFilter,
-                                                  pageSize = Model.ModelList.PageSize }),
+                                                  pageSize = Model.EntityList.PageSize }),
                                             new PagedListRenderOptions { DisplayPageCountAndCurrentLocation = true })
             </td>
         }

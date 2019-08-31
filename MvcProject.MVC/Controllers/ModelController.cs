@@ -30,9 +30,9 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = new ModelIndexViewModel();
+            var model = new IndexViewModel<VehicleModelDTO, string>();
             var modelList = _service.GetAllVehicleModels(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
-            model.ModelList = DtoMapping.MapToVehicleModelDTO(modelList, modelList.PageSize, modelList.PageNumber);
+            model.EntityList = DtoMapping.MapToVehicleModelDTO(modelList, modelList.PageSize, modelList.PageNumber);
 
             model.CurrentFilter = searchString;
             model.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());

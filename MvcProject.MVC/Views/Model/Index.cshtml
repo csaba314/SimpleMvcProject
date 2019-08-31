@@ -1,4 +1,6 @@
-﻿@model MvcProject.MVC.Models.ModelIndexViewModel
+﻿@model MvcProject.MVC.Models.IndexViewModel<VehicleModelDTO, string>
+@using MvcProject.MVC.Models
+
 @{
     ViewBag.Title = "Vehicle Models";
 }
@@ -24,32 +26,32 @@
                         <th>
                             @Html.ActionLink("Id", "Index", new { sorting = ViewBag.IdSorting,
                                                                   currentFilter = Model.CurrentFilter,
-                                                                  pageSize = Model.ModelList.PageSize,
-                                                                  pageNumber = Model.ModelList.PageNumber })
+                                                                  pageSize = Model.EntityList.PageSize,
+                                                                  pageNumber = Model.EntityList.PageNumber })
                         </th>
                         <th>
                             @Html.ActionLink("Name", "Index", new { sorting = ViewBag.NameSorting,
                                                                     currentFilter = Model.CurrentFilter,
-                                                                    pageSize = Model.ModelList.PageSize,
-                                                                    pageNumber = Model.ModelList.PageNumber })
+                                                                    pageSize = Model.EntityList.PageSize,
+                                                                    pageNumber = Model.EntityList.PageNumber })
                         </th>
                         <th>
                             @Html.ActionLink("Abbreviation", "Index", new { sorting = ViewBag.AbrvSorting,
                                                                             currentFilter = Model.CurrentFilter,
-                                                                            pageSize = Model.ModelList.PageSize,
-                                                                            pageNumber = Model.ModelList.PageNumber })
+                                                                            pageSize = Model.EntityList.PageSize,
+                                                                            pageNumber = Model.EntityList.PageNumber })
                         </th>
                         <th>
                             @Html.ActionLink("Vehicle Make", "Index", new { sorting = ViewBag.MakeSorting,
                                                                             currentFilter = Model.CurrentFilter,
-                                                                            pageSize = Model.ModelList.PageSize,
-                                                                            pageNumber = Model.ModelList.PageNumber })
+                                                                            pageSize = Model.EntityList.PageSize,
+                                                                            pageNumber = Model.EntityList.PageNumber })
                         </th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.ModelList)
+                    @foreach (var item in Model.EntityList)
                     {
                         <tr>
                             <td>
