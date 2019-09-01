@@ -32,7 +32,8 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new IndexViewModel<VehicleModelDTO, string>();
-            var controllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber);
+            var controllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber, _service.SetOptions(true));
+            //var controllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber);
 
             var mappedList = _service.GetAllVehicleModels(controllerParameters)
                                                                         .Select(x => Mapper.Map<VehicleModelDTO>(x));
@@ -65,7 +66,7 @@ namespace MvcProject.MVC.Controllers
         public ActionResult Create()
         {
             var model = new VehicleModelDTO();
-            model.MakeDropdown = GetMakeDropDown();
+            ViewBag.MakeDropdown = GetMakeDropDown();
             return View(model);
         }
 
@@ -77,7 +78,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newModel = new VehicleModel();
+            var newModel = _service.GetModelInstance();
             Mapper.Map(model, newModel);
             _service.AddVehicleModel(newModel);
             _service.SaveChanges();
@@ -102,7 +103,7 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = Mapper.Map<VehicleModelDTO>(selectedModel);
-            model.MakeDropdown = GetMakeDropDown();
+            ViewBag.MakeDropdown = GetMakeDropDown();
 
             return View(model);
         }

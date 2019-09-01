@@ -36,6 +36,10 @@ namespace Project.Service.Services
 
         IEnumerable<int> GetPageSizeParamList();
 
-        ControllerParameters SetControllerParameters(string sorting, string searchString, int pageSize, int pageNumber);
+        ControllerParameters SetControllerParameters(string sorting, string searchString, int pageSize, int pageNumber, Options options=null);
+        Options SetOptions(bool loadMakesWithModel);
+
+        IVehicleMake GetMakeInstance();
+        IVehicleModel GetModelInstance();
     }
 }

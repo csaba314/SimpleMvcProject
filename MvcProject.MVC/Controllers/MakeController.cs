@@ -84,7 +84,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newMake = new VehicleMake();
+            var newMake = _service.GetMakeInstance();
             Mapper.Map(model, newMake);
             _service.AddVehicleMake(newMake);
             _service.SaveChanges();

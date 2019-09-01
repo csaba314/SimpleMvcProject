@@ -19,7 +19,6 @@ namespace Project.Service.Services
             _context = ProjectDbContext.GetDbContext();
         }
 
-
         #region Vehicle Make CRUD
 
         public IVehicleMake GetVehicleMake(int id)
@@ -139,7 +138,16 @@ namespace Project.Service.Services
 
         public IEnumerable<IVehicleModel> GetAllVehicleModels(ControllerParameters parameters)
         {
-            IQueryable<VehicleModel> modelList = _context.VehicleModels.Include(m => m.VehicleMake);
+            IQueryable<VehicleModel> modelList;
+            
+            if (!parameters.Options.LoadMakesWithModel)
+            {
+                modelList = _context.VehicleModels;
+            } else
+            {
+                modelList = _context.VehicleModels.Include(m => m.VehicleMake);
+            }
+            
 
             // Filtering
             if (!String.IsNullOrEmpty(parameters.SearchString))
@@ -260,17 +268,36 @@ namespace Project.Service.Services
             return new List<int> { 5, 10, 20, 40 };
         }
 
-        public ControllerParameters SetControllerParameters(string sorting, string searchString, int pageSize, int pageNumber)
-        {
+        public ControllerParameters SetControllerParameters(string sorting, string searchString, int pageSize, int pageNumber, Options options=null)
+        { 
             var parameters = new ControllerParameters
             {
                 Sorting = sorting,
                 SearchString = searchString,
-                PageSize = pageSize,
-                PageNumber = pageNumber
+                //PageSize = pageSize,
+                //PageNumber = pageNumber
+                Options = options ?? SetOptions()
             };
 
             return parameters;
+        }
+
+        public IVehicleMake GetMakeInstance()
+        {
+            return new VehicleMake();
+        }
+
+        public IVehicleModel GetModelInstance()
+        {
+            return new VehicleModel();
+        }
+
+        public Options SetOptions(bool loadMakesWithModel = false)
+        {
+            return new Options
+            {
+                LoadMakesWithModel = loadMakesWithModel
+            };
         }
     }
 }

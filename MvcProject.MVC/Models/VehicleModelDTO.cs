@@ -22,7 +22,5 @@ namespace MvcProject.MVC.Models
         public int VehicleMakeId { get; set; }
 
         public IVehicleMake VehicleMake { get; set; }
-
-        public SelectList MakeDropdown { get; set; }
     }
 }

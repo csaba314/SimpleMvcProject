@@ -10,7 +10,8 @@ namespace Project.Service.Services
     {
         public string SearchString { get; set; } 
         public string Sorting { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
+        //public int PageSize { get; set; }
+        //public int PageNumber { get; set; }
+        public Options Options { get; set; }
     }
 }
