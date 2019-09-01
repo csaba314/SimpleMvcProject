@@ -12,7 +12,7 @@ namespace Project.Service.Services
     {
         #region Vehicle Make
         IVehicleMake GetVehicleMake(int id);
-        IPagedList<IVehicleMake> GetAllVehicleMake(ControllerParameters parameters);
+        IEnumerable<IVehicleMake> GetAllVehicleMake(ControllerParameters parameters);
         IEnumerable<IVehicleMake> GetAllVehicleMake();
 
         void AddVehicleMake(IVehicleMake make);
@@ -23,7 +23,7 @@ namespace Project.Service.Services
 
         #region Vehicle Model
         IVehicleModel GetVehicleModel(int id);
-        IPagedList<IVehicleModel> GetAllVehicleModels(ControllerParameters parameters);
+        IEnumerable<IVehicleModel> GetAllVehicleModels(ControllerParameters parameters);
         IEnumerable<IVehicleModel> GetAllModelsByMake(int makeId);
 
         void AddVehicleModel(IVehicleModel model);

@@ -34,18 +34,28 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new IndexViewModel<VehicleMakeDTO, VehicleModelDTO>();
-            var list = _service.GetAllVehicleMake(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
-            model.EntityList = DtoMapping.MapToVehicleMakeDTO(list, list.PageSize, list.PageNumber);
+            var controllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber);
 
-            //var model = new MakeIndexViewModel();
-            //var list = _service.GetAllVehicleMake(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
-            //model.MakeList = DtoMapping.MapToVehicleMakeDTO(list, list.PageSize, list.PageNumber);
+            var mappedList = _service.GetAllVehicleMake(controllerParameters)
+                                                                .Select(x => Mapper.Map<VehicleMakeDTO>(x));
 
+            var list = mappedList.ToPagedList(pageNumber, pageSize);
+
+            if (list.PageCount < list.PageNumber)
+            {
+                model.EntityList = mappedList.ToPagedList(1, pageSize);
+            }
+            else
+            {
+                model.EntityList = list;
+            }
+
+            
             if (id > 0)
             {
                 model.Entity = Mapper.Map<VehicleMakeDTO>(_service.GetVehicleMake(id));
                 var modelsList = _service.GetAllModelsByMake(id);
-                model.ChildEntityList = DtoMapping.MapToVehicleModelDTO(modelsList);
+                model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
             }
 
             model.CurrentFilter = searchString;

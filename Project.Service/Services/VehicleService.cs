@@ -32,7 +32,7 @@ namespace Project.Service.Services
             return _context.VehicleMakes.ToList();
         }
 
-        public IPagedList<IVehicleMake> GetAllVehicleMake(ControllerParameters parameters)
+        public IEnumerable<IVehicleMake> GetAllVehicleMake(ControllerParameters parameters)
         {
             IQueryable<VehicleMake> makeList = _context.VehicleMakes;
 
@@ -42,6 +42,7 @@ namespace Project.Service.Services
                 makeList = makeList.Where(x => x.Name.ToLower().Contains(parameters.SearchString.ToLower()));
             }
 
+            // Sorting
             switch (parameters.Sorting)
             {
                 case "name_desc":
@@ -64,14 +65,7 @@ namespace Project.Service.Services
                     break;
             }
 
-            var list = makeList.ToPagedList(parameters.PageNumber, parameters.PageSize);
-
-            if (list.PageCount < list.PageNumber)
-            {
-                return makeList.ToPagedList(1, parameters.PageSize);
-            }
-
-            return list;
+            return makeList.ToList();
         }
 
         public void AddVehicleMake(IVehicleMake make)
@@ -143,7 +137,7 @@ namespace Project.Service.Services
             return _context.VehicleModels.Where(m => m.VehicleMakeId == makeId).ToList();
         }
 
-        public IPagedList<IVehicleModel> GetAllVehicleModels(ControllerParameters parameters)
+        public IEnumerable<IVehicleModel> GetAllVehicleModels(ControllerParameters parameters)
         {
             IQueryable<VehicleModel> modelList = _context.VehicleModels.Include(m => m.VehicleMake);
 
@@ -153,7 +147,7 @@ namespace Project.Service.Services
                 modelList = modelList.Where(x => x.VehicleMake.Name.ToLower().Contains(parameters.SearchString.ToLower()));
             }
 
-            // Sorting and Paging
+            // Sorting
             switch (parameters.Sorting)
             {
                 case "name_desc":
@@ -182,14 +176,7 @@ namespace Project.Service.Services
                     break;
             }
 
-            var list = modelList.ToPagedList(parameters.PageNumber, parameters.PageSize);
-
-            if (list.PageCount < list.PageNumber)
-            {
-                return modelList.ToPagedList(1, parameters.PageSize);
-            }
-
-            return list;
+            return modelList.ToList();
         }
 
         public void AddVehicleModel(IVehicleModel model)

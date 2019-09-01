@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MvcProject.MVC.Models;
+using PagedList;
 using Project.Service.Model;
 using Project.Service.Services;
 using System;
@@ -31,9 +32,22 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new IndexViewModel<VehicleModelDTO, string>();
-            var modelList = _service.GetAllVehicleModels(_service.SetControllerParameters(sorting, searchString, pageSize, pageNumber));
-            model.EntityList = DtoMapping.MapToVehicleModelDTO(modelList, modelList.PageSize, modelList.PageNumber);
+            var controllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber);
 
+            var mappedList = _service.GetAllVehicleModels(controllerParameters)
+                                                                        .Select(x => Mapper.Map<VehicleModelDTO>(x));
+
+            var list = mappedList.ToPagedList(pageNumber, pageSize);
+
+            if (list.PageCount < list.PageNumber)
+            {
+                model.EntityList = mappedList.ToPagedList(1, pageSize);
+            } else
+            {
+                model.EntityList = list;
+            }
+
+            
             model.CurrentFilter = searchString;
             model.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
