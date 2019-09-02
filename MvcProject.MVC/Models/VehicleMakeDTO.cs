@@ -20,6 +20,6 @@ namespace MvcProject.MVC.Models
             StringLength(10)]
         public string Abrv { get; set; }
 
-        public IEnumerable<IVehicleModel> VehicleModels { get; set; }
+        public IEnumerable<VehicleModelDTO> VehicleModels { get; set; }
     }
 }

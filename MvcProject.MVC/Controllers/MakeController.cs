@@ -144,7 +144,7 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = Mapper.Map<VehicleMakeDTO>(selectedMake);
-            model.VehicleModels = _service.GetAllModelsByMake(model.Id);
+            model.VehicleModels = Mapper.Map<IEnumerable<VehicleModelDTO>>(_service.GetAllModelsByMake(model.Id));
 
             return View(model);
         }

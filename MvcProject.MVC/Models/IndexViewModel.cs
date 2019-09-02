@@ -13,10 +13,7 @@ namespace MvcProject.MVC.Models
         public IPagedList<TEntity> EntityList { get; set; }
         public TEntity Entity { get; set; }
 
-
         public ControllerParameters ControllerParameters { get; set; }
-        //public string Sorting { get; set; }
-        //public string CurrentFilter { get; set; }
 
         public IEnumerable<TChildEntity> ChildEntityList { get; set; }
     }
