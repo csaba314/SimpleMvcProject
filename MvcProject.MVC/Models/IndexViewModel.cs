@@ -1,4 +1,5 @@
 ﻿using PagedList;
+using Project.Service.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace MvcProject.MVC.Models
         public TEntity Entity { get; set; }
 
 
-        public string Sorting { get; set; }
-        public string CurrentFilter { get; set; }
-        public SelectList PageSizeDropdown { get; set; }
+        public ControllerParameters ControllerParameters { get; set; }
+        //public string Sorting { get; set; }
+        //public string CurrentFilter { get; set; }
 
         public IEnumerable<TChildEntity> ChildEntityList { get; set; }
     }

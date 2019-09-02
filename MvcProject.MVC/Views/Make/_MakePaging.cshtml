@@ -14,10 +14,10 @@
             </td>
             <td>
 
-                @Html.DropDownList("pageSize", Model.PageSizeDropdown, new { @class = "form-control", style = "width: 65px;" })
+                @Html.DropDownList("pageSize", (SelectList)ViewBag.PageSizeDropdown, new { @class = "form-control", style = "width: 65px;" })
 
-                @Html.Hidden("sorting", Model.Sorting)
-                @Html.Hidden("currentFilter", Model.CurrentFilter)
+                @Html.Hidden("sorting", Model.ControllerParameters.Sorting)
+                @Html.Hidden("currentFilter", Model.ControllerParameters.CurrentFilter)
                 @Html.Hidden("id", makeId)
                 @Html.Hidden("pageNumber", Model.EntityList.PageNumber)
             </td>
@@ -28,8 +28,8 @@
             <td style="width:70px;"></td>
             <td>
                 @Html.PagedListPager(Model.EntityList, pageNumber => Url.Action("Index","Make", new { pageNumber ,
-                                                                                                    sorting = Model.Sorting,
-                                                                                                    currentFilter = Model.CurrentFilter,
+                                                                                                    sorting = Model.ControllerParameters.Sorting,
+                                                                                                    currentFilter = Model.ControllerParameters.CurrentFilter,
                                                                                                     pageSize = Model.EntityList.PageSize,
                                                                                                     id = makeId }),
                                                                 new PagedListRenderOptions { DisplayPageCountAndCurrentLocation = true } )

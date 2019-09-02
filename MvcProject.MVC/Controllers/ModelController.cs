@@ -32,11 +32,9 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new IndexViewModel<VehicleModelDTO, string>();
-            var controllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber, _service.SetOptions(true));
-            //var controllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber);
+            model.ControllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber, _service.SetOptions(true));
 
-            var mappedList = _service.GetAllVehicleModels(controllerParameters)
-                                                                        .Select(x => Mapper.Map<VehicleModelDTO>(x));
+            var mappedList = _service.GetAllVehicleModels(model.ControllerParameters).Select(x => Mapper.Map<VehicleModelDTO>(x));
 
             var list = mappedList.ToPagedList(pageNumber, pageSize);
 
@@ -49,13 +47,13 @@ namespace MvcProject.MVC.Controllers
             }
 
             
-            model.CurrentFilter = searchString;
-            model.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());
+            model.ControllerParameters.CurrentFilter = searchString;
+            ViewBag.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
             ViewBag.MakeSorting = sorting == "make" ? "make_desc" : "make";
-            model.Sorting = sorting;
+            model.ControllerParameters.Sorting = sorting;
 
             return View(model);
         }
