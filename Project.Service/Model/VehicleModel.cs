@@ -1,5 +1,4 @@
-﻿
-namespace Project.Service.Model
+﻿namespace Project.Service.Model
 {
     public class VehicleModel : IVehicleModel
     {

@@ -3,22 +3,27 @@ using MvcProject.MVC.Models;
 using PagedList;
 using Project.Service.Model;
 using Project.Service.Services;
+using Project.Service.Containers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using MvcProject.MVC.PresentationService;
 
 namespace MvcProject.MVC.Controllers
 {
     public class ModelController : Controller
     {
-        private IVehicleService _service;
+        private IMakeService _makeService;
+        private IModelService _modelService;
 
         public ModelController()
         {
-            _service = new VehicleService();
+            var context = new ProjectDbContext();
+            _modelService = new ModelService(context);
+            _makeService = new MakeService(context, _modelService);
         }
 
         // GET: /Model
@@ -32,9 +37,12 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new IndexViewModel<VehicleModelDTO, string>();
-            model.ControllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber, _service.SetOptions(true));
 
-            var mappedList = _service.GetAllVehicleModels(model.ControllerParameters).Select(x => Mapper.Map<VehicleModelDTO>(x));
+            model.ControllerParameters = ContainerBuilder.BuildControllerParameters(
+                sorting, searchString, pageSize, pageNumber, ContainerBuilder.BuildLoadingOptions(true));
+
+            var mappedList = _modelService.GetAll(model.ControllerParameters)
+                                          .Select(x => Mapper.Map<VehicleModelDTO>(x));
 
             var list = mappedList.ToPagedList(pageNumber, pageSize);
 
@@ -48,7 +56,7 @@ namespace MvcProject.MVC.Controllers
 
             
             model.ControllerParameters.CurrentFilter = searchString;
-            ViewBag.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());
+            ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
@@ -76,10 +84,10 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newModel = _service.GetModelInstance();
+            var newModel = new VehicleModel();
             Mapper.Map(model, newModel);
-            _service.AddVehicleModel(newModel);
-            _service.SaveChanges();
+            _modelService.Add(newModel);
+            _modelService.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -93,7 +101,7 @@ namespace MvcProject.MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedModel = _service.GetVehicleModel((int)id);
+            var selectedModel = _modelService.Get((int)id);
 
             if (selectedModel == null)
             {
@@ -115,10 +123,10 @@ namespace MvcProject.MVC.Controllers
                 return View(model);
             }
 
-            var editedModel = _service.GetVehicleModel(model.Id);
+            var editedModel = _modelService.Get(model.Id);
             Mapper.Map(model, editedModel);
-            _service.UpdateVehicleModel(editedModel);
-            _service.SaveChanges();
+            _modelService.Update(editedModel);
+            _modelService.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -132,7 +140,7 @@ namespace MvcProject.MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedModel = _service.GetVehicleModel((int)id);
+            var selectedModel = _modelService.Get((int)id);
 
             if (selectedModel == null)
             {
@@ -145,9 +153,9 @@ namespace MvcProject.MVC.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var modelToRemove = _service.GetVehicleModel(id);
-            _service.RemoveVehicleModel(modelToRemove);
-            _service.SaveChanges();
+            var modelToRemove = _modelService.Get(id);
+            _modelService.Remove(modelToRemove);
+            _modelService.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -156,14 +164,14 @@ namespace MvcProject.MVC.Controllers
         {
             if (disposing)
             {
-                _service.Dispose();
+                _modelService.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private SelectList GetMakeDropDown()
         {
-            return new SelectList(_service.GetAllVehicleMake(), "Id", "Name");
+            return new SelectList(_makeService.GetAll(), "Id", "Name");
         }
     }
 }

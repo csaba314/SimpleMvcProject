@@ -1,9 +1,6 @@
 namespace Project.Service.Model
 {
-    using Project.Service.Model;
-    using System;
     using System.Data.Entity;
-    using System.Linq;
 
     public class ProjectDbContext : DbContext
     {

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Containers
 {
-    public class ContainerBuilder
+    public static class ContainerBuilder
     {
-        public IControllerParameters BuildControllerParameters(
+        public static IControllerParameters BuildControllerParameters(
             string sorting, string searchString, int pageSize, int pageNumber, ILoadingOptions options = null)
         {
             var parameters = new ControllerParameters
@@ -22,7 +22,7 @@ namespace Project.Service.Containers
             return parameters;
         }
 
-        public ILoadingOptions BuildLoadingOptions(bool loadMakesWithModel = false)
+        public static ILoadingOptions BuildLoadingOptions(bool loadMakesWithModel = false)
         {
             return new Options { LoadMakesWithModel = loadMakesWithModel };
         }

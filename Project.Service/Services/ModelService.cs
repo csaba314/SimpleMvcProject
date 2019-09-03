@@ -7,7 +7,7 @@ using System.Data.Entity;
 
 namespace Project.Service.Services
 {
-    public class ModelService : Service<IVehicleModel>, IModelService
+    public class ModelService : Service<VehicleModel>, IModelService
     {
         private ProjectDbContext context { get { return _context as ProjectDbContext; } }
 
@@ -75,12 +75,12 @@ namespace Project.Service.Services
             return modelList.ToList();
         }
         
-        public override void Add(IVehicleModel model)
+        public void Add(IVehicleModel model)
         {
             if (model is VehicleModel)
             {
                 model.Abrv = context.VehicleMakes.Find(model.VehicleMakeId).Abrv;
-                base.Add(model);
+                base.Add(model as VehicleModel);
             }
             else
             {
@@ -89,12 +89,12 @@ namespace Project.Service.Services
 
         }
 
-        public override void Update(IVehicleModel model)
+        public void Update(IVehicleModel model)
         {
             if (model is VehicleModel)
             {
                 model.Abrv = context.VehicleMakes.Find(model.VehicleMakeId).Abrv;
-                base.Update(model);
+                base.Update(model as VehicleModel);
             }
             else
             {
@@ -102,5 +102,13 @@ namespace Project.Service.Services
             }
         }
 
+        public void RemoveRange(IEnumerable<IVehicleModel> models)
+        {
+            if (models is IEnumerable<VehicleModel>)
+            {
+                base.RemoveRange(models as IEnumerable<VehicleModel>);
+
+            }
+        }
     }
 }

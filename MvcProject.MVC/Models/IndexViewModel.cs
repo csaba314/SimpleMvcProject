@@ -1,4 +1,5 @@
 ﻿using PagedList;
+using Project.Service.Containers;
 using Project.Service.Services;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace MvcProject.MVC.Models
         public IPagedList<TEntity> EntityList { get; set; }
         public TEntity Entity { get; set; }
 
-        public ControllerParameters ControllerParameters { get; set; }
+        public IControllerParameters ControllerParameters { get; set; }
 
         public IEnumerable<TChildEntity> ChildEntityList { get; set; }
     }

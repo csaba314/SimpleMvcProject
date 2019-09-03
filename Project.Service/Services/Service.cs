@@ -8,7 +8,7 @@ namespace Project.Service.Services
 {
     public class Service<TEntity> : IService<TEntity> where TEntity : class
     {
-        protected readonly DbContext _context;
+        protected DbContext _context;
 
         public Service(DbContext context)
         {

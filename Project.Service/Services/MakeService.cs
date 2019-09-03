@@ -6,7 +6,7 @@ using Project.Service.Model;
 
 namespace Project.Service.Services
 {
-    public class MakeService : Service<IVehicleMake>, IMakeService
+    public class MakeService : Service<VehicleMake>, IMakeService
     {
 
         private ProjectDbContext context { get { return _context as ProjectDbContext; } }
@@ -17,7 +17,7 @@ namespace Project.Service.Services
             this._modelService = modelService;
         } 
 
-        public IEnumerable<IVehicleMake> GetAllVehicleMake(IControllerParameters parameters)
+        public IEnumerable<IVehicleMake> GetAll(IControllerParameters parameters)
         {
             IQueryable<VehicleMake> makeList = context.VehicleMakes;
 
@@ -53,15 +53,20 @@ namespace Project.Service.Services
             return makeList.ToList();
         }
 
-        public override void Update(IVehicleMake entity)
+        public void Update(IVehicleMake entity)
         {
-            base.Update(entity);
-            var childModels = context.VehicleModels.Where(x => x.VehicleMakeId == entity.Id);
-            foreach (var item in childModels)
+            if (entity is VehicleMake)
             {
-                item.Abrv = entity.Abrv;
-                _modelService.Update(item);
+                base.Update(entity as VehicleMake);
+                var childModels = context.VehicleModels.Where(x => x.VehicleMakeId == entity.Id);
+                foreach (var item in childModels)
+                {
+                    item.Abrv = entity.Abrv;
+                    _modelService.Update(item);
+                }
             }
+
+            
         }
     }
 }

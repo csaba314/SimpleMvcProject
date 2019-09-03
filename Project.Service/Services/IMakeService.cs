@@ -5,8 +5,9 @@ using System.Collections.Generic;
 
 namespace Project.Service.Services
 {
-    public interface IMakeService : IService<IVehicleMake>
+    public interface IMakeService : IService<VehicleMake>
     {
-        IEnumerable<IVehicleMake> GetAllVehicleMake(IControllerParameters parameters);
+        IEnumerable<IVehicleMake> GetAll(IControllerParameters parameters);
+        void Update(IVehicleMake entity);
     }
 }

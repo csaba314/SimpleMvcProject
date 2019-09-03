@@ -1,5 +1,6 @@
 ﻿using MvcProject.MVC.Models;
 using Project.Service.Services;
+using Project.Service.Containers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,17 +10,21 @@ using System.Web.Mvc;
 using AutoMapper;
 using Project.Service.Model;
 using PagedList;
+using MvcProject.MVC.PresentationService;
 
 namespace MvcProject.MVC.Controllers
 {
     public class MakeController : Controller
     {
 
-        private IVehicleService _service;
+        private IMakeService _makeService;
+        private IModelService _modelService;
 
         public MakeController()
         {
-            _service = new VehicleService();
+            var context = new ProjectDbContext();
+            _modelService = new ModelService(context);
+            _makeService = new MakeService(context, _modelService);
         }
 
         // GET: /Make
@@ -34,10 +39,10 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = new IndexViewModel<VehicleMakeDTO, VehicleModelDTO>();
-            model.ControllerParameters = _service.SetControllerParameters(sorting, searchString, pageSize, pageNumber);
+            model.ControllerParameters = ContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
 
-            var mappedList = _service.GetAllVehicleMake(model.ControllerParameters)
-                                                                .Select(x => Mapper.Map<VehicleMakeDTO>(x));
+            var mappedList = _makeService.GetAll(model.ControllerParameters)
+                                         .Select(x => Mapper.Map<VehicleMakeDTO>(x));
 
             var list = mappedList.ToPagedList(pageNumber, pageSize);
 
@@ -53,13 +58,13 @@ namespace MvcProject.MVC.Controllers
             
             if (id > 0)
             {
-                model.Entity = Mapper.Map<VehicleMakeDTO>(_service.GetVehicleMake(id));
-                var modelsList = _service.GetAllModelsByMake(id);
+                model.Entity = Mapper.Map<VehicleMakeDTO>(_makeService.Get(id));
+                var modelsList = _modelService.GetAllByMake(id);
                 model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
             }
 
             model.ControllerParameters.CurrentFilter = searchString;
-            ViewBag.PageSizeDropdown = new SelectList(_service.GetPageSizeParamList());
+            ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
@@ -84,10 +89,10 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newMake = _service.GetMakeInstance();
+            var newMake = new VehicleMake();
             Mapper.Map(model, newMake);
-            _service.AddVehicleMake(newMake);
-            _service.SaveChanges();
+            _makeService.Add(newMake);
+            _makeService.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -101,7 +106,7 @@ namespace MvcProject.MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedMake = _service.GetVehicleMake((int)id);
+            var selectedMake = _makeService.Get((int)id);
 
             if (selectedMake == null)
             {
@@ -119,10 +124,10 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var makeToUpdate = _service.GetVehicleMake(model.Id);
+            var makeToUpdate = _makeService.Get(model.Id);
             Mapper.Map(model, makeToUpdate);
-            _service.UpdateVehicleMake(makeToUpdate);
-            _service.SaveChanges();
+            _makeService.Update(makeToUpdate);
+            _makeService.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -136,7 +141,7 @@ namespace MvcProject.MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedMake = _service.GetVehicleMake((int)id);
+            var selectedMake = _makeService.Get((int)id);
 
             if (selectedMake == null)
             {
@@ -144,7 +149,7 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = Mapper.Map<VehicleMakeDTO>(selectedMake);
-            model.VehicleModels = Mapper.Map<IEnumerable<VehicleModelDTO>>(_service.GetAllModelsByMake(model.Id));
+            model.VehicleModels = Mapper.Map<IEnumerable<VehicleModelDTO>>(_modelService.GetAllByMake(model.Id));
 
             return View(model);
         }
@@ -153,13 +158,13 @@ namespace MvcProject.MVC.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var modelList = _service.GetAllModelsByMake(id);
-            _service.RemoveVehicleModels(modelList);
+            var modelList = _modelService.GetAllByMake(id);
+            _modelService.RemoveRange(modelList);
 
-            var makeToRemove = _service.GetVehicleMake(id);
-            _service.RemoveVehicleMake(makeToRemove);
+            var makeToRemove = _makeService.Get(id);
+            _makeService.Remove(makeToRemove);
 
-            _service.SaveChanges();
+            _makeService.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -168,7 +173,8 @@ namespace MvcProject.MVC.Controllers
         {
             if (disposing)
             {
-                _service.Dispose();
+                _makeService.Dispose();
+                _modelService.Dispose();
             }
             base.Dispose(disposing);
         }
