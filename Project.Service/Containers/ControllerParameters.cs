@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Service.Services
+namespace Project.Service.Containers
 {
-    public class ControllerParameters
+    public class ControllerParameters : IControllerParameters
     {
         public string SearchString { get; set; } 
         public string Sorting { get; set; }
         public string CurrentFilter { get; set; }
         //public int PageSize { get; set; }
         //public int PageNumber { get; set; }
-        public Options Options { get; set; }
+        public ILoadingOptions Options { get; set; }
     }
 }

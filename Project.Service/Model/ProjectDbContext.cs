@@ -12,7 +12,7 @@ namespace Project.Service.Model
         {
         }
 
-        public static ProjectDbContext GetDbContext()
+        public ProjectDbContext GetDbContext()
         {
             return new ProjectDbContext();
         }
