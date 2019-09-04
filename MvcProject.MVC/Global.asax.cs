@@ -15,7 +15,9 @@ namespace MvcProject.MVC
     {
         protected void Application_Start()
         {
-            
+            // run the Configure method from the DIContainerConfig class
+            DIContainerConfig.Configure();
+
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

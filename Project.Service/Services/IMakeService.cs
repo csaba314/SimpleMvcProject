@@ -9,5 +9,6 @@ namespace Project.Service.Services
     {
         IEnumerable<IVehicleMake> GetAll(IControllerParameters parameters);
         void Update(IVehicleMake entity);
+        void Add(IVehicleMake make);
     }
 }

@@ -11,6 +11,7 @@ using AutoMapper;
 using Project.Service.Model;
 using PagedList;
 using MvcProject.MVC.PresentationService;
+using Autofac;
 
 namespace MvcProject.MVC.Controllers
 {
@@ -19,12 +20,21 @@ namespace MvcProject.MVC.Controllers
 
         private IMakeService _makeService;
         private IModelService _modelService;
+        private IVehicleMake _newMake;
+        private IndexViewModel<VehicleMakeDTO, VehicleModelDTO> _indexViewModel;
 
-        public MakeController()
+        public MakeController(
+            ProjectDbContext dbContext, 
+            IMakeService makeService, 
+            IModelService modelService, 
+            IVehicleMake newMake, 
+            IndexViewModel<VehicleMakeDTO, VehicleModelDTO> indexViewModel)
         {
-            var context = new ProjectDbContext();
-            _modelService = new ModelService(context);
-            _makeService = new MakeService(context, _modelService);
+            var context = dbContext;
+            _modelService = modelService;
+            _makeService = makeService;
+            _newMake = newMake;
+            _indexViewModel = indexViewModel;
         }
 
         // GET: /Make
@@ -38,39 +48,39 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = new IndexViewModel<VehicleMakeDTO, VehicleModelDTO>();
-            model.ControllerParameters = ContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
+            //var model = new IndexViewModel<VehicleMakeDTO, VehicleModelDTO>();
+            _indexViewModel.ControllerParameters = Project.Service.Containers.ContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
 
-            var mappedList = _makeService.GetAll(model.ControllerParameters)
+            var mappedList = _makeService.GetAll(_indexViewModel.ControllerParameters)
                                          .Select(x => Mapper.Map<VehicleMakeDTO>(x));
 
             var list = mappedList.ToPagedList(pageNumber, pageSize);
 
             if (list.PageCount < list.PageNumber)
             {
-                model.EntityList = mappedList.ToPagedList(1, pageSize);
+                _indexViewModel.EntityList = mappedList.ToPagedList(1, pageSize);
             }
             else
             {
-                model.EntityList = list;
+                _indexViewModel.EntityList = list;
             }
 
             
             if (id > 0)
             {
-                model.Entity = Mapper.Map<VehicleMakeDTO>(_makeService.Get(id));
+                _indexViewModel.Entity = Mapper.Map<VehicleMakeDTO>(_makeService.Get(id));
                 var modelsList = _modelService.GetAllByMake(id);
-                model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
+                _indexViewModel.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
             }
 
-            model.ControllerParameters.CurrentFilter = searchString;
+            _indexViewModel.ControllerParameters.CurrentFilter = searchString;
             ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
-            model.ControllerParameters.Sorting = sorting;
+            _indexViewModel.ControllerParameters.Sorting = sorting;
 
-            return View(model);
+            return View(_indexViewModel);
         }
 
         
@@ -89,9 +99,9 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newMake = new VehicleMake();
-            Mapper.Map(model, newMake);
-            _makeService.Add(newMake);
+
+            Mapper.Map(model, _newMake);
+            _makeService.Add(_newMake);
             _makeService.SaveChanges();
 
             return RedirectToAction("Index");

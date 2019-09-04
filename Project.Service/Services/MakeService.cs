@@ -58,15 +58,33 @@ namespace Project.Service.Services
             if (entity is VehicleMake)
             {
                 base.Update(entity as VehicleMake);
-                var childModels = context.VehicleModels.Where(x => x.VehicleMakeId == entity.Id);
-                foreach (var item in childModels)
+
+                // get the list of unmodified child entities
+                var modifiedChildModels = context.VehicleModels.Where(x => x.VehicleMakeId == entity.Id).ToList();
+
+                foreach (var item in modifiedChildModels)
                 {
+                    // set the new property value for each item in the list
                     item.Abrv = entity.Abrv;
-                    _modelService.Update(item);
+
+                    // select the existing child entity from the parrent entity
+                    var existingChild = entity.VehicleModels.Where(c => c.Id == item.Id).SingleOrDefault();
+
+                    if (existingChild != null)
+                    {
+                        // set the new values to the child entity in the parrent entity collection
+                        context.Entry(existingChild).CurrentValues.SetValues(item);
+                    }
                 }
             }
+        }
 
-            
+        public void Add(IVehicleMake make)
+        {
+            if (make is VehicleMake)
+            {
+                base.Add(make as VehicleMake);
+            }
         }
     }
 }
