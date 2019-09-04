@@ -56,6 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\DomainModelFactory.cs" />
+    <Compile Include="Model\IDomainModelFactory.cs" />
+    <Compile Include="ParamContainers\IParamContainerBuilder.cs" />
     <Compile Include="ParamContainers\ParamContainerBuilder.cs" />
     <Compile Include="ParamContainers\ControllerParameters\IControllerParameters.cs" />
     <Compile Include="ParamContainers\LoadingOptions\ILoadingOptions.cs" />

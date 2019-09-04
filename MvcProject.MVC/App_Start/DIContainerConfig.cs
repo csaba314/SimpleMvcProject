@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using MvcProject.MVC.Models;
+using MvcProject.MVC.Models.Factories;
 using Project.Service.Containers;
 using Project.Service.Model;
 using Project.Service.Services;
@@ -32,8 +33,11 @@ namespace MvcProject.MVC.App_Start
             builder.RegisterType<VehicleMakeDTO>().AsSelf();
             builder.RegisterType<VehicleModelDTO>().AsSelf();
 
+            builder.RegisterType<DomainModelFactory>().As<IDomainModelFactory>();
+
             builder.RegisterType<ControllerParameters>().As<IControllerParameters>();
             builder.RegisterType<Options>().As<ILoadingOptions>();
+            builder.RegisterType<ParamContainerBuilder>().As<IParamContainerBuilder>();
 
             // register all types in the assembly where MakeService is located
             builder.RegisterAssemblyTypes(typeof(MakeService).Assembly)
@@ -45,6 +49,10 @@ namespace MvcProject.MVC.App_Start
             // register all domain model objects
             builder.RegisterAssemblyTypes(typeof(VehicleMake).Assembly)
                 .Where(t => t.Name.StartsWith("Vehicle") && t.Namespace.EndsWith("Model"))
+                .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
+
+            builder.RegisterAssemblyTypes(typeof(DTOFactory).Assembly)
+                .Where(t => t.Name.EndsWith("Factory") && t.Namespace.EndsWith("Factories"))
                 .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
 
             // build the container

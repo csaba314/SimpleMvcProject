@@ -6,25 +6,35 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Containers
 {
-    public static class ParamContainerBuilder
+    public class ParamContainerBuilder : IParamContainerBuilder
     {
-        public static IControllerParameters BuildControllerParameters(
-            string sorting, string searchString, int pageSize, int pageNumber, ILoadingOptions options = null)
+        private IControllerParameters _parameters;
+        private ILoadingOptions _options;
+
+        public ParamContainerBuilder(
+            IControllerParameters controllerParameters, 
+            ILoadingOptions loadingOptions)
         {
-            var parameters = new ControllerParameters
-            {
-                Sorting = sorting,
-                SearchString = searchString,
-                //PageSize = pageSize,
-                //PageNumber = pageNumber
-                Options = options ?? BuildLoadingOptions()
-            };
-            return parameters;
+            _parameters = controllerParameters;
+            _options = loadingOptions;
         }
 
-        public static ILoadingOptions BuildLoadingOptions(bool loadMakesWithModel = false)
+        public IControllerParameters BuildControllerParameters(
+            string sorting, string searchString, int pageSize, int pageNumber, ILoadingOptions options)
         {
-            return new Options { LoadMakesWithModel = loadMakesWithModel };
+            _parameters.Sorting = sorting;
+            _parameters.SearchString = searchString;
+            //_parameters.PageSize = pageSize,
+            //_parameters.PageNumber = pageNumber
+            _parameters.Options = options ?? BuildLoadingOptions();
+            
+            return _parameters;
+        }
+
+        public ILoadingOptions BuildLoadingOptions(bool loadMakesWithModel = false)
+        {
+            _options.LoadMakesWithModel = loadMakesWithModel;
+            return _options;
         }
     }
 }

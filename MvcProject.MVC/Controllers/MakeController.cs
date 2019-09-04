@@ -12,6 +12,7 @@ using Project.Service.Model;
 using PagedList;
 using MvcProject.MVC.PresentationService;
 using Autofac;
+using MvcProject.MVC.Models.Factories;
 
 namespace MvcProject.MVC.Controllers
 {
@@ -20,19 +21,22 @@ namespace MvcProject.MVC.Controllers
 
         private IMakeService _makeService;
         private IModelService _modelService;
-        private IVehicleMake _newMake;
-        private IndexViewModel<VehicleMakeDTO, VehicleModelDTO> _indexViewModel;
+        private IDomainModelFactory _domainModelFactory;
+        private IIndexViewModelFactory _indexViewModelFactory;
+        private IParamContainerBuilder _paramContainerBuilder;
 
         public MakeController(
             IMakeService makeService, 
-            IModelService modelService, 
-            IVehicleMake newMake, 
-            IndexViewModel<VehicleMakeDTO, VehicleModelDTO> indexViewModel)
+            IModelService modelService,
+            IDomainModelFactory domainModelFactory,
+            IIndexViewModelFactory indexViewModelFactory,
+            IParamContainerBuilder paramContainerBuilder)
         {
             _modelService = modelService;
             _makeService = makeService;
-            _newMake = newMake;
-            _indexViewModel = indexViewModel;
+            _domainModelFactory = domainModelFactory;
+            _indexViewModelFactory = indexViewModelFactory;
+            _paramContainerBuilder = paramContainerBuilder;
         }
 
         // GET: /Make
@@ -46,39 +50,40 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            //var model = new IndexViewModel<VehicleMakeDTO, VehicleModelDTO>();
-            _indexViewModel.ControllerParameters = Project.Service.Containers.ParamContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
+            var model = _indexViewModelFactory.MakeIndexViewModelInstance();
+            model.ControllerParameters = _paramContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
 
-            var mappedList = _makeService.GetAll(_indexViewModel.ControllerParameters)
+            var mappedList = _makeService.GetAll(model.ControllerParameters)
                                          .Select(x => Mapper.Map<VehicleMakeDTO>(x));
 
             var list = mappedList.ToPagedList(pageNumber, pageSize);
 
             if (list.PageCount < list.PageNumber)
             {
-                _indexViewModel.EntityList = mappedList.ToPagedList(1, pageSize);
+                model.EntityList = mappedList.ToPagedList(1, pageSize);
             }
             else
             {
-                _indexViewModel.EntityList = list;
+                model.EntityList = list;
             }
 
             
             if (id > 0)
             {
-                _indexViewModel.Entity = Mapper.Map<VehicleMakeDTO>(_makeService.Get(id));
+                model.Entity = Mapper.Map<VehicleMakeDTO>(_makeService.Get(id));
                 var modelsList = _modelService.GetAllByMake(id);
-                _indexViewModel.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
-            }
+                model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
+            }            
 
-            _indexViewModel.ControllerParameters.CurrentFilter = searchString;
             ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
-            _indexViewModel.ControllerParameters.Sorting = sorting;
 
-            return View(_indexViewModel);
+            model.ControllerParameters.CurrentFilter = searchString;
+            model.ControllerParameters.Sorting = sorting;
+
+            return View(model);
         }
 
         
@@ -97,9 +102,9 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-
-            Mapper.Map(model, _newMake);
-            _makeService.Add(_newMake);
+            var newMake = _domainModelFactory.MakeInstance();
+            Mapper.Map(model, newMake);
+            _makeService.Add(newMake);
             _makeService.SaveChanges();
 
             return RedirectToAction("Index");

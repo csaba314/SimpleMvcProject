@@ -11,6 +11,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MvcProject.MVC.PresentationService;
+using MvcProject.MVC.Models.Factories;
 
 namespace MvcProject.MVC.Controllers
 {
@@ -18,23 +19,26 @@ namespace MvcProject.MVC.Controllers
     {
         private IMakeService _makeService;
         private IModelService _modelService;
-        private IndexViewModel<VehicleModelDTO, string> _indexViewModel;
-        private VehicleModelDTO _modelDto;
-        private IVehicleModel _model;
+        private IIndexViewModelFactory _indexViewModelFactory;
+        private IDTOFactory _dtoFactory;
+        private IDomainModelFactory _domainModelFactory;
+        private IParamContainerBuilder _paramContainerBuilder;
 
 
         public ModelController(
             IMakeService makeService, 
             IModelService modelService,
-            IndexViewModel<VehicleModelDTO, string> indexViewModel,
-            VehicleModelDTO modelDto, 
-            IVehicleModel model)
+            IIndexViewModelFactory indexViewModelFactory,
+            IDTOFactory dtoFactory,
+            IDomainModelFactory domainModelFactory,
+            IParamContainerBuilder paramContainerBuilder)
         {
             _modelService = modelService;
             _makeService = makeService;
-            _indexViewModel = indexViewModel;
-            _modelDto = modelDto;
-            _model = model;
+            _indexViewModelFactory = indexViewModelFactory;
+            _dtoFactory = dtoFactory;
+            _domainModelFactory = domainModelFactory;
+            _paramContainerBuilder = paramContainerBuilder;
         }
 
         // GET: /Model
@@ -47,34 +51,34 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            //var model = new IndexViewModel<VehicleModelDTO, string>();
+            var model = _indexViewModelFactory.ModelIndexViewModelInstance();
 
-            _indexViewModel.ControllerParameters = ParamContainerBuilder.BuildControllerParameters(
-                sorting, searchString, pageSize, pageNumber, ParamContainerBuilder.BuildLoadingOptions(true));
+            model.ControllerParameters = _paramContainerBuilder.BuildControllerParameters(
+                sorting, searchString, pageSize, pageNumber, _paramContainerBuilder.BuildLoadingOptions(true));
 
-            var mappedList = _modelService.GetAll(_indexViewModel.ControllerParameters)
+            var mappedList = _modelService.GetAll(model.ControllerParameters)
                                           .Select(x => Mapper.Map<VehicleModelDTO>(x));
 
             var list = mappedList.ToPagedList(pageNumber, pageSize);
 
             if (list.PageCount < list.PageNumber)
             {
-                _indexViewModel.EntityList = mappedList.ToPagedList(1, pageSize);
+                model.EntityList = mappedList.ToPagedList(1, pageSize);
             } else
             {
-                _indexViewModel.EntityList = list;
+                model.EntityList = list;
             }
 
 
-            _indexViewModel.ControllerParameters.CurrentFilter = searchString;
+            model.ControllerParameters.CurrentFilter = searchString;
             ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
             ViewBag.MakeSorting = sorting == "make" ? "make_desc" : "make";
-            _indexViewModel.ControllerParameters.Sorting = sorting;
+            model.ControllerParameters.Sorting = sorting;
 
-            return View(_indexViewModel);
+            return View(model);
         }
 
 
@@ -82,7 +86,7 @@ namespace MvcProject.MVC.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var modelDTO = _modelDto;
+            var modelDTO = _dtoFactory.ModelDTOInstance();
             ViewBag.MakeDropdown = GetMakeDropDown();
             return View(modelDTO);
         }
@@ -95,7 +99,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newModel = _model;
+            var newModel = _domainModelFactory.ModelInstance();
             Mapper.Map(model, newModel);
             _modelService.Add(newModel);
             _modelService.SaveChanges();
