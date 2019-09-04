@@ -56,9 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Containers\ParamContainerBuilder.cs" />
-    <Compile Include="Containers\IControllerParameters.cs" />
-    <Compile Include="Containers\ILoadingOptions.cs" />
+    <Compile Include="ParamContainers\ParamContainerBuilder.cs" />
+    <Compile Include="ParamContainers\ControllerParameters\IControllerParameters.cs" />
+    <Compile Include="ParamContainers\LoadingOptions\ILoadingOptions.cs" />
     <Compile Include="Migrations\201908261449071_InitialMigration.cs" />
     <Compile Include="Migrations\201908261449071_InitialMigration.Designer.cs">
       <DependentUpon>201908261449071_InitialMigration.cs</DependentUpon>
@@ -68,19 +68,19 @@
       <DependentUpon>201908270938278_seedDbWithTestData.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Model\IVehicleMake.cs" />
-    <Compile Include="Model\IVehicleModel.cs" />
-    <Compile Include="Model\VehicleMake.cs" />
-    <Compile Include="Model\VehicleModel.cs" />
+    <Compile Include="Model\Make\IVehicleMake.cs" />
+    <Compile Include="Model\Model\IVehicleModel.cs" />
+    <Compile Include="Model\Make\VehicleMake.cs" />
+    <Compile Include="Model\Model\VehicleModel.cs" />
     <Compile Include="Model\ProjectDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Containers\ControllerParameters.cs" />
-    <Compile Include="Services\IModelService.cs" />
+    <Compile Include="ParamContainers\ControllerParameters\ControllerParameters.cs" />
+    <Compile Include="Services\Model\IModelService.cs" />
     <Compile Include="Services\IService.cs" />
-    <Compile Include="Services\IMakeService.cs" />
-    <Compile Include="Services\MakeService.cs" />
-    <Compile Include="Containers\Options.cs" />
-    <Compile Include="Services\ModelService.cs" />
+    <Compile Include="Services\Make\IMakeService.cs" />
+    <Compile Include="Services\Make\MakeService.cs" />
+    <Compile Include="ParamContainers\LoadingOptions\Options.cs" />
+    <Compile Include="Services\Model\ModelService.cs" />
     <Compile Include="Services\Service.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +95,6 @@
       <DependentUpon>201908270938278_seedDbWithTestData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\Make\" />
-    <Folder Include="Model\Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
