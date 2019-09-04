@@ -18,12 +18,23 @@ namespace MvcProject.MVC.Controllers
     {
         private IMakeService _makeService;
         private IModelService _modelService;
+        private IndexViewModel<VehicleModelDTO, string> _indexViewModel;
+        private VehicleModelDTO _modelDto;
+        private IVehicleModel _model;
 
-        public ModelController()
+
+        public ModelController(
+            IMakeService makeService, 
+            IModelService modelService,
+            IndexViewModel<VehicleModelDTO, string> indexViewModel,
+            VehicleModelDTO modelDto, 
+            IVehicleModel model)
         {
-            var context = new ProjectDbContext();
-            _modelService = new ModelService(context);
-            _makeService = new MakeService(context, _modelService);
+            _modelService = modelService;
+            _makeService = makeService;
+            _indexViewModel = indexViewModel;
+            _modelDto = modelDto;
+            _model = model;
         }
 
         // GET: /Model
@@ -36,34 +47,34 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = new IndexViewModel<VehicleModelDTO, string>();
+            //var model = new IndexViewModel<VehicleModelDTO, string>();
 
-            model.ControllerParameters = ContainerBuilder.BuildControllerParameters(
-                sorting, searchString, pageSize, pageNumber, ContainerBuilder.BuildLoadingOptions(true));
+            _indexViewModel.ControllerParameters = ParamContainerBuilder.BuildControllerParameters(
+                sorting, searchString, pageSize, pageNumber, ParamContainerBuilder.BuildLoadingOptions(true));
 
-            var mappedList = _modelService.GetAll(model.ControllerParameters)
+            var mappedList = _modelService.GetAll(_indexViewModel.ControllerParameters)
                                           .Select(x => Mapper.Map<VehicleModelDTO>(x));
 
             var list = mappedList.ToPagedList(pageNumber, pageSize);
 
             if (list.PageCount < list.PageNumber)
             {
-                model.EntityList = mappedList.ToPagedList(1, pageSize);
+                _indexViewModel.EntityList = mappedList.ToPagedList(1, pageSize);
             } else
             {
-                model.EntityList = list;
+                _indexViewModel.EntityList = list;
             }
 
-            
-            model.ControllerParameters.CurrentFilter = searchString;
+
+            _indexViewModel.ControllerParameters.CurrentFilter = searchString;
             ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
             ViewBag.MakeSorting = sorting == "make" ? "make_desc" : "make";
-            model.ControllerParameters.Sorting = sorting;
+            _indexViewModel.ControllerParameters.Sorting = sorting;
 
-            return View(model);
+            return View(_indexViewModel);
         }
 
 
@@ -71,9 +82,9 @@ namespace MvcProject.MVC.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var model = new VehicleModelDTO();
+            var modelDTO = _modelDto;
             ViewBag.MakeDropdown = GetMakeDropDown();
-            return View(model);
+            return View(modelDTO);
         }
 
         // POST: /Model/Create
@@ -84,7 +95,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newModel = new VehicleModel();
+            var newModel = _model;
             Mapper.Map(model, newModel);
             _modelService.Add(newModel);
             _modelService.SaveChanges();

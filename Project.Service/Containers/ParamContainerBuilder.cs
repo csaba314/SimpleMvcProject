@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Containers
 {
-    public static class ContainerBuilder
+    public static class ParamContainerBuilder
     {
         public static IControllerParameters BuildControllerParameters(
             string sorting, string searchString, int pageSize, int pageNumber, ILoadingOptions options = null)

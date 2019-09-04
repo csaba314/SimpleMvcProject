@@ -10,5 +10,6 @@ namespace Project.Service.Services
         IEnumerable<IVehicleModel> GetAll(IControllerParameters parameters);
         void Update(IVehicleModel entity);
         void RemoveRange(IEnumerable<IVehicleModel> entities);
+        void Add(IVehicleModel model);
     }
 }

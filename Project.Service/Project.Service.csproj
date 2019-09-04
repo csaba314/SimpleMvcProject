@@ -56,7 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Containers\ContainerBuilder.cs" />
+    <Compile Include="Containers\ParamContainerBuilder.cs" />
     <Compile Include="Containers\IControllerParameters.cs" />
     <Compile Include="Containers\ILoadingOptions.cs" />
     <Compile Include="Migrations\201908261449071_InitialMigration.cs" />
@@ -94,6 +94,10 @@
     <EmbeddedResource Include="Migrations\201908270938278_seedDbWithTestData.resx">
       <DependentUpon>201908270938278_seedDbWithTestData.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\Make\" />
+    <Folder Include="Model\Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

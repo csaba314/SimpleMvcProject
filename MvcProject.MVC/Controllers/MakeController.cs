@@ -24,13 +24,11 @@ namespace MvcProject.MVC.Controllers
         private IndexViewModel<VehicleMakeDTO, VehicleModelDTO> _indexViewModel;
 
         public MakeController(
-            ProjectDbContext dbContext, 
             IMakeService makeService, 
             IModelService modelService, 
             IVehicleMake newMake, 
             IndexViewModel<VehicleMakeDTO, VehicleModelDTO> indexViewModel)
         {
-            var context = dbContext;
             _modelService = modelService;
             _makeService = makeService;
             _newMake = newMake;
@@ -49,7 +47,7 @@ namespace MvcProject.MVC.Controllers
             }
 
             //var model = new IndexViewModel<VehicleMakeDTO, VehicleModelDTO>();
-            _indexViewModel.ControllerParameters = Project.Service.Containers.ContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
+            _indexViewModel.ControllerParameters = Project.Service.Containers.ParamContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
 
             var mappedList = _makeService.GetAll(_indexViewModel.ControllerParameters)
                                          .Select(x => Mapper.Map<VehicleMakeDTO>(x));
