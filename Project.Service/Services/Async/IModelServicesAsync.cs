@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Services.Async
 {
-    interface IModelServicesAsync : IServicesAsync<VehicleModel>
+    public interface IModelServicesAsync : IServicesAsync<VehicleModel>
     {
         Task<IEnumerable<IVehicleModel>> GetAllByMakeAsync(int makeId);
         Task<IEnumerable<IVehicleModel>> GetAllAsync(IControllerParameters parameters);

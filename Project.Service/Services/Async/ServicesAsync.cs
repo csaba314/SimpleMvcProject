@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Project.Service.Services.Async
 {
@@ -86,15 +85,37 @@ namespace Project.Service.Services.Async
             return Task.FromResult(1);
         }
 
-       
+
+        //public async Task<int> SaveChangesAsync()
+        //{
+        //    int result = 0;
+
+        //    using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        //    {
+        //        result = await _context.SaveChangesAsync();
+        //        scope.Complete();
+        //    }
+        //    return result;
+        //}
+
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
         }
 
+        //public void SaveChanges()
+        //{
+        //    _context.SaveChanges();
+        //}
+
         public void Dispose()
         {
-            _context.Dispose();
+            if (_context != null)
+            {
+                _context.Dispose();
+                _context = null;
+            }
+            
         }
     }
 }

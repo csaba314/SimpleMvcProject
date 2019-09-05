@@ -16,6 +16,7 @@ namespace Project.Service.Services.Async
         Task<int> RemoveAsync(TEntity entity);
         Task<int> RemoveRangeAsync(IEnumerable<TEntity> entities);
 
+        //void SaveChanges();
         Task<int> SaveChangesAsync();
     }
 }

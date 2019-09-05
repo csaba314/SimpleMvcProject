@@ -9,7 +9,7 @@ using System.Data.Entity;
 
 namespace Project.Service.Services.Async
 {
-    class ModelServicesAsync : ServicesAsync<VehicleModel>, IModelServicesAsync
+    public class ModelServicesAsync : ServicesAsync<VehicleModel>, IModelServicesAsync
     {
         public ProjectDbContext Context { get { return _context as ProjectDbContext; } }
 
@@ -80,7 +80,7 @@ namespace Project.Service.Services.Async
             if (entity is VehicleModel)
             {
                 entity.Abrv = SetModelAbrv(entity.VehicleMakeId);
-                return await base.UpdateAsync(entity as VehicleModel);
+                return await base.AddAsync(entity as VehicleModel);
             }
             else
             {
@@ -93,7 +93,7 @@ namespace Project.Service.Services.Async
             if (entity is VehicleModel)
             {
                 entity.Abrv = SetModelAbrv(entity.VehicleMakeId);
-                return await base.AddAsync(entity as VehicleModel);
+                return await base.UpdateAsync(entity as VehicleModel);
             }
             else
             {

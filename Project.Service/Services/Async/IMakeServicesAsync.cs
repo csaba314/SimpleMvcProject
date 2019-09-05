@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Services.Async
 {
-    interface IMakeServicesAsync : IServicesAsync<VehicleMake>
+    public interface IMakeServicesAsync : IServicesAsync<VehicleMake>
     {
         Task<IEnumerable<IVehicleMake>> GetAllAsync(IControllerParameters parameters);
         Task<int> UpdateAsync(IVehicleMake entity);

@@ -2,7 +2,7 @@
 using MvcProject.MVC.Models;
 using PagedList;
 using Project.Service.Model;
-using Project.Service.Services;
+using Project.Service.Services.Async;
 using Project.Service.Containers;
 using System;
 using System.Collections.Generic;
@@ -12,13 +12,14 @@ using System.Web;
 using System.Web.Mvc;
 using MvcProject.MVC.PresentationService;
 using MvcProject.MVC.Models.Factories;
+using System.Threading.Tasks;
 
 namespace MvcProject.MVC.Controllers
 {
     public class ModelController : Controller
     {
-        private IMakeService _makeService;
-        private IModelService _modelService;
+        private IMakeServicesAsync _makeService;
+        private IModelServicesAsync _modelService;
         private IIndexViewModelFactory _indexViewModelFactory;
         private IDTOFactory _dtoFactory;
         private IDomainModelFactory _domainModelFactory;
@@ -26,8 +27,8 @@ namespace MvcProject.MVC.Controllers
 
 
         public ModelController(
-            IMakeService makeService, 
-            IModelService modelService,
+            IMakeServicesAsync makeService,
+            IModelServicesAsync modelService,
             IIndexViewModelFactory indexViewModelFactory,
             IDTOFactory dtoFactory,
             IDomainModelFactory domainModelFactory,
@@ -43,7 +44,7 @@ namespace MvcProject.MVC.Controllers
 
         // GET: /Model
         [HttpGet]
-        public ActionResult Index(string searchString, string currentFilter,
+        public async Task<ActionResult> Index(string searchString, string currentFilter,
                                   string sorting, int pageSize = 10, int pageNumber = 1)
         {
             if (String.IsNullOrEmpty(searchString))
@@ -56,14 +57,13 @@ namespace MvcProject.MVC.Controllers
             model.ControllerParameters = _paramContainerBuilder.BuildControllerParameters(
                 sorting, searchString, pageSize, pageNumber, _paramContainerBuilder.BuildLoadingOptions(true));
 
-            var mappedList = _modelService.GetAll(model.ControllerParameters)
-                                          .Select(x => Mapper.Map<VehicleModelDTO>(x));
+            var mappedList = await _modelService.GetAllAsync(model.ControllerParameters);
 
-            var list = mappedList.ToPagedList(pageNumber, pageSize);
+            var list = mappedList.Select(x => Mapper.Map<VehicleModelDTO>(x)).ToPagedList(pageNumber, pageSize);
 
             if (list.PageCount < list.PageNumber)
             {
-                model.EntityList = mappedList.ToPagedList(1, pageSize);
+                model.EntityList = mappedList.Select(x => Mapper.Map<VehicleModelDTO>(x)).ToPagedList(1, pageSize);
             } else
             {
                 model.EntityList = list;
@@ -84,16 +84,16 @@ namespace MvcProject.MVC.Controllers
 
         // GET: /Model/Create
         [HttpGet]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             var modelDTO = _dtoFactory.ModelDTOInstance();
-            ViewBag.MakeDropdown = GetMakeDropDown();
+            ViewBag.MakeDropdown = await GetMakeDropDownAsync();
             return View(modelDTO);
         }
 
         // POST: /Model/Create
         [HttpPost]
-        public ActionResult Create([Bind(Include = "Name, VehicleMakeId")] VehicleModelDTO model)
+        public async Task<ActionResult> Create([Bind(Include = "Name, VehicleMakeId")] VehicleModelDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -101,22 +101,22 @@ namespace MvcProject.MVC.Controllers
             }
             var newModel = _domainModelFactory.ModelInstance();
             Mapper.Map(model, newModel);
-            _modelService.Add(newModel);
-            _modelService.SaveChanges();
+            await _modelService.AddAsync(newModel);
+            await _modelService.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
 
         // GET: /Model/Edit/1
         [HttpGet]
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedModel = _modelService.Get((int)id);
+            var selectedModel = await _modelService.GetAsync((int)id);
 
             if (selectedModel == null)
             {
@@ -124,38 +124,38 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = Mapper.Map<VehicleModelDTO>(selectedModel);
-            ViewBag.MakeDropdown = GetMakeDropDown();
+            ViewBag.MakeDropdown = await GetMakeDropDownAsync();
 
             return View(model);
         }
 
         //POST: /Model/Edit/1
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id, Name, VehicleMakeId")] VehicleModelDTO model)
+        public async Task<ActionResult> Edit([Bind(Include = "Id, Name, VehicleMakeId")] VehicleModelDTO model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var editedModel = _modelService.Get(model.Id);
+            var editedModel = await _modelService.GetAsync(model.Id);
             Mapper.Map(model, editedModel);
-            _modelService.Update(editedModel);
-            _modelService.SaveChanges();
+            await _modelService.UpdateAsync(editedModel);
+            await _modelService.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
 
         //GET: /Model/Delete/1
         [HttpGet]
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedModel = _modelService.Get((int)id);
+            var selectedModel = await _modelService.GetAsync((int)id);
 
             if (selectedModel == null)
             {
@@ -166,11 +166,11 @@ namespace MvcProject.MVC.Controllers
 
         //GET: /Model/Delete/1
         [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var modelToRemove = _modelService.Get(id);
-            _modelService.Remove(modelToRemove);
-            _modelService.SaveChanges();
+            var modelToRemove = await _modelService.GetAsync(id);
+            await _modelService.RemoveAsync(modelToRemove);
+            await _modelService.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
@@ -180,13 +180,14 @@ namespace MvcProject.MVC.Controllers
             if (disposing)
             {
                 _modelService.Dispose();
+                _makeService.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        private SelectList GetMakeDropDown()
+        private async Task<SelectList> GetMakeDropDownAsync()
         {
-            return new SelectList(_makeService.GetAll(), "Id", "Name");
+            return new SelectList(await _makeService.GetAllAsync(), "Id", "Name");
         }
     }
 }

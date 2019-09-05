@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Services.Async
 {
-    class MakeServicesAsync : ServicesAsync<VehicleMake>, IMakeServicesAsync
+    public class MakeServicesAsync : ServicesAsync<VehicleMake>, IMakeServicesAsync
     {
         private ProjectDbContext Context { get { return _context as ProjectDbContext; } }
 

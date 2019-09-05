@@ -11,6 +11,7 @@ using MvcProject.MVC.Models.Factories;
 using Project.Service.Containers;
 using Project.Service.Model;
 using Project.Service.Services;
+using Project.Service.Services.Async;
 
 namespace MvcProject.MVC.App_Start
 {
@@ -53,6 +54,10 @@ namespace MvcProject.MVC.App_Start
 
             builder.RegisterAssemblyTypes(typeof(DTOFactory).Assembly)
                 .Where(t => t.Name.EndsWith("Factory") && t.Namespace.EndsWith("Factories"))
+                .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
+
+            builder.RegisterAssemblyTypes(typeof(MakeServicesAsync).Assembly)
+                .Where(t => t.Name.EndsWith("Async") && t.Namespace.EndsWith("Async"))
                 .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
 
             // build the container
