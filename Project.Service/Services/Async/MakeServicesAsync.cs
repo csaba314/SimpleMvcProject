@@ -1,23 +1,25 @@
-﻿using System;
+﻿using Project.Service.Containers;
+using Project.Service.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Project.Service.Containers;
-using Project.Service.Model;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Project.Service.Services
+namespace Project.Service.Services.Async
 {
-    public class MakeService : Service<VehicleMake>, IMakeService
+    class MakeServicesAsync : ServicesAsync<VehicleMake>, IMakeServicesAsync
     {
+        private ProjectDbContext Context { get { return _context as ProjectDbContext; } }
 
-        private ProjectDbContext context { get { return _context as ProjectDbContext; } }
-
-        public MakeService(ProjectDbContext context) : base(context)
+        public MakeServicesAsync(ProjectDbContext context) : base(context)
         {
-        } 
 
-        public IEnumerable<IVehicleMake> GetAll(IControllerParameters parameters)
+        }
+
+        public async Task<IEnumerable<IVehicleMake>> GetAllAsync(IControllerParameters parameters)
         {
-            IQueryable<VehicleMake> makeList = context.VehicleMakes;
+            var makeList = await GetAllAsync();
 
             // Filtering
             if (!String.IsNullOrEmpty(parameters.SearchString))
@@ -48,17 +50,29 @@ namespace Project.Service.Services
                     break;
             }
 
-            return makeList.ToList();
+            return makeList;
         }
 
-        public void Update(IVehicleMake entity)
+        public async Task<int> AddAsync(IVehicleMake entity)
         {
             if (entity is VehicleMake)
             {
-                base.Update(entity as VehicleMake);
+                return await base.AddAsync(entity as VehicleMake);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        public async Task<int> UpdateAsync(IVehicleMake entity)
+        {
+            if (entity is VehicleMake)
+            {
+                //base.UpdateAsync(entity as VehicleMake);
 
                 // get the list of unmodified child entities
-                var modifiedChildModels = context.VehicleModels.Where(x => x.VehicleMakeId == entity.Id).ToList();
+                var modifiedChildModels = Context.VehicleModels.Where(x => x.VehicleMakeId == entity.Id).ToList();
 
                 foreach (var item in modifiedChildModels)
                 {
@@ -71,17 +85,14 @@ namespace Project.Service.Services
                     if (existingChild != null)
                     {
                         // set the new values to the child entity in the parrent entity collection
-                        context.Entry(existingChild).CurrentValues.SetValues(item);
+                        Context.Entry(existingChild).CurrentValues.SetValues(item);
                     }
                 }
+                return await base.UpdateAsync(entity as VehicleMake);
             }
-        }
-
-        public void Add(IVehicleMake make)
-        {
-            if (make is VehicleMake)
+            else
             {
-                base.Add(make as VehicleMake);
+                throw new ArgumentException();
             }
         }
     }

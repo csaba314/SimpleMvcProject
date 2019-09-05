@@ -3,38 +3,37 @@ using Project.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Data.Entity;
 
-namespace Project.Service.Services
+namespace Project.Service.Services.Async
 {
-    public class ModelService : Service<VehicleModel>, IModelService
+    class ModelServicesAsync : ServicesAsync<VehicleModel>, IModelServicesAsync
     {
-        private ProjectDbContext context { get { return _context as ProjectDbContext; } }
+        public ProjectDbContext Context { get { return _context as ProjectDbContext; } }
 
-        public ModelService(ProjectDbContext dbcontext) : base(dbcontext)
+        public ModelServicesAsync(ProjectDbContext dbcontext) : base(dbcontext)
         {
 
         }
 
-       
-        public IEnumerable<IVehicleModel> GetAllByMake(int makeId)
+        public async Task<IEnumerable<IVehicleModel>> GetAllByMakeAsync(int makeId)
         {
-            return context.VehicleModels
-                .Where(x => x.VehicleMakeId == makeId)
-                .ToList();
+            return await Task.Run(()=> GetAllAsync().Result.Where(m => m.VehicleMakeId == makeId).ToList());
         }
 
-        public IEnumerable<IVehicleModel> GetAll(IControllerParameters parameters)
+        public async Task<IEnumerable<IVehicleModel>> GetAllAsync(IControllerParameters parameters)
         {
             IQueryable<VehicleModel> modelList;
 
             if (!parameters.Options.LoadMakesWithModel)
             {
-                modelList = context.VehicleModels;
+                modelList = Context.VehicleModels;
             }
             else
             {
-                modelList = context.VehicleModels.Include(m => m.VehicleMake);
+                modelList = Context.VehicleModels.Include(m => m.VehicleMake);
             }
 
             // Filtering
@@ -72,29 +71,16 @@ namespace Project.Service.Services
                     break;
             }
 
-            return modelList.ToList();
-        }
-        
-        public void Add(IVehicleModel model)
-        {
-            if (model is VehicleModel)
-            {
-                model.Abrv = SetModelAbrv(model.VehicleMakeId);
-                base.Add(model as VehicleModel);
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
-
+            return await modelList.ToListAsync();
         }
 
-        public void Update(IVehicleModel model)
+
+        public async Task<int> AddAsync(IVehicleModel entity)
         {
-            if (model is VehicleModel)
+            if (entity is VehicleModel)
             {
-                model.Abrv = SetModelAbrv(model.VehicleMakeId);
-                base.Update(model as VehicleModel);
+                entity.Abrv = SetModelAbrv(entity.VehicleMakeId);
+                return await base.UpdateAsync(entity as VehicleModel);
             }
             else
             {
@@ -102,18 +88,35 @@ namespace Project.Service.Services
             }
         }
 
-        public void RemoveRange(IEnumerable<IVehicleModel> models)
+        public async Task<int> UpdateAsync(IVehicleModel entity)
         {
-            if (models is IEnumerable<VehicleModel>)
+            if (entity is VehicleModel)
             {
-                base.RemoveRange(models as IEnumerable<VehicleModel>);
+                entity.Abrv = SetModelAbrv(entity.VehicleMakeId);
+                return await base.AddAsync(entity as VehicleModel);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
 
+        public async Task<int> RemoveRangeAsync(IEnumerable<IVehicleModel> entities)
+        {
+            if (entities is IEnumerable<VehicleModel>)
+            {
+                return await base.RemoveRangeAsync(entities as IEnumerable<VehicleModel>);
+            }
+            else
+            {
+                throw new ArgumentException();
             }
         }
 
         private string SetModelAbrv(int makeId)
         {
-            return context.VehicleMakes.Find(makeId).Abrv;
+            return Context.VehicleMakes.Find(makeId).Abrv;
         }
     }
+
 }
