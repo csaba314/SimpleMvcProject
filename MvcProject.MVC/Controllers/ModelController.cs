@@ -18,6 +18,8 @@ namespace MvcProject.MVC.Controllers
 {
     public class ModelController : Controller
     {
+        #region Private Properties
+
         private IMakeServicesAsync _makeService;
         private IModelServicesAsync _modelService;
         private IIndexViewModelFactory _indexViewModelFactory;
@@ -25,6 +27,9 @@ namespace MvcProject.MVC.Controllers
         private IDomainModelFactory _domainModelFactory;
         private IParamContainerBuilder _paramContainerBuilder;
 
+        #endregion
+
+        #region Constructor
 
         public ModelController(
             IMakeServicesAsync makeService,
@@ -41,7 +46,10 @@ namespace MvcProject.MVC.Controllers
             _domainModelFactory = domainModelFactory;
             _paramContainerBuilder = paramContainerBuilder;
         }
+        #endregion
 
+
+        #region Index
         // GET: /Model
         [HttpGet]
         public async Task<ActionResult> Index(string searchString, string currentFilter,
@@ -80,7 +88,9 @@ namespace MvcProject.MVC.Controllers
 
             return View(model);
         }
+        #endregion
 
+        #region Create
 
         // GET: /Model/Create
         [HttpGet]
@@ -106,7 +116,9 @@ namespace MvcProject.MVC.Controllers
 
             return RedirectToAction("Index");
         }
+        #endregion
 
+        #region Edit
         // GET: /Model/Edit/1
         [HttpGet]
         public async Task<ActionResult> Edit(int? id)
@@ -145,7 +157,9 @@ namespace MvcProject.MVC.Controllers
 
             return RedirectToAction("Index");
         }
+        #endregion
 
+        #region Delete
         //GET: /Model/Delete/1
         [HttpGet]
         public async Task<ActionResult> Delete(int? id)
@@ -174,6 +188,8 @@ namespace MvcProject.MVC.Controllers
 
             return RedirectToAction("Index");
         }
+        #endregion
+
 
         protected override void Dispose(bool disposing)
         {
