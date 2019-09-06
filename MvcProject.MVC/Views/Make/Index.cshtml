@@ -14,7 +14,7 @@
 {
     <p>
         <strong>Search by Name</strong>
-        @Html.TextBox("searchString", Model.ControllerParameters.CurrentFilter)
+        @Html.TextBox("searchString", Model.FilteringParams.CurrentFilter)
         <input type="submit" value="Search" class="btn btn-primary" />
     </p>
 }
@@ -26,19 +26,19 @@
                     <tr>
                         <th>
                             @Html.ActionLink("Id", "Index", new { sorting = ViewBag.IdSorting,
-                                                                  currentFilter = Model.ControllerParameters.CurrentFilter,
+                                                                  currentFilter = Model.FilteringParams.CurrentFilter,
                                                                   pageSize = Model.EntityList.PageSize,
                                                                   pageNumber = Model.EntityList.PageNumber })
                         </th>
                         <th>
                             @Html.ActionLink("Name", "Index", new { sorting = ViewBag.NameSorting,
-                                                                    currentFilter = Model.ControllerParameters.CurrentFilter,
+                                                                    currentFilter = Model.FilteringParams.CurrentFilter,
                                                                     pageSize = Model.EntityList.PageSize,
                                                                     pageNumber = Model.EntityList.PageNumber })
                         </th>
                         <th>
                             @Html.ActionLink("Abbreviation", "Index", new { sorting = ViewBag.AbrvSorting,
-                                                                            currentFilter = Model.ControllerParameters.CurrentFilter,
+                                                                            currentFilter = Model.FilteringParams.CurrentFilter,
                                                                             pageSize = Model.EntityList.PageSize,
                                                                             pageNumber = Model.EntityList.PageNumber })
                         </th>
@@ -60,7 +60,7 @@
                             </td>
                             <td>
                                 @Html.ActionLink("Details", "Index", new { id = item.Id,
-                                                                           currentFilter = Model.ControllerParameters.CurrentFilter,
+                                                                           currentFilter = Model.FilteringParams.CurrentFilter,
                                                                            pageSize = Model.EntityList.PageSize,
                                                                            Model.EntityList.PageNumber }
                                                                     , new { @class = "btn btn-sm btn-default" })

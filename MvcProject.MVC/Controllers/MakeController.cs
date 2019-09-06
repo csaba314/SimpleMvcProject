@@ -1,6 +1,5 @@
 ﻿using MvcProject.MVC.Models;
 using Project.Service.Services;
-using Project.Service.Containers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +12,8 @@ using PagedList;
 using MvcProject.MVC.PresentationService;
 using Autofac;
 using System.Threading.Tasks;
+//using Project.Service.DTO;
+using Project.Service.ParamContainers;
 
 namespace MvcProject.MVC.Controllers
 {
@@ -22,7 +23,11 @@ namespace MvcProject.MVC.Controllers
 
         private IMakeServicesAsync _makeService;
         private IModelServicesAsync _modelService;
+<<<<<<< HEAD
         private IParamContainerBuilder _paramContainerBuilder;
+=======
+        private IParamsFactory _paramsFactory;
+>>>>>>> refactoring
 
         #endregion
 
@@ -31,11 +36,19 @@ namespace MvcProject.MVC.Controllers
         public MakeController(
             IMakeServicesAsync makeService, 
             IModelServicesAsync modelService,
+<<<<<<< HEAD
             IParamContainerBuilder paramContainerBuilder)
         {
             _modelService = modelService;
             _makeService = makeService;
             _paramContainerBuilder = paramContainerBuilder;
+=======
+            IParamsFactory paramsFactory)
+        {
+            _modelService = modelService;
+            _makeService = makeService;
+            _paramsFactory = paramsFactory;
+>>>>>>> refactoring
         }
         #endregion
 
@@ -52,26 +65,33 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleMakeDTO, VehicleModelDTO>>();
+<<<<<<< HEAD
 
                model.ControllerParameters = _paramContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
+=======
+            BuildModel(ref model);
+>>>>>>> refactoring
 
-            var mappedList = await _makeService.GetAllAsync(model.ControllerParameters);
+            model.FilteringParams.SearchString = searchString;
+            model.FilteringParams.CurrentFilter = currentFilter;
+            model.PagingParams.PageSize = pageSize;
+            model.PagingParams.PageNumber = pageNumber;
+            model.SortingParams.Sorting = sorting;
 
-            var list = mappedList.Select(x => Mapper.Map<VehicleMakeDTO>(x)).ToPagedList(pageNumber, pageSize);
+            var pagedDomainList = await _makeService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams);
 
-            if (list.PageCount < list.PageNumber)
+            if (pagedDomainList.PageNumber > pagedDomainList.PageCount)
             {
-                model.EntityList = mappedList.Select(x => Mapper.Map<VehicleMakeDTO>(x)).ToPagedList(1, pageSize);
-            }
-            else
-            {
-                model.EntityList = list;
+                model.PagingParams.PageNumber = 1;
+                pagedDomainList = await _makeService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams);
             }
 
-            
+            model.EntityList = PagedListMapper.ToMappedPagedList<IVehicleMake, VehicleMakeDTO>(pagedDomainList);
+
+
             if (id > 0)
             {
-                model.Entity = Mapper.Map<VehicleMakeDTO>(await _makeService.GetAsync(id));
+                model.Entity = Mapper.Map<VehicleMakeDTO>(await _makeService.FindAsync(id));
                 var modelsList = await _modelService.GetAllByMakeAsync(id);
                 model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
             }            
@@ -81,8 +101,8 @@ namespace MvcProject.MVC.Controllers
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
 
-            model.ControllerParameters.CurrentFilter = searchString;
-            model.ControllerParameters.Sorting = sorting;
+            model.FilteringParams.CurrentFilter = searchString;
+            model.SortingParams.Sorting = sorting;
 
             return View(model);
         }
@@ -125,7 +145,7 @@ namespace MvcProject.MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedMake = await _makeService.GetAsync((int)id);
+            var selectedMake = await _makeService.FindAsync((int)id);
 
             if (selectedMake == null)
             {
@@ -143,7 +163,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var makeToUpdate = await _makeService.GetAsync(model.Id);
+            var makeToUpdate = await _makeService.FindAsync(model.Id);
             Mapper.Map(model, makeToUpdate);
             await _makeService.UpdateAsync(makeToUpdate);
             await _makeService.SaveChangesAsync();
@@ -162,7 +182,7 @@ namespace MvcProject.MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedMake = await _makeService.GetAsync((int)id);
+            var selectedMake = await _makeService.FindAsync((int)id);
 
             if (selectedMake == null)
             {
@@ -182,7 +202,7 @@ namespace MvcProject.MVC.Controllers
             var modelList = await _modelService.GetAllByMakeAsync(id);
             await _modelService.RemoveRangeAsync(modelList);
 
-            var makeToRemove = await _makeService.GetAsync(id);
+            var makeToRemove = await _makeService.FindAsync(id);
             await _makeService.RemoveAsync(makeToRemove);
 
             await _makeService.SaveChangesAsync();
@@ -202,5 +222,13 @@ namespace MvcProject.MVC.Controllers
             base.Dispose(disposing);
         }
 
+
+        private void BuildModel(ref IndexViewModel<VehicleMakeDTO, VehicleModelDTO> model)
+        {
+            model.FilteringParams = _paramsFactory.FilteringParamsInstance();
+            model.SortingParams = _paramsFactory.SortingParamsInstance();
+            model.PagingParams = _paramsFactory.PagingParamsInstance();
+            model.Options = _paramsFactory.IOptionsInstance();
+        }
     }
 }

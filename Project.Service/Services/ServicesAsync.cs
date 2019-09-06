@@ -26,9 +26,9 @@ namespace Project.Service.Services
             return await _context.Set<TEntity>().FindAsync(id);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public Task<DbSet<TEntity>> GetAllAsync()
         {
-            return await _context.Set<TEntity>().ToListAsync();
+            return Task.FromResult(_context.Set<TEntity>());
         }
 
         public Task<int> AddAsync(TEntity entity)

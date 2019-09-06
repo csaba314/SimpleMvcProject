@@ -7,9 +7,15 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using MvcProject.MVC.Models;
+<<<<<<< HEAD
 using Project.Service.Containers;
+=======
+//using Project.Service.DTO;
+>>>>>>> refactoring
 using Project.Service.Model;
+using Project.Service.ParamContainers;
 using Project.Service.Services;
+
 
 namespace MvcProject.MVC.App_Start
 {
@@ -33,9 +39,11 @@ namespace MvcProject.MVC.App_Start
             builder.RegisterType<VehicleModelDTO>().AsSelf();
 
             // Register parameters
-            builder.RegisterType<ControllerParameters>().As<IControllerParameters>();
+            builder.RegisterAssemblyTypes(typeof(Options).Assembly)
+                .Where(t => t.Name.EndsWith("Params") && t.Namespace.EndsWith("ParamContainers"))
+                .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
             builder.RegisterType<Options>().As<IOptions>();
-            builder.RegisterType<ParamContainerBuilder>().As<IParamContainerBuilder>();
+            builder.RegisterType<ParamsFactory>().As<IParamsFactory>();
 
             // Register all domain model objects
             builder.RegisterAssemblyTypes(typeof(VehicleMake).Assembly)

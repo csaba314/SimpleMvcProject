@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using AutoMapper;
-using MvcProject.MVC.Models;
 using Project.Service.Model;
+using MvcProject.MVC.Models;
 
 namespace MvcProject.MVC.App_Start
 {
