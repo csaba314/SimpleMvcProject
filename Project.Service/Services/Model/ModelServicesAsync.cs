@@ -76,8 +76,6 @@ namespace Project.Service.Services
                     break;
             }
 
-            //var dtoList = modelList.Select(x => AutoMapper.Mapper.Map<VehicleModelDTO>(x));
-
             var pagedList = modelList.ToPagedList(pagingParams.PageNumber, pagingParams.PageSize);
 
             if (pagedList.PageCount < pagedList.PageNumber)

@@ -4,10 +4,7 @@ using Project.Service.ParamContainers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-
 
 namespace Project.Service.Services
 {
@@ -55,9 +52,7 @@ namespace Project.Service.Services
                     makeList = makeList.OrderBy(x => x.Name);
                     break;
             }
-
-            //var dtoList = makeList.Select(x => Mapper.Map<VehicleMakeDTO>(x));
-            
+          
             var pagedList = makeList.ToPagedList(pagingParams.PageNumber, pagingParams.PageSize);
 
             if (pagedList.PageCount < pagedList.PageNumber)

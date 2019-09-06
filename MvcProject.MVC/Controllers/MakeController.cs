@@ -4,15 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using Project.Service.Model;
-using PagedList;
 using MvcProject.MVC.PresentationService;
-using Autofac;
 using System.Threading.Tasks;
-//using Project.Service.DTO;
 using Project.Service.ParamContainers;
 
 namespace MvcProject.MVC.Controllers
@@ -53,7 +49,7 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleMakeDTO, VehicleModelDTO>>();
-            BuildModel(ref model);
+            BuildViewModel(ref model);
 
             model.FilteringParams.SearchString = searchString;
             model.FilteringParams.CurrentFilter = currentFilter;
@@ -206,7 +202,7 @@ namespace MvcProject.MVC.Controllers
         }
 
 
-        private void BuildModel(ref IndexViewModel<VehicleMakeDTO, VehicleModelDTO> model)
+        private void BuildViewModel(ref IndexViewModel<VehicleMakeDTO, VehicleModelDTO> model)
         {
             model.FilteringParams = _paramsFactory.FilteringParamsInstance();
             model.SortingParams = _paramsFactory.SortingParamsInstance();

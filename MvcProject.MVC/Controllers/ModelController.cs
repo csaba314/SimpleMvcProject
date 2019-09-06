@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
 using MvcProject.MVC.Models;
-using PagedList;
 using Project.Service.Model;
 using Project.Service.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using MvcProject.MVC.PresentationService;
 using System.Threading.Tasks;
-//using Project.Service.DTO;
 using Project.Service.ParamContainers;
 
 namespace MvcProject.MVC.Controllers
@@ -52,7 +47,7 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleModelDTO, string>>();
-            BuildModel(ref model);
+            BuildViewModel(ref model);
 
             model.FilteringParams.SearchString = searchString;
             model.FilteringParams.CurrentFilter = currentFilter;
@@ -202,7 +197,7 @@ namespace MvcProject.MVC.Controllers
             return new SelectList(await _makeService.GetMakeDropdown(), "Id", "Name");
         }
 
-        private void BuildModel(ref IndexViewModel<VehicleModelDTO, string> model)
+        private void BuildViewModel(ref IndexViewModel<VehicleModelDTO, string> model)
         {
             model.FilteringParams = _paramsFactory.FilteringParamsInstance();
             model.SortingParams = _paramsFactory.SortingParamsInstance();
