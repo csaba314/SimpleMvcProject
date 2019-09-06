@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using AutoMapper;
-using Project.Service.DTO;
 using Project.Service.Model;
+using MvcProject.MVC.Models;
 
 namespace MvcProject.MVC.App_Start
 {
@@ -17,10 +17,6 @@ namespace MvcProject.MVC.App_Start
 
             Mapper.CreateMap<VehicleModelDTO, IVehicleModel>().ForMember(m => m.Id, opt => opt.Ignore());
             Mapper.CreateMap<IVehicleModel, VehicleModelDTO>();
-
-            Mapper.CreateMap<VehicleModel, VehicleModelDTO>();
-            Mapper.CreateMap<VehicleMake, VehicleMakeDTO>();
-
         }
     }
 }

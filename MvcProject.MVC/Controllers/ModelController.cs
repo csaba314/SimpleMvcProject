@@ -11,7 +11,7 @@ using System.Web;
 using System.Web.Mvc;
 using MvcProject.MVC.PresentationService;
 using System.Threading.Tasks;
-using Project.Service.DTO;
+//using Project.Service.DTO;
 using Project.Service.ParamContainers;
 
 namespace MvcProject.MVC.Controllers
@@ -61,8 +61,16 @@ namespace MvcProject.MVC.Controllers
             model.SortingParams.Sorting = sorting;
             model.Options.LoadMakesWithModel = true;
 
-            model.EntityList = await _modelService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams, model.Options);
-            
+            var pagedDomainList = await _modelService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams, model.Options);
+
+            if (pagedDomainList.PageNumber > pagedDomainList.PageCount)
+            {
+                model.PagingParams.PageNumber = 1;
+                pagedDomainList = await _modelService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams, model.Options);
+            }
+
+            model.EntityList = PagedListMapper.ToMappedPagedList<IVehicleModel, VehicleModelDTO>(pagedDomainList);
+
 
 
             model.FilteringParams.CurrentFilter = searchString;
@@ -75,6 +83,7 @@ namespace MvcProject.MVC.Controllers
 
             return View(model);
         }
+
         #endregion
 
         #region Create

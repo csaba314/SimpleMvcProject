@@ -1,5 +1,4 @@
 ﻿using PagedList;
-using Project.Service.DTO;
 using Project.Service.Model;
 using Project.Service.ParamContainers;
 using System;
@@ -21,7 +20,7 @@ namespace Project.Service.Services
 
         }
 
-        public async Task<IPagedList<VehicleMakeDTO>> GetAsync(
+        public async Task<IPagedList<IVehicleMake>> GetAsync(
             IFilteringParams filteringParams, 
             IPagingParams pagingParams,
             ISortingParams sortingParams)
@@ -57,13 +56,13 @@ namespace Project.Service.Services
                     break;
             }
 
-            var dtoList = makeList.Select(x => Mapper.Map<VehicleMakeDTO>(x));
+            //var dtoList = makeList.Select(x => Mapper.Map<VehicleMakeDTO>(x));
             
-            var pagedList = dtoList.ToPagedList(pagingParams.PageNumber, pagingParams.PageSize);
+            var pagedList = makeList.ToPagedList(pagingParams.PageNumber, pagingParams.PageSize);
 
             if (pagedList.PageCount < pagedList.PageNumber)
             {
-                dtoList.ToPagedList(1, pagingParams.PageSize);
+                makeList.ToPagedList(1, pagingParams.PageSize);
             }
 
             return pagedList;

@@ -57,8 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTO\VehicleMakeDTO.cs" />
-    <Compile Include="DTO\VehicleModelDTO.cs" />
     <Compile Include="ParamContainers\FilteringParams.cs" />
     <Compile Include="ParamContainers\IFilteringParams.cs" />
     <Compile Include="ParamContainers\IPagingParams.cs" />

@@ -148,6 +148,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\IndexViewModel.cs" />
+    <Compile Include="Models\VehicleMakeDTO.cs" />
+    <Compile Include="Models\VehicleModelDTO.cs" />
+    <Compile Include="PresentationService\PagedListMapper.cs" />
     <Compile Include="PresentationService\PagingHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

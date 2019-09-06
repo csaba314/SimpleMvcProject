@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using Project.Service.ParamContainers;
 using PagedList;
-using Project.Service.DTO;
 
 namespace Project.Service.Services
 {
@@ -26,14 +25,14 @@ namespace Project.Service.Services
             return list.Where(m => m.VehicleMakeId == makeId).ToList();
         }
 
-        public async Task<IPagedList<VehicleModelDTO>> GetAsync(IFilteringParams filteringParams,
+        public async Task<IPagedList<IVehicleModel>> GetAsync(IFilteringParams filteringParams,
                                                                 IPagingParams pagingParams,
                                                                 ISortingParams sortingParams,
                                                                 IOptions options)
         {
             IQueryable<VehicleModel> modelList = await base.GetAllAsync();
 
-            if (options.LoadMakesWithModel)
+            if (!options.LoadMakesWithModel)
             {
                 modelList = Context.VehicleModels;
             }
@@ -77,13 +76,13 @@ namespace Project.Service.Services
                     break;
             }
 
-            var dtoList = modelList.Select(x => AutoMapper.Mapper.Map<VehicleModelDTO>(x));
+            //var dtoList = modelList.Select(x => AutoMapper.Mapper.Map<VehicleModelDTO>(x));
 
-            var pagedList = dtoList.ToPagedList(pagingParams.PageNumber, pagingParams.PageSize);
+            var pagedList = modelList.ToPagedList(pagingParams.PageNumber, pagingParams.PageSize);
 
             if (pagedList.PageCount < pagedList.PageNumber)
             {
-                dtoList.ToPagedList(1, pagingParams.PageSize);
+                modelList.ToPagedList(1, pagingParams.PageSize);
             }
             return pagedList;
         }

@@ -1,5 +1,4 @@
 ﻿using PagedList;
-using Project.Service.DTO;
 using Project.Service.Model;
 using Project.Service.ParamContainers;
 using System;
@@ -12,7 +11,7 @@ namespace Project.Service.Services
 {
     public interface IMakeServicesAsync : IServicesAsync<VehicleMake>
     {
-        Task<IPagedList<VehicleMakeDTO>> GetAsync(IFilteringParams filteringParams, IPagingParams pagingParams, ISortingParams sortingParams);
+        Task<IPagedList<IVehicleMake>> GetAsync(IFilteringParams filteringParams, IPagingParams pagingParams, ISortingParams sortingParams);
         Task<int> UpdateAsync(IVehicleMake entity);
         Task<int> AddAsync(IVehicleMake entity);
         Task<IVehicleMake> FindAsync(int id);

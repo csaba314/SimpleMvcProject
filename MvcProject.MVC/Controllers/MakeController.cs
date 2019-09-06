@@ -12,7 +12,7 @@ using PagedList;
 using MvcProject.MVC.PresentationService;
 using Autofac;
 using System.Threading.Tasks;
-using Project.Service.DTO;
+//using Project.Service.DTO;
 using Project.Service.ParamContainers;
 
 namespace MvcProject.MVC.Controllers
@@ -61,7 +61,15 @@ namespace MvcProject.MVC.Controllers
             model.PagingParams.PageNumber = pageNumber;
             model.SortingParams.Sorting = sorting;
 
-            model.EntityList = await _makeService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams);
+            var pagedDomainList = await _makeService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams);
+
+            if (pagedDomainList.PageNumber > pagedDomainList.PageCount)
+            {
+                model.PagingParams.PageNumber = 1;
+                pagedDomainList = await _makeService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams);
+            }
+
+            model.EntityList = PagedListMapper.ToMappedPagedList<IVehicleMake, VehicleMakeDTO>(pagedDomainList);
 
 
             if (id > 0)
@@ -81,8 +89,6 @@ namespace MvcProject.MVC.Controllers
 
             return View(model);
         }
-
-        
 
         #endregion
 
