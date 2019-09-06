@@ -1,4 +1,4 @@
-﻿namespace Project.Service.Containers
+﻿namespace Project.Service.ParamContainers
 {
     public interface IOptions
     {

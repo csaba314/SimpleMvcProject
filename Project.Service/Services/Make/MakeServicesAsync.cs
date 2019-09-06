@@ -1,10 +1,14 @@
-﻿using Project.Service.Containers;
+﻿using PagedList;
+using Project.Service.DTO;
 using Project.Service.Model;
+using Project.Service.ParamContainers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+
 
 namespace Project.Service.Services
 {
@@ -17,18 +21,21 @@ namespace Project.Service.Services
 
         }
 
-        public async Task<IEnumerable<IVehicleMake>> GetAllAsync(IControllerParameters parameters)
+        public async Task<IPagedList<VehicleMakeDTO>> GetAsync(
+            IFilteringParams filteringParams, 
+            IPagingParams pagingParams,
+            ISortingParams sortingParams)
         {
-            var makeList = await GetAllAsync();
+            IQueryable<VehicleMake> makeList = await GetAllAsync();
 
             // Filtering
-            if (!String.IsNullOrEmpty(parameters.SearchString))
+            if (!String.IsNullOrEmpty(filteringParams.SearchString))
             {
-                makeList = makeList.Where(x => x.Name.ToLower().Contains(parameters.SearchString.ToLower()));
+                makeList = makeList.Where(x => x.Name.ToLower().Contains(filteringParams.SearchString.ToLower()));
             }
 
             // Sorting
-            switch (parameters.Sorting)
+            switch (sortingParams.Sorting)
             {
                 case "name_desc":
                     makeList = makeList.OrderByDescending(x => x.Name);
@@ -50,7 +57,16 @@ namespace Project.Service.Services
                     break;
             }
 
-            return makeList;
+            var dtoList = makeList.Select(x => Mapper.Map<VehicleMakeDTO>(x));
+            
+            var pagedList = dtoList.ToPagedList(pagingParams.PageNumber, pagingParams.PageSize);
+
+            if (pagedList.PageCount < pagedList.PageNumber)
+            {
+                dtoList.ToPagedList(1, pagingParams.PageSize);
+            }
+
+            return pagedList;
         }
 
         public async Task<int> AddAsync(IVehicleMake entity)
@@ -92,6 +108,32 @@ namespace Project.Service.Services
             {
                 throw new ArgumentException();
             }
+        }
+
+
+
+        public async Task<IVehicleMake> FindAsync(int id)
+        {
+            return await base.GetAsync(id);
+
+        }
+
+        public async Task<int> RemoveAsync(IVehicleMake entity)
+        {
+            if (entity is VehicleMake)
+            {
+                return await base.RemoveAsync(entity as VehicleMake);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        public async Task<IEnumerable<IVehicleMake>> GetMakeDropdown()
+        {
+            var list = await base.GetAllAsync();
+            return list.ToList();
         }
     }
 }

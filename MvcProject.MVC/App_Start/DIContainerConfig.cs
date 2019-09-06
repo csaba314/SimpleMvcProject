@@ -7,9 +7,9 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using MvcProject.MVC.Models;
-using MvcProject.MVC.Models.Factories;
-using Project.Service.Containers;
+using Project.Service.DTO;
 using Project.Service.Model;
+using Project.Service.ParamContainers;
 using Project.Service.Services;
 
 namespace MvcProject.MVC.App_Start
@@ -33,15 +33,12 @@ namespace MvcProject.MVC.App_Start
             builder.RegisterType<VehicleMakeDTO>().AsSelf();
             builder.RegisterType<VehicleModelDTO>().AsSelf();
 
-            // Register factories
-            builder.RegisterType<DomainModelFactory>().As<IDomainModelFactory>();
-            builder.RegisterType<DTOFactory>().As<IDTOFactory>();
-            builder.RegisterType<IndexViewModelFactory>().As<IIndexViewModelFactory>();
-
             // Register parameters
-            builder.RegisterType<ControllerParameters>().As<IControllerParameters>();
+            builder.RegisterAssemblyTypes(typeof(Options).Assembly)
+                .Where(t => t.Name.EndsWith("Params") && t.Namespace.EndsWith("ParamContainers"))
+                .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
             builder.RegisterType<Options>().As<IOptions>();
-            builder.RegisterType<ParamContainerBuilder>().As<IParamContainerBuilder>();
+            builder.RegisterType<ParamsFactory>().As<IParamsFactory>();
 
             // Register all domain model objects
             builder.RegisterAssemblyTypes(typeof(VehicleMake).Assembly)

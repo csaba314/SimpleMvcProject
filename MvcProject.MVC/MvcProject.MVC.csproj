@@ -147,13 +147,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Factories\IDTOFactory.cs" />
-    <Compile Include="Models\Factories\IIndexViewModelFactory.cs" />
     <Compile Include="Models\IndexViewModel.cs" />
-    <Compile Include="Models\Factories\IndexViewModelFactory.cs" />
-    <Compile Include="Models\VehicleMakeDTO.cs" />
-    <Compile Include="Models\VehicleModelDTO.cs" />
-    <Compile Include="Models\Factories\DTOFactory.cs" />
     <Compile Include="PresentationService\PagingHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Service.Containers
+namespace Project.Service.ParamContainers
 {
-    public class Options : IOptions
+    public class SortingParams : ISortingParams
     {
-        public bool LoadMakesWithModel { get; set; } = false;
+        public string Sorting { get; set; }
     }
 }

@@ -57,12 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\DomainModelFactory.cs" />
-    <Compile Include="Model\IDomainModelFactory.cs" />
-    <Compile Include="ParamContainers\IParamContainerBuilder.cs" />
-    <Compile Include="ParamContainers\ParamContainerBuilder.cs" />
-    <Compile Include="ParamContainers\ControllerParameters\IControllerParameters.cs" />
-    <Compile Include="ParamContainers\LoadingOptions\IOptions.cs" />
+    <Compile Include="DTO\VehicleMakeDTO.cs" />
+    <Compile Include="DTO\VehicleModelDTO.cs" />
+    <Compile Include="ParamContainers\FilteringParams.cs" />
+    <Compile Include="ParamContainers\IFilteringParams.cs" />
+    <Compile Include="ParamContainers\IPagingParams.cs" />
+    <Compile Include="ParamContainers\IParamsFactory.cs" />
+    <Compile Include="ParamContainers\ISortingParams.cs" />
+    <Compile Include="ParamContainers\PagingParams.cs" />
+    <Compile Include="ParamContainers\IOptions.cs" />
     <Compile Include="Migrations\201908261449071_InitialMigration.cs" />
     <Compile Include="Migrations\201908261449071_InitialMigration.Designer.cs">
       <DependentUpon>201908261449071_InitialMigration.cs</DependentUpon>
@@ -77,15 +80,16 @@
     <Compile Include="Model\Make\VehicleMake.cs" />
     <Compile Include="Model\Model\VehicleModel.cs" />
     <Compile Include="Model\ProjectDbContext.cs" />
+    <Compile Include="ParamContainers\ParamsFactory.cs" />
+    <Compile Include="ParamContainers\SortingParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ParamContainers\ControllerParameters\ControllerParameters.cs" />
     <Compile Include="Services\Make\IMakeServicesAsync.cs" />
     <Compile Include="Services\Model\IModelServicesAsync.cs" />
     <Compile Include="Services\IServicesAsync.cs" />
     <Compile Include="Services\Make\MakeServicesAsync.cs" />
     <Compile Include="Services\Model\ModelServicesAsync.cs" />
     <Compile Include="Services\ServicesAsync.cs" />
-    <Compile Include="ParamContainers\LoadingOptions\Options.cs" />
+    <Compile Include="ParamContainers\Options.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

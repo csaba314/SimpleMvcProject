@@ -1,6 +1,5 @@
 ﻿using MvcProject.MVC.Models;
 using Project.Service.Services;
-using Project.Service.Containers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +11,9 @@ using Project.Service.Model;
 using PagedList;
 using MvcProject.MVC.PresentationService;
 using Autofac;
-using MvcProject.MVC.Models.Factories;
 using System.Threading.Tasks;
+using Project.Service.DTO;
+using Project.Service.ParamContainers;
 
 namespace MvcProject.MVC.Controllers
 {
@@ -23,10 +23,7 @@ namespace MvcProject.MVC.Controllers
 
         private IMakeServicesAsync _makeService;
         private IModelServicesAsync _modelService;
-        private IDomainModelFactory _domainModelFactory;
-        private IIndexViewModelFactory _indexViewModelFactory;
-        private IParamContainerBuilder _paramContainerBuilder;
-        private IDTOFactory _dtoFactory;
+        private IParamsFactory _paramsFactory;
 
         #endregion
 
@@ -35,17 +32,11 @@ namespace MvcProject.MVC.Controllers
         public MakeController(
             IMakeServicesAsync makeService, 
             IModelServicesAsync modelService,
-            IDomainModelFactory domainModelFactory,
-            IIndexViewModelFactory indexViewModelFactory,
-            IParamContainerBuilder paramContainerBuilder,
-            IDTOFactory dtoFactory)
+            IParamsFactory paramsFactory)
         {
             _modelService = modelService;
             _makeService = makeService;
-            _domainModelFactory = domainModelFactory;
-            _indexViewModelFactory = indexViewModelFactory;
-            _paramContainerBuilder = paramContainerBuilder;
-            _dtoFactory = dtoFactory;
+            _paramsFactory = paramsFactory;
         }
         #endregion
 
@@ -61,26 +52,21 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = _indexViewModelFactory.MakeIndexViewModelInstance();
-            model.ControllerParameters = _paramContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
+            var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleMakeDTO, VehicleModelDTO>>();
+            BuildModel(ref model);
 
-            var mappedList = await _makeService.GetAllAsync(model.ControllerParameters);
+            model.FilteringParams.SearchString = searchString;
+            model.FilteringParams.CurrentFilter = currentFilter;
+            model.PagingParams.PageSize = pageSize;
+            model.PagingParams.PageNumber = pageNumber;
+            model.SortingParams.Sorting = sorting;
 
-            var list = mappedList.Select(x => Mapper.Map<VehicleMakeDTO>(x)).ToPagedList(pageNumber, pageSize);
+            model.EntityList = await _makeService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams);
 
-            if (list.PageCount < list.PageNumber)
-            {
-                model.EntityList = mappedList.Select(x => Mapper.Map<VehicleMakeDTO>(x)).ToPagedList(1, pageSize);
-            }
-            else
-            {
-                model.EntityList = list;
-            }
 
-            
             if (id > 0)
             {
-                model.Entity = Mapper.Map<VehicleMakeDTO>(await _makeService.GetAsync(id));
+                model.Entity = Mapper.Map<VehicleMakeDTO>(await _makeService.FindAsync(id));
                 var modelsList = await _modelService.GetAllByMakeAsync(id);
                 model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
             }            
@@ -90,11 +76,13 @@ namespace MvcProject.MVC.Controllers
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
 
-            model.ControllerParameters.CurrentFilter = searchString;
-            model.ControllerParameters.Sorting = sorting;
+            model.FilteringParams.CurrentFilter = searchString;
+            model.SortingParams.Sorting = sorting;
 
             return View(model);
         }
+
+        
 
         #endregion
 
@@ -103,7 +91,8 @@ namespace MvcProject.MVC.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return View(_dtoFactory.MakeDTOInstance());
+            var makeDTO = DependencyResolver.Current.GetService<VehicleMakeDTO>();
+            return View(makeDTO);
         }
 
         // POST: /Make/Create
@@ -114,7 +103,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newMake = _domainModelFactory.MakeInstance();
+            var newMake = DependencyResolver.Current.GetService<IVehicleMake>();
             Mapper.Map(model, newMake);
             await _makeService.AddAsync(newMake);
             await _makeService.SaveChangesAsync();
@@ -133,7 +122,7 @@ namespace MvcProject.MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedMake = await _makeService.GetAsync((int)id);
+            var selectedMake = await _makeService.FindAsync((int)id);
 
             if (selectedMake == null)
             {
@@ -151,7 +140,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var makeToUpdate = await _makeService.GetAsync(model.Id);
+            var makeToUpdate = await _makeService.FindAsync(model.Id);
             Mapper.Map(model, makeToUpdate);
             await _makeService.UpdateAsync(makeToUpdate);
             await _makeService.SaveChangesAsync();
@@ -170,7 +159,7 @@ namespace MvcProject.MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var selectedMake = await _makeService.GetAsync((int)id);
+            var selectedMake = await _makeService.FindAsync((int)id);
 
             if (selectedMake == null)
             {
@@ -190,7 +179,7 @@ namespace MvcProject.MVC.Controllers
             var modelList = await _modelService.GetAllByMakeAsync(id);
             await _modelService.RemoveRangeAsync(modelList);
 
-            var makeToRemove = await _makeService.GetAsync(id);
+            var makeToRemove = await _makeService.FindAsync(id);
             await _makeService.RemoveAsync(makeToRemove);
 
             await _makeService.SaveChangesAsync();
@@ -210,5 +199,13 @@ namespace MvcProject.MVC.Controllers
             base.Dispose(disposing);
         }
 
+
+        private void BuildModel(ref IndexViewModel<VehicleMakeDTO, VehicleModelDTO> model)
+        {
+            model.FilteringParams = _paramsFactory.FilteringParamsInstance();
+            model.SortingParams = _paramsFactory.SortingParamsInstance();
+            model.PagingParams = _paramsFactory.PagingParamsInstance();
+            model.Options = _paramsFactory.IOptionsInstance();
+        }
     }
 }

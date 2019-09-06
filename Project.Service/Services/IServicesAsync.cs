@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace Project.Service.Services
     public interface IServicesAsync<TEntity> : IDisposable where TEntity : class
     {
         Task<TEntity> GetAsync(int id);
-        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<DbSet<TEntity>> GetAllAsync();
 
         Task<int> AddAsync(TEntity entity);
         Task<int> UpdateAsync(TEntity entity);

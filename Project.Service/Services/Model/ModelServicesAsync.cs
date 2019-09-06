@@ -1,11 +1,13 @@
-﻿using Project.Service.Containers;
-using Project.Service.Model;
+﻿using Project.Service.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using Project.Service.ParamContainers;
+using PagedList;
+using Project.Service.DTO;
 
 namespace Project.Service.Services
 {
@@ -20,14 +22,18 @@ namespace Project.Service.Services
 
         public async Task<IEnumerable<IVehicleModel>> GetAllByMakeAsync(int makeId)
         {
-            return await Task.Run(()=> GetAllAsync().Result.Where(m => m.VehicleMakeId == makeId).ToList());
+            IQueryable<VehicleModel> list = await GetAllAsync();
+            return list.Where(m => m.VehicleMakeId == makeId).ToList();
         }
 
-        public async Task<IEnumerable<IVehicleModel>> GetAllAsync(IControllerParameters parameters)
+        public async Task<IPagedList<VehicleModelDTO>> GetAsync(IFilteringParams filteringParams,
+                                                                IPagingParams pagingParams,
+                                                                ISortingParams sortingParams,
+                                                                IOptions options)
         {
-            IQueryable<VehicleModel> modelList;
+            IQueryable<VehicleModel> modelList = await base.GetAllAsync();
 
-            if (!parameters.Options.LoadMakesWithModel)
+            if (options.LoadMakesWithModel)
             {
                 modelList = Context.VehicleModels;
             }
@@ -37,13 +43,13 @@ namespace Project.Service.Services
             }
 
             // Filtering
-            if (!String.IsNullOrEmpty(parameters.SearchString))
+            if (!String.IsNullOrEmpty(filteringParams.SearchString))
             {
-                modelList = modelList.Where(x => x.VehicleMake.Name.ToLower().Contains(parameters.SearchString.ToLower()));
+                modelList = modelList.Where(x => x.VehicleMake.Name.ToLower().Contains(filteringParams.SearchString.ToLower()));
             }
 
             // Sorting
-            switch (parameters.Sorting)
+            switch (sortingParams.Sorting)
             {
                 case "name_desc":
                     modelList = modelList.OrderByDescending(x => x.Name);
@@ -71,8 +77,17 @@ namespace Project.Service.Services
                     break;
             }
 
-            return await modelList.ToListAsync();
+            var dtoList = modelList.Select(x => AutoMapper.Mapper.Map<VehicleModelDTO>(x));
+
+            var pagedList = dtoList.ToPagedList(pagingParams.PageNumber, pagingParams.PageSize);
+
+            if (pagedList.PageCount < pagedList.PageNumber)
+            {
+                dtoList.ToPagedList(1, pagingParams.PageSize);
+            }
+            return pagedList;
         }
+    
 
 
         public async Task<int> AddAsync(IVehicleModel entity)
@@ -117,6 +132,23 @@ namespace Project.Service.Services
         {
             return Context.VehicleMakes.Find(makeId).Abrv;
         }
-    }
 
+        public async Task<IVehicleModel> FindAsync(int id)
+        {
+            return await base.GetAsync(id);
+        }
+
+        public async Task<int> RemoveAsync(IVehicleModel entity)
+        {
+            if (entity is VehicleModel)
+            {
+                return await base.RemoveAsync(entity as VehicleModel);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+        }
+    }
 }
+
