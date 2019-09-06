@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using MvcProject.MVC.Models;
-using MvcProject.MVC.Models.Factories;
 using Project.Service.Containers;
 using Project.Service.Model;
 using Project.Service.Services;
@@ -32,11 +31,6 @@ namespace MvcProject.MVC.App_Start
             builder.RegisterType<IndexViewModel<VehicleModelDTO, string>>().AsSelf();
             builder.RegisterType<VehicleMakeDTO>().AsSelf();
             builder.RegisterType<VehicleModelDTO>().AsSelf();
-
-            // Register factories
-            builder.RegisterType<DomainModelFactory>().As<IDomainModelFactory>();
-            builder.RegisterType<DTOFactory>().As<IDTOFactory>();
-            builder.RegisterType<IndexViewModelFactory>().As<IIndexViewModelFactory>();
 
             // Register parameters
             builder.RegisterType<ControllerParameters>().As<IControllerParameters>();

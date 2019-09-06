@@ -12,7 +12,6 @@ using Project.Service.Model;
 using PagedList;
 using MvcProject.MVC.PresentationService;
 using Autofac;
-using MvcProject.MVC.Models.Factories;
 using System.Threading.Tasks;
 
 namespace MvcProject.MVC.Controllers
@@ -23,10 +22,7 @@ namespace MvcProject.MVC.Controllers
 
         private IMakeServicesAsync _makeService;
         private IModelServicesAsync _modelService;
-        private IDomainModelFactory _domainModelFactory;
-        private IIndexViewModelFactory _indexViewModelFactory;
         private IParamContainerBuilder _paramContainerBuilder;
-        private IDTOFactory _dtoFactory;
 
         #endregion
 
@@ -35,17 +31,11 @@ namespace MvcProject.MVC.Controllers
         public MakeController(
             IMakeServicesAsync makeService, 
             IModelServicesAsync modelService,
-            IDomainModelFactory domainModelFactory,
-            IIndexViewModelFactory indexViewModelFactory,
-            IParamContainerBuilder paramContainerBuilder,
-            IDTOFactory dtoFactory)
+            IParamContainerBuilder paramContainerBuilder)
         {
             _modelService = modelService;
             _makeService = makeService;
-            _domainModelFactory = domainModelFactory;
-            _indexViewModelFactory = indexViewModelFactory;
             _paramContainerBuilder = paramContainerBuilder;
-            _dtoFactory = dtoFactory;
         }
         #endregion
 
@@ -61,8 +51,9 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = _indexViewModelFactory.MakeIndexViewModelInstance();
-            model.ControllerParameters = _paramContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
+            var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleMakeDTO, VehicleModelDTO>>();
+
+               model.ControllerParameters = _paramContainerBuilder.BuildControllerParameters(sorting, searchString, pageSize, pageNumber);
 
             var mappedList = await _makeService.GetAllAsync(model.ControllerParameters);
 
@@ -103,7 +94,8 @@ namespace MvcProject.MVC.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return View(_dtoFactory.MakeDTOInstance());
+            var makeDTO = DependencyResolver.Current.GetService<VehicleMakeDTO>();
+            return View(makeDTO);
         }
 
         // POST: /Make/Create
@@ -114,7 +106,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newMake = _domainModelFactory.MakeInstance();
+            var newMake = DependencyResolver.Current.GetService<IVehicleMake>();
             Mapper.Map(model, newMake);
             await _makeService.AddAsync(newMake);
             await _makeService.SaveChangesAsync();

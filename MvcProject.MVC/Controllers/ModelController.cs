@@ -11,7 +11,6 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MvcProject.MVC.PresentationService;
-using MvcProject.MVC.Models.Factories;
 using System.Threading.Tasks;
 
 namespace MvcProject.MVC.Controllers
@@ -22,9 +21,6 @@ namespace MvcProject.MVC.Controllers
 
         private IMakeServicesAsync _makeService;
         private IModelServicesAsync _modelService;
-        private IIndexViewModelFactory _indexViewModelFactory;
-        private IDTOFactory _dtoFactory;
-        private IDomainModelFactory _domainModelFactory;
         private IParamContainerBuilder _paramContainerBuilder;
 
         #endregion
@@ -34,16 +30,10 @@ namespace MvcProject.MVC.Controllers
         public ModelController(
             IMakeServicesAsync makeService,
             IModelServicesAsync modelService,
-            IIndexViewModelFactory indexViewModelFactory,
-            IDTOFactory dtoFactory,
-            IDomainModelFactory domainModelFactory,
             IParamContainerBuilder paramContainerBuilder)
         {
             _modelService = modelService;
             _makeService = makeService;
-            _indexViewModelFactory = indexViewModelFactory;
-            _dtoFactory = dtoFactory;
-            _domainModelFactory = domainModelFactory;
             _paramContainerBuilder = paramContainerBuilder;
         }
         #endregion
@@ -60,7 +50,7 @@ namespace MvcProject.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = _indexViewModelFactory.ModelIndexViewModelInstance();
+            var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleModelDTO, string>>();
 
             model.ControllerParameters = _paramContainerBuilder.BuildControllerParameters(
                 sorting, searchString, pageSize, pageNumber, _paramContainerBuilder.BuildLoadingOptions(true));
@@ -96,7 +86,7 @@ namespace MvcProject.MVC.Controllers
         [HttpGet]
         public async Task<ActionResult> Create()
         {
-            var modelDTO = _dtoFactory.ModelDTOInstance();
+            var modelDTO = DependencyResolver.Current.GetService<VehicleModelDTO>();
             ViewBag.MakeDropdown = await GetMakeDropDownAsync();
             return View(modelDTO);
         }
@@ -109,7 +99,7 @@ namespace MvcProject.MVC.Controllers
             {
                 return View(model);
             }
-            var newModel = _domainModelFactory.ModelInstance();
+            var newModel = DependencyResolver.Current.GetService<IVehicleModel>();
             Mapper.Map(model, newModel);
             await _modelService.AddAsync(newModel);
             await _modelService.SaveChangesAsync();
