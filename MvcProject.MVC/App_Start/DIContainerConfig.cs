@@ -11,7 +11,6 @@ using MvcProject.MVC.Models.Factories;
 using Project.Service.Containers;
 using Project.Service.Model;
 using Project.Service.Services;
-using Project.Service.Services.Async;
 
 namespace MvcProject.MVC.App_Start
 {
@@ -41,18 +40,8 @@ namespace MvcProject.MVC.App_Start
 
             // Register parameters
             builder.RegisterType<ControllerParameters>().As<IControllerParameters>();
-            builder.RegisterType<Options>().As<ILoadingOptions>();
+            builder.RegisterType<Options>().As<IOptions>();
             builder.RegisterType<ParamContainerBuilder>().As<IParamContainerBuilder>();
-
-            /*
-            // register all Services
-            // register all types in the assembly where MakeService is located
-            builder.RegisterAssemblyTypes(typeof(MakeService).Assembly)
-                // where type name ends with "Service" and namespace ends with "Services"
-                .Where(t => t.Name.EndsWith("Service") && t.Namespace.EndsWith("Services"))
-                // map to interface that is implemented by type where interface name is "I" + type name
-                .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
-            */
 
             // Register all domain model objects
             builder.RegisterAssemblyTypes(typeof(VehicleMake).Assembly)
@@ -61,7 +50,7 @@ namespace MvcProject.MVC.App_Start
 
             // Register all Async Services
             builder.RegisterAssemblyTypes(typeof(MakeServicesAsync).Assembly)
-                .Where(t => t.Name.EndsWith("Async") && t.Namespace.EndsWith("Async"))
+                .Where(t => t.Name.EndsWith("Async") && t.Namespace.EndsWith("Services"))
                 .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
 
             // build the container

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
 
-namespace Project.Service.Services.Async
+namespace Project.Service.Services
 {
     public class ModelServicesAsync : ServicesAsync<VehicleModel>, IModelServicesAsync
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Service.Services.Async
+namespace Project.Service.Services
 {
     public class MakeServicesAsync : ServicesAsync<VehicleMake>, IMakeServicesAsync
     {
@@ -69,8 +69,6 @@ namespace Project.Service.Services.Async
         {
             if (entity is VehicleMake)
             {
-                //base.UpdateAsync(entity as VehicleMake);
-
                 // get the list of unmodified child entities
                 var modifiedChildModels = Context.VehicleModels.Where(x => x.VehicleMakeId == entity.Id).ToList();
 

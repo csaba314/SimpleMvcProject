@@ -2,7 +2,7 @@
 using MvcProject.MVC.Models;
 using PagedList;
 using Project.Service.Model;
-using Project.Service.Services.Async;
+using Project.Service.Services;
 using Project.Service.Containers;
 using System;
 using System.Collections.Generic;

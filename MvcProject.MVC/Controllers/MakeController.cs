@@ -13,7 +13,6 @@ using PagedList;
 using MvcProject.MVC.PresentationService;
 using Autofac;
 using MvcProject.MVC.Models.Factories;
-using Project.Service.Services.Async;
 using System.Threading.Tasks;
 
 namespace MvcProject.MVC.Controllers

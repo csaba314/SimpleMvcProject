@@ -1,6 +1,6 @@
 ﻿namespace Project.Service.Containers
 {
-    public interface ILoadingOptions
+    public interface IOptions
     {
         bool LoadMakesWithModel { get; set; }
     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Containers
 {
-    public class Options : ILoadingOptions
+    public class Options : IOptions
     {
         public bool LoadMakesWithModel { get; set; } = false;
     }

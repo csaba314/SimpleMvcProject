@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Service.Services.Async
+namespace Project.Service.Services
 {
     public interface IServicesAsync<TEntity> : IDisposable where TEntity : class
     {
@@ -16,7 +16,6 @@ namespace Project.Service.Services.Async
         Task<int> RemoveAsync(TEntity entity);
         Task<int> RemoveRangeAsync(IEnumerable<TEntity> entities);
 
-        //void SaveChanges();
         Task<int> SaveChangesAsync();
     }
 }

@@ -9,18 +9,18 @@ namespace Project.Service.Containers
     public class ParamContainerBuilder : IParamContainerBuilder
     {
         private IControllerParameters _parameters;
-        private ILoadingOptions _options;
+        private IOptions _options;
 
         public ParamContainerBuilder(
             IControllerParameters controllerParameters, 
-            ILoadingOptions loadingOptions)
+            IOptions loadingOptions)
         {
             _parameters = controllerParameters;
             _options = loadingOptions;
         }
 
         public IControllerParameters BuildControllerParameters(
-            string sorting, string searchString, int pageSize, int pageNumber, ILoadingOptions options)
+            string sorting, string searchString, int pageSize, int pageNumber, IOptions options)
         {
             _parameters.Sorting = sorting;
             _parameters.SearchString = searchString;
@@ -31,7 +31,7 @@ namespace Project.Service.Containers
             return _parameters;
         }
 
-        public ILoadingOptions BuildLoadingOptions(bool loadMakesWithModel = false)
+        public IOptions BuildLoadingOptions(bool loadMakesWithModel = false)
         {
             _options.LoadMakesWithModel = loadMakesWithModel;
             return _options;

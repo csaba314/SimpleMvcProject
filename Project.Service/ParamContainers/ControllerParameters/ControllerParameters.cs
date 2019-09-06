@@ -13,6 +13,6 @@ namespace Project.Service.Containers
         public string CurrentFilter { get; set; }
         //public int PageSize { get; set; }
         //public int PageNumber { get; set; }
-        public ILoadingOptions Options { get; set; }
+        public IOptions Options { get; set; }
     }
 }
