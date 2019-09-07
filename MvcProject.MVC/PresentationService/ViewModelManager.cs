@@ -1,9 +1,5 @@
 ﻿using MvcProject.MVC.Models;
-using Project.Service.ParamContainers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using Project.Common.ParamContainers;
 
 namespace MvcProject.MVC.PresentationService
 {

@@ -1,4 +1,4 @@
-﻿namespace Project.Service.ParamContainers
+﻿namespace Project.Common.ParamContainers
 {
     public interface IFilteringParams
     {

@@ -2,10 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
-using Project.Service.ParamContainers;
+using Project.Common.ParamContainers;
 using PagedList;
 
 namespace Project.Service.Services

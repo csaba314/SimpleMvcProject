@@ -7,7 +7,7 @@ using System.Net;
 using System.Web.Mvc;
 using MvcProject.MVC.PresentationService;
 using System.Threading.Tasks;
-using Project.Service.ParamContainers;
+using Project.Common.ParamContainers;
 
 namespace MvcProject.MVC.Controllers
 {

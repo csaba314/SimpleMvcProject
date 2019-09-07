@@ -9,7 +9,7 @@ using AutoMapper;
 using Project.Service.Model;
 using MvcProject.MVC.PresentationService;
 using System.Threading.Tasks;
-using Project.Service.ParamContainers;
+using Project.Common.ParamContainers;
 
 namespace MvcProject.MVC.Controllers
 {

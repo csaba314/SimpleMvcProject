@@ -41,6 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ParamContainers\FilteringParams.cs" />
+    <Compile Include="ParamContainers\IFilteringParams.cs" />
+    <Compile Include="ParamContainers\IOptions.cs" />
+    <Compile Include="ParamContainers\IPagingParams.cs" />
+    <Compile Include="ParamContainers\IParamsFactory.cs" />
+    <Compile Include="ParamContainers\ISortingParams.cs" />
+    <Compile Include="ParamContainers\Options.cs" />
+    <Compile Include="ParamContainers\PagingParams.cs" />
+    <Compile Include="ParamContainers\ParamsFactory.cs" />
+    <Compile Include="ParamContainers\SortingParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
