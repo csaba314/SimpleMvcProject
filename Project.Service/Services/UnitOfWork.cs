@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Project.Service.Model;
+using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 
 namespace Project.Service.Services
 {
-    public class ServicesAsync<TEntity> : IServicesAsync<TEntity> where TEntity : class
+    internal class UnitOfWork<TEntity> : IUnitOfWork<TEntity> where TEntity : class
     {
 
-        protected DbContext _context;
+        private readonly ProjectDbContext _context;
 
-        public ServicesAsync(DbContext context)
+        public UnitOfWork(ProjectDbContext context)
         {
             if (context == null)
             {
@@ -109,7 +110,6 @@ namespace Project.Service.Services
             if (_context != null)
             {
                 _context.Dispose();
-                _context = null;
             }
             
         }

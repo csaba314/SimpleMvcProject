@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Services
 {
-    public interface IServicesAsync<TEntity> : IDisposable where TEntity : class
+    public interface IUnitOfWork<TEntity> : IDisposable where TEntity : class
     {
         Task<TEntity> GetAsync(int id);
         Task<DbSet<TEntity>> GetAllAsync();
