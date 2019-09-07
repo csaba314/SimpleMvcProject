@@ -2,16 +2,24 @@
 @using MvcProject.MVC.Models
 
 @{
-    
+    TempData.Keep("message");
     ViewBag.Title = "Vehicle Make";
 }
 
 <h2>@ViewBag.Title</h2>
 
+@*@if (ViewBag.Message != null)
+    {
+        <h4 style="color:red">@ViewBag.Message</h4>
+    }*@
+
 @Html.ActionLink("Add New Vehicle Make", "Create", null, new { @class = "btn btn-primary" })
 <br />
 @using (Html.BeginForm("Index", "Make", FormMethod.Get))
 {
+
+
+
     <p>
         <strong>Search by Name</strong>
         @Html.TextBox("searchString", Model.FilteringParams.CurrentFilter)
@@ -72,22 +80,24 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-5 table-bordered">
-            @if (Model.ChildEntityList != null)
-            {
+
+        @if (Model.ChildEntityList != null)
+        {
+            <div class="col-md-5 table-bordered">
                 <h3>Vehicle Models belonging to @Model.Entity.Name</h3>
 
-            <table class="table table-hover" style="width:150px;">
-                @foreach (var item in Model.ChildEntityList)
-                {
-                    <tr>
-                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                    </tr>
-                }
+                <table class="table table-hover" style="width:150px;">
+                    @foreach (var item in Model.ChildEntityList)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                        </tr>
+                    }
 
-            </table>
-            }
-        </div>
+                </table>
+            </div>
+        }
+
         <div class="col-md-5"></div>
     </div>
     <div class="row">

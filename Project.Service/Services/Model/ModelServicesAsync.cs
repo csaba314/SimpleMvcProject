@@ -19,10 +19,15 @@ namespace Project.Service.Services
 
         }
 
+        public async Task<IVehicleModel> FindAsync(int id)
+        {
+            return await base.GetAsync(id);
+        }
+
         public async Task<IEnumerable<IVehicleModel>> GetAllByMakeAsync(int makeId)
         {
             IQueryable<VehicleModel> list = await GetAllAsync();
-            return list.Where(m => m.VehicleMakeId == makeId).ToList();
+            return list.Where(m => m.VehicleMakeId == makeId).OrderBy(m => m.Name).ToList();
         }
 
         public async Task<IPagedList<IVehicleModel>> GetAsync(IFilteringParams filteringParams,
@@ -91,8 +96,16 @@ namespace Project.Service.Services
         {
             if (entity is VehicleModel)
             {
-                entity.Abrv = SetModelAbrv(entity.VehicleMakeId);
-                return await base.AddAsync(entity as VehicleModel);
+                try
+                {
+                    entity.Abrv = SetModelAbrv(entity.VehicleMakeId);
+                    await base.AddAsync(entity as VehicleModel);
+                    return await base.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
             }
             else
             {
@@ -104,8 +117,17 @@ namespace Project.Service.Services
         {
             if (entity is VehicleModel)
             {
-                entity.Abrv = SetModelAbrv(entity.VehicleMakeId);
-                return await base.UpdateAsync(entity as VehicleModel);
+                try
+                {
+                    entity.Abrv = SetModelAbrv(entity.VehicleMakeId);
+                    await base.UpdateAsync(entity as VehicleModel);
+                    return await base.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+
+                    throw e;
+                }
             }
             else
             {
@@ -113,11 +135,19 @@ namespace Project.Service.Services
             }
         }
 
-        public async Task<int> RemoveRangeAsync(IEnumerable<IVehicleModel> entities)
+        public async Task<int> RemoveAsync(IVehicleModel entity)
         {
-            if (entities is IEnumerable<VehicleModel>)
+            if (entity is VehicleModel)
             {
-                return await base.RemoveRangeAsync(entities as IEnumerable<VehicleModel>);
+                try
+                {
+                    await base.RemoveAsync(entity as VehicleModel);
+                    return await base.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
             }
             else
             {
@@ -128,23 +158,6 @@ namespace Project.Service.Services
         private string SetModelAbrv(int makeId)
         {
             return Context.VehicleMakes.Find(makeId).Abrv;
-        }
-
-        public async Task<IVehicleModel> FindAsync(int id)
-        {
-            return await base.GetAsync(id);
-        }
-
-        public async Task<int> RemoveAsync(IVehicleModel entity)
-        {
-            if (entity is VehicleModel)
-            {
-                return await base.RemoveAsync(entity as VehicleModel);
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
         }
     }
 }

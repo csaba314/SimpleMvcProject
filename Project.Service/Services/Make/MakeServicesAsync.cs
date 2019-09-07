@@ -14,6 +14,11 @@ namespace Project.Service.Services
 
         public MakeServicesAsync(ProjectDbContext context) : base(context)
         {
+        }
+
+        public async Task<IVehicleMake> FindAsync(int id)
+        {
+            return await base.GetAsync(id);
 
         }
 
@@ -22,8 +27,9 @@ namespace Project.Service.Services
             IPagingParams pagingParams,
             ISortingParams sortingParams)
         {
-            IQueryable<VehicleMake> makeList = await GetAllAsync();
 
+            IQueryable<VehicleMake> makeList = await GetAllAsync();
+            
             // Filtering
             if (!String.IsNullOrEmpty(filteringParams.SearchString))
             {
@@ -52,14 +58,12 @@ namespace Project.Service.Services
                     makeList = makeList.OrderBy(x => x.Name);
                     break;
             }
-          
             var pagedList = makeList.ToPagedList(pagingParams.PageNumber, pagingParams.PageSize);
 
             if (pagedList.PageCount < pagedList.PageNumber)
             {
                 makeList.ToPagedList(1, pagingParams.PageSize);
             }
-
             return pagedList;
         }
 
@@ -67,7 +71,15 @@ namespace Project.Service.Services
         {
             if (entity is VehicleMake)
             {
-                return await base.AddAsync(entity as VehicleMake);
+                try
+                {
+                    await base.AddAsync(entity as VehicleMake);
+                    return await base.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
             }
             else
             {
@@ -79,24 +91,32 @@ namespace Project.Service.Services
         {
             if (entity is VehicleMake)
             {
-                // get the list of unmodified child entities
-                var modifiedChildModels = Context.VehicleModels.Where(x => x.VehicleMakeId == entity.Id).ToList();
-
-                foreach (var item in modifiedChildModels)
+                try
                 {
-                    // set the new property value for each item in the list
-                    item.Abrv = entity.Abrv;
+                    // get the list of unmodified child entities
+                    var modifiedChildModels = Context.VehicleModels.Where(x => x.VehicleMakeId == entity.Id).ToList();
 
-                    // select the existing child entity from the parrent entity
-                    var existingChild = entity.VehicleModels.Where(c => c.Id == item.Id).SingleOrDefault();
-
-                    if (existingChild != null)
+                    foreach (var item in modifiedChildModels)
                     {
-                        // set the new values to the child entity in the parrent entity collection
-                        Context.Entry(existingChild).CurrentValues.SetValues(item);
+                        // set the new property value for each item in the list
+                        item.Abrv = entity.Abrv;
+
+                        // select the existing child entity from the parrent entity
+                        var existingChild = entity.VehicleModels.Where(c => c.Id == item.Id).SingleOrDefault();
+
+                        if (existingChild != null)
+                        {
+                            // set the new values to the child entity in the parrent entity collection
+                            Context.Entry(existingChild).CurrentValues.SetValues(item);
+                        }
                     }
+                    await base.UpdateAsync(entity as VehicleMake);
+                    return await base.SaveChangesAsync();
                 }
-                return await base.UpdateAsync(entity as VehicleMake);
+                catch (Exception e)
+                {
+                    throw e;
+                }
             }
             else
             {
@@ -104,19 +124,19 @@ namespace Project.Service.Services
             }
         }
 
-
-
-        public async Task<IVehicleMake> FindAsync(int id)
-        {
-            return await base.GetAsync(id);
-
-        }
-
         public async Task<int> RemoveAsync(IVehicleMake entity)
         {
             if (entity is VehicleMake)
             {
-                return await base.RemoveAsync(entity as VehicleMake);
+                try
+                {
+                    await base.RemoveAsync(entity as VehicleMake);
+                    return await base.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
             }
             else
             {

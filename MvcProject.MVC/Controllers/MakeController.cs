@@ -107,8 +107,9 @@ namespace MvcProject.MVC.Controllers
             }
             var newMake = DependencyResolver.Current.GetService<IVehicleMake>();
             Mapper.Map(model, newMake);
+            string message = string.Empty;
+
             await _makeService.AddAsync(newMake);
-            await _makeService.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
@@ -144,8 +145,8 @@ namespace MvcProject.MVC.Controllers
             }
             var makeToUpdate = await _makeService.FindAsync(model.Id);
             Mapper.Map(model, makeToUpdate);
+
             await _makeService.UpdateAsync(makeToUpdate);
-            await _makeService.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
@@ -178,13 +179,9 @@ namespace MvcProject.MVC.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var modelList = await _modelService.GetAllByMakeAsync(id);
-            await _modelService.RemoveRangeAsync(modelList);
-
             var makeToRemove = await _makeService.FindAsync(id);
-            await _makeService.RemoveAsync(makeToRemove);
 
-            await _makeService.SaveChangesAsync();
+            await _makeService.RemoveAsync(makeToRemove);
 
             return RedirectToAction("Index");
         }

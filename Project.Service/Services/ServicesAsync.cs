@@ -32,56 +32,72 @@ namespace Project.Service.Services
 
         public Task<int> AddAsync(TEntity entity)
         {
-            DbEntityEntry entityEntry = _context.Entry(entity);
-
-            if (entityEntry.State != EntityState.Detached)
+            try
             {
-                _context.Set<TEntity>().Attach(entity);
-            }
-            else
-            {
-                _context.Set<TEntity>().Add(entity);
-            }
+                DbEntityEntry entityEntry = _context.Entry(entity);
 
-            return Task.FromResult(1);
+                if (entityEntry.State != EntityState.Detached)
+                {
+                    _context.Set<TEntity>().Attach(entity);
+                }
+                else
+                {
+                    _context.Set<TEntity>().Add(entity);
+                }
+
+                return Task.FromResult(1);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public Task<int> UpdateAsync(TEntity entity)
         {
-            DbEntityEntry entityEntry = _context.Entry(entity);
-
-            if (entityEntry.State == EntityState.Detached)
+            try
             {
-                _context.Set<TEntity>().Attach(entity);
-            }
+                DbEntityEntry entityEntry = _context.Entry(entity);
 
-            entityEntry.State = EntityState.Modified;
-            
-            return Task.FromResult(1);
+                if (entityEntry.State == EntityState.Detached)
+                {
+                    _context.Set<TEntity>().Attach(entity);
+                }
+
+                entityEntry.State = EntityState.Modified;
+
+                return Task.FromResult(1);
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
 
         public Task<int> RemoveAsync(TEntity entity)
         {
-            DbEntityEntry entityEntry = _context.Entry(entity);
-
-            if (entityEntry.State != EntityState.Deleted)
+            try
             {
-                entityEntry.State = EntityState.Deleted;
+                DbEntityEntry entityEntry = _context.Entry(entity);
+
+                if (entityEntry.State != EntityState.Deleted)
+                {
+                    entityEntry.State = EntityState.Deleted;
+                }
+                else
+                {
+                    _context.Set<TEntity>().Attach(entity);
+                    _context.Set<TEntity>().Remove(entity);
+                }
+
+                return Task.FromResult(1);
             }
-            else
+            catch (Exception e)
             {
-                _context.Set<TEntity>().Attach(entity);
-                _context.Set<TEntity>().Remove(entity);
+
+                throw e;
             }
-
-            return Task.FromResult(1);
-        }
-
-        public Task<int> RemoveRangeAsync(IEnumerable<TEntity> entities)
-        {
-            Task.Run(() =>_context.Set<TEntity>().RemoveRange(entities));
-
-            return Task.FromResult(1);
         }
 
         public async Task<int> SaveChangesAsync()

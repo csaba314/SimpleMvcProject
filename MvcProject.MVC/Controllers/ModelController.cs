@@ -102,8 +102,8 @@ namespace MvcProject.MVC.Controllers
             }
             var newModel = DependencyResolver.Current.GetService<IVehicleModel>();
             Mapper.Map(model, newModel);
+
             await _modelService.AddAsync(newModel);
-            await _modelService.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
@@ -143,8 +143,8 @@ namespace MvcProject.MVC.Controllers
 
             var editedModel = await _modelService.FindAsync(model.Id);
             Mapper.Map(model, editedModel);
+
             await _modelService.UpdateAsync(editedModel);
-            await _modelService.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
@@ -174,8 +174,8 @@ namespace MvcProject.MVC.Controllers
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var modelToRemove = await _modelService.FindAsync(id);
+
             await _modelService.RemoveAsync(modelToRemove);
-            await _modelService.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }

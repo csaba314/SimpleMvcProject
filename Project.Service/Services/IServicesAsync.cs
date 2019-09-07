@@ -13,7 +13,7 @@ namespace Project.Service.Services
         Task<int> AddAsync(TEntity entity);
         Task<int> UpdateAsync(TEntity entity);
         Task<int> RemoveAsync(TEntity entity);
-        Task<int> RemoveRangeAsync(IEnumerable<TEntity> entities);
+        //Task<int> RemoveRangeAsync(IEnumerable<TEntity> entities);
 
         Task<int> SaveChangesAsync();
     }
