@@ -101,6 +101,11 @@
       <DependentUpon>201908270938278_seedDbWithTestData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Project.Common\Project.Common.csproj">
+      <Project>{36c87590-53b3-41d6-b52f-cd504937a99b}</Project>
+      <Name>Project.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

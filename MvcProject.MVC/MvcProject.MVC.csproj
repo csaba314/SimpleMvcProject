@@ -220,6 +220,10 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Project.Common\Project.Common.csproj">
+      <Project>{36c87590-53b3-41d6-b52f-cd504937a99b}</Project>
+      <Name>Project.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Project.Service\Project.Service.csproj">
       <Project>{1d150be6-3a55-405f-9f0a-b8bd411552d5}</Project>
       <Name>Project.Service</Name>

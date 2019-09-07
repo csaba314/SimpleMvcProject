@@ -7,7 +7,6 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using MvcProject.MVC.Models;
-//using Project.Service.DTO;
 using Project.Service.Model;
 using Project.Service.ParamContainers;
 using Project.Service.Services;
