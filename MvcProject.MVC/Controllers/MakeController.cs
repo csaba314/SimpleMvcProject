@@ -49,13 +49,9 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleMakeDTO, VehicleModelDTO>>();
-            BuildViewModel(ref model);
 
-            model.FilteringParams.SearchString = searchString;
-            model.FilteringParams.CurrentFilter = currentFilter;
-            model.PagingParams.PageSize = pageSize;
-            model.PagingParams.PageNumber = pageNumber;
-            model.SortingParams.Sorting = sorting;
+            ViewModelManager.SetParams(ref model, _paramsFactory, searchString, currentFilter, sorting, pageSize, pageNumber);
+
 
             var pagedDomainList = await _makeService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams);
 
@@ -196,15 +192,6 @@ namespace MvcProject.MVC.Controllers
                 _modelService.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-
-        private void BuildViewModel(ref IndexViewModel<VehicleMakeDTO, VehicleModelDTO> model)
-        {
-            model.FilteringParams = _paramsFactory.FilteringParamsInstance();
-            model.SortingParams = _paramsFactory.SortingParamsInstance();
-            model.PagingParams = _paramsFactory.PagingParamsInstance();
-            model.Options = _paramsFactory.IOptionsInstance();
         }
     }
 }

@@ -14,7 +14,6 @@ namespace Project.Service.Services
                                                   ISortingParams sortingParams, 
                                                   IOptions options);
         Task<int> UpdateAsync(IVehicleModel entity);
-        //Task<int> RemoveRangeAsync(IEnumerable<IVehicleModel> entities);
         Task<int> AddAsync(IVehicleModel entity);
         Task<IVehicleModel> FindAsync(int id);
         Task<int> RemoveAsync(IVehicleModel entity);

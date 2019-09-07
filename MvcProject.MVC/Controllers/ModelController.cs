@@ -47,14 +47,9 @@ namespace MvcProject.MVC.Controllers
             }
 
             var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleModelDTO, string>>();
-            BuildViewModel(ref model);
 
-            model.FilteringParams.SearchString = searchString;
-            model.FilteringParams.CurrentFilter = currentFilter;
-            model.PagingParams.PageSize = pageSize;
-            model.PagingParams.PageNumber = pageNumber;
-            model.SortingParams.Sorting = sorting;
-            model.Options.LoadMakesWithModel = true;
+            ViewModelManager.SetParams(ref model, _paramsFactory, searchString, currentFilter, sorting, pageSize, pageNumber, true);
+
 
             var pagedDomainList = await _modelService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams, model.Options);
 
@@ -195,14 +190,6 @@ namespace MvcProject.MVC.Controllers
         private async Task<SelectList> GetMakeDropDownAsync()
         {
             return new SelectList(await _makeService.GetMakeDropdown(), "Id", "Name");
-        }
-
-        private void BuildViewModel(ref IndexViewModel<VehicleModelDTO, string> model)
-        {
-            model.FilteringParams = _paramsFactory.FilteringParamsInstance();
-            model.SortingParams = _paramsFactory.SortingParamsInstance();
-            model.PagingParams = _paramsFactory.PagingParamsInstance();
-            model.Options = _paramsFactory.IOptionsInstance();
         }
     }
 }
