@@ -1,15 +1,11 @@
-﻿using MvcProject.MVC.App_Start;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Project.MVC.App_Start;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using AutoMapper;
 
 
-namespace MvcProject.MVC
+namespace Project.MVC
 {
     public class MvcApplication : System.Web.HttpApplication
     {

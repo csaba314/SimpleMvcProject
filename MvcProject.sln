@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcProject.MVC", "MvcProject.MVC\MvcProject.MVC.csproj", "{94CBD1B0-BDD3-498D-AD0E-5581A541BED8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.MVC", "MvcProject.MVC\Project.MVC.csproj", "{94CBD1B0-BDD3-498D-AD0E-5581A541BED8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Service", "Project.Service\Project.Service.csproj", "{1D150BE6-3A55-405F-9F0A-B8BD411552D5}"
 EndProject

@@ -2,13 +2,13 @@
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
-using MvcProject.MVC.Models;
+using Project.MVC.Models;
 using Project.Service.Model;
 using Project.Common;
 using Project.Service;
 
 
-namespace MvcProject.MVC.App_Start
+namespace Project.MVC.App_Start
 {
     public static class DIContainerConfig
     {

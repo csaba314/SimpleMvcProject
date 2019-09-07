@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using AutoMapper;
+﻿using AutoMapper;
 using Project.Service.Model;
-using MvcProject.MVC.Models;
+using Project.MVC.Models;
 
-namespace MvcProject.MVC.App_Start
+namespace Project.MVC.App_Start
 {
     public class MappingProfile : Profile
     {

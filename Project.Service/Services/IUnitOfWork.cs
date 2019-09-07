@@ -8,11 +8,9 @@ namespace Project.Service.Services
     {
         Task<TEntity> GetAsync(int id);
         Task<DbSet<TEntity>> GetAllAsync();
-
         Task<int> AddAsync(TEntity entity);
         Task<int> UpdateAsync(TEntity entity);
         Task<int> RemoveAsync(TEntity entity);
-
         Task<int> SaveChangesAsync();
     }
 }

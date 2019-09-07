@@ -1,7 +1,7 @@
-﻿using MvcProject.MVC.Models;
+﻿using Project.MVC.Models;
 using Project.Common.ParamContainers;
 
-namespace MvcProject.MVC.PresentationService
+namespace Project.MVC.PresentationService
 {
     public static class ViewModelManager
     {

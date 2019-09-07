@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MvcProject.MVC.Models
+namespace Project.MVC.Models
 {
     public class VehicleModelDTO
     {

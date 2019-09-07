@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MvcProject.MVC.Models
+namespace Project.MVC.Models
 {
     public class VehicleMakeDTO
     {

@@ -1,5 +1,5 @@
-﻿@model MvcProject.MVC.Models.IndexViewModel<VehicleMakeDTO, VehicleModelDTO>
-@using MvcProject.MVC.Models
+﻿@model Project.MVC.Models.IndexViewModel<VehicleMakeDTO, VehicleModelDTO>
+@using Project.MVC.Models
 
 @{
     TempData.Keep("message");
@@ -7,11 +7,6 @@
 }
 
 <h2>@ViewBag.Title</h2>
-
-@*@if (ViewBag.Message != null)
-    {
-        <h4 style="color:red">@ViewBag.Message</h4>
-    }*@
 
 @Html.ActionLink("Add New Vehicle Make", "Create", null, new { @class = "btn btn-primary" })
 <br />

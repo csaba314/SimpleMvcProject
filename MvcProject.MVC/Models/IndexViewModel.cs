@@ -2,7 +2,7 @@
 using Project.Common.ParamContainers;
 using System.Collections.Generic;
 
-namespace MvcProject.MVC.Models
+namespace Project.MVC.Models
 {
     public class IndexViewModel<TEntity, TChildEntity>
     {

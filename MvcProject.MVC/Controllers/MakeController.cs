@@ -1,4 +1,4 @@
-﻿using MvcProject.MVC.Models;
+﻿using Project.MVC.Models;
 using Project.Service.Services;
 using System;
 using System.Collections.Generic;
@@ -7,11 +7,11 @@ using System.Net;
 using System.Web.Mvc;
 using AutoMapper;
 using Project.Service.Model;
-using MvcProject.MVC.PresentationService;
+using Project.MVC.PresentationService;
 using System.Threading.Tasks;
 using Project.Common.ParamContainers;
 
-namespace MvcProject.MVC.Controllers
+namespace Project.MVC.Controllers
 {
     public class MakeController : Controller
     {

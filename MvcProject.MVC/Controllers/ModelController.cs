@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
-using MvcProject.MVC.Models;
+using Project.MVC.Models;
 using Project.Service.Model;
 using Project.Service.Services;
 using System;
 using System.Net;
 using System.Web.Mvc;
-using MvcProject.MVC.PresentationService;
+using Project.MVC.PresentationService;
 using System.Threading.Tasks;
 using Project.Common.ParamContainers;
 
-namespace MvcProject.MVC.Controllers
+namespace Project.MVC.Controllers
 {
     public class ModelController : Controller
     {

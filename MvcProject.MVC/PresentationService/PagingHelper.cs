@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MvcProject.MVC.PresentationService
+namespace Project.MVC.PresentationService
 {
     public static class PagingHelper
     {
