@@ -1,0 +1,7 @@
+﻿@model string
+
+@if (!string.IsNullOrEmpty(Model))
+{
+    <h4 style="color:forestgreen"><strong>@Model</strong></h4>
+    TempData["Message"] = "";
+}

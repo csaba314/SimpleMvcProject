@@ -20,9 +20,9 @@ namespace Project.Service.Services
             _makeUOW = makeServices;
         }
 
-        public async Task<IVehicleModel> FindAsync(int id)
+        public Task<VehicleModel> FindAsync(int id)
         {
-            return await _modelUOW.GetAsync(id);
+            return _modelUOW.GetAsync(id);
         }
 
         public async Task<IEnumerable<IVehicleModel>> GetAllByMakeAsync(int makeId)

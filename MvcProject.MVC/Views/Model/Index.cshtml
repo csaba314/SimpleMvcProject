@@ -5,6 +5,8 @@
     ViewBag.Title = "Vehicle Models";
 }
 
+@{ Html.RenderPartial("_Message", (string)ViewBag.Message); }
+
 <h2>@ViewBag.Title</h2>
 
 @Html.ActionLink("Add New Vehicle Model", "Create", null, new { @class = "btn btn-primary" })

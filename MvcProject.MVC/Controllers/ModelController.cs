@@ -61,7 +61,8 @@ namespace Project.MVC.Controllers
 
             model.EntityList = PagedListMapper.ToMappedPagedList<IVehicleModel, VehicleModelDTO>(pagedDomainList);
 
-
+            TempData["Message"] = TempData["Message"] ?? "";
+            ViewBag.Message = string.IsNullOrEmpty(TempData["Message"].ToString()) ? "" : TempData["Message"].ToString();
 
             model.FilteringParams.CurrentFilter = searchString;
             ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
@@ -98,7 +99,9 @@ namespace Project.MVC.Controllers
             var newModel = DependencyResolver.Current.GetService<IVehicleModel>();
             Mapper.Map(model, newModel);
 
-            await _modelService.AddAsync(newModel);
+            int result = await _modelService.AddAsync(newModel);
+
+            SetMessage(result, $"Model: {model.Name} successfully added to the database.");
 
             return RedirectToAction("Index");
         }
@@ -139,7 +142,9 @@ namespace Project.MVC.Controllers
             var editedModel = await _modelService.FindAsync(model.Id);
             Mapper.Map(model, editedModel);
 
-            await _modelService.UpdateAsync(editedModel);
+            int result = await _modelService.UpdateAsync(editedModel);
+
+            SetMessage(result, $"Model: {model.Name} successfully updated.");
 
             return RedirectToAction("Index");
         }
@@ -170,7 +175,9 @@ namespace Project.MVC.Controllers
         {
             var modelToRemove = await _modelService.FindAsync(id);
 
-            await _modelService.RemoveAsync(modelToRemove);
+            int result = await _modelService.RemoveAsync(modelToRemove);
+
+            SetMessage(result, $"Model: {modelToRemove.Name} successfully deleted.");
 
             return RedirectToAction("Index");
         }
@@ -190,6 +197,17 @@ namespace Project.MVC.Controllers
         private async Task<SelectList> GetMakeDropDownAsync()
         {
             return new SelectList(await _makeService.GetMakeDropdown(), "Id", "Name");
+        }
+
+        private void SetMessage(int result, string message)
+        {
+            string msg = "Something went wrong!";
+
+            if (result > 0)
+            {
+                msg = message;
+            }
+            TempData["Message"] = message;
         }
     }
 }

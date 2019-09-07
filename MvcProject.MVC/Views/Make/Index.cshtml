@@ -2,19 +2,20 @@
 @using Project.MVC.Models
 
 @{
-    TempData.Keep("message");
     ViewBag.Title = "Vehicle Make";
 }
 
+
+
 <h2>@ViewBag.Title</h2>
+
+@{ Html.RenderPartial("_Message", (string)ViewBag.Message); }
+
 
 @Html.ActionLink("Add New Vehicle Make", "Create", null, new { @class = "btn btn-primary" })
 <br />
 @using (Html.BeginForm("Index", "Make", FormMethod.Get))
 {
-
-
-
     <p>
         <strong>Search by Name</strong>
         @Html.TextBox("searchString", Model.FilteringParams.CurrentFilter)

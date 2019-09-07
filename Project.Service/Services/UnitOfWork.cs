@@ -20,9 +20,9 @@ namespace Project.Service.Services
             this._context = context;
         }
 
-        public async Task<TEntity> GetAsync(int id)
+        public Task<TEntity> GetAsync(int id)
         {
-            return await _context.Set<TEntity>().FindAsync(id);
+            return _context.Set<TEntity>().FindAsync(id);
         }
 
         public Task<DbSet<TEntity>> GetAllAsync()
@@ -100,9 +100,9 @@ namespace Project.Service.Services
             }
         }
 
-        public async Task<int> SaveChangesAsync()
+        public Task<int> SaveChangesAsync()
         {
-            return await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
 
         public void Dispose()

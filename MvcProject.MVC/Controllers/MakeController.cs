@@ -69,7 +69,10 @@ namespace Project.MVC.Controllers
                 model.Entity = Mapper.Map<VehicleMakeDTO>(await _makeService.FindAsync(id));
                 var modelsList = await _modelService.GetAllByMakeAsync(id);
                 model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
-            }            
+            }
+
+            TempData["Message"] = TempData["Message"] ?? "";
+            ViewBag.Message = string.IsNullOrEmpty(TempData["Message"].ToString()) ? "" : TempData["Message"].ToString();
 
             ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
@@ -103,9 +106,10 @@ namespace Project.MVC.Controllers
             }
             var newMake = DependencyResolver.Current.GetService<IVehicleMake>();
             Mapper.Map(model, newMake);
-            string message = string.Empty;
 
-            await _makeService.AddAsync(newMake);
+            var result = await _makeService.AddAsync(newMake);
+
+            SetMessage(result, $"{model.Name} ({model.Abrv}) successfully added to the database.");
 
             return RedirectToAction("Index");
         }
@@ -142,8 +146,10 @@ namespace Project.MVC.Controllers
             var makeToUpdate = await _makeService.FindAsync(model.Id);
             Mapper.Map(model, makeToUpdate);
 
-            await _makeService.UpdateAsync(makeToUpdate);
+            var result = await _makeService.UpdateAsync(makeToUpdate);
 
+            SetMessage(result, $"{model.Name} ({model.Abrv}) successfully updated.");
+            
             return RedirectToAction("Index");
         }
         #endregion
@@ -177,11 +183,24 @@ namespace Project.MVC.Controllers
         {
             var makeToRemove = await _makeService.FindAsync(id);
 
-            await _makeService.RemoveAsync(makeToRemove);
+            var result = await _makeService.RemoveAsync(makeToRemove);
+
+            SetMessage(result, $"{makeToRemove.Name} ({makeToRemove.Abrv}) successfully deleted.");
 
             return RedirectToAction("Index");
         }
         #endregion
+
+        private void SetMessage(int result, string message)
+        {
+            string msg = "Something went wrong!";
+
+            if (result > 0)
+            {
+                msg = message;
+            }
+            TempData["Message"] = message;
+        }
 
 
         protected override void Dispose(bool disposing)
