@@ -2,6 +2,8 @@
 
 @if (!string.IsNullOrEmpty(Model))
 {
-    <h4 style="color:forestgreen"><strong>@Model</strong></h4>
+<div class="table table-bordered">
+    <h4><strong>@Model</strong></h4>
+</div>
     TempData["Message"] = "";
 }

@@ -109,6 +109,7 @@ namespace Project.Service.Services
 
                     // update parent entity
                     await _makeUOW.UpdateAsync(entity as VehicleMake);
+
                     return await _makeUOW.SaveChangesAsync();
                 }
                 catch (Exception e)
@@ -124,11 +125,13 @@ namespace Project.Service.Services
 
         public async Task<int> RemoveAsync(IVehicleMake entity)
         {
+            
             if (entity is VehicleMake)
             {
                 try
                 {
                     await _makeUOW.RemoveAsync(entity as VehicleMake);
+                    
                     return await _makeUOW.SaveChangesAsync();
                 }
                 catch (Exception e)

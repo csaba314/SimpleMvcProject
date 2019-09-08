@@ -61,8 +61,7 @@ namespace Project.MVC.Controllers
 
             model.EntityList = PagedListMapper.ToMappedPagedList<IVehicleModel, VehicleModelDTO>(pagedDomainList);
 
-            TempData["Message"] = TempData["Message"] ?? "";
-            ViewBag.Message = string.IsNullOrEmpty(TempData["Message"].ToString()) ? "" : TempData["Message"].ToString();
+            SetMessage();
 
             model.FilteringParams.CurrentFilter = searchString;
             ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
@@ -85,6 +84,7 @@ namespace Project.MVC.Controllers
         {
             var modelDTO = DependencyResolver.Current.GetService<VehicleModelDTO>();
             ViewBag.MakeDropdown = await GetMakeDropDownAsync();
+            SetMessage();
             return View(modelDTO);
         }
 
@@ -99,9 +99,16 @@ namespace Project.MVC.Controllers
             var newModel = DependencyResolver.Current.GetService<IVehicleModel>();
             Mapper.Map(model, newModel);
 
-            int result = await _modelService.AddAsync(newModel);
-
-            SetMessage(result, $"Model: {model.Name} successfully added to the database.");
+            try
+            {
+                await _modelService.AddAsync(newModel);
+                TempData["Message"] = $"Model: {model.Name} successfully added to the database.";
+            }
+            catch (Exception e)
+            {
+                TempData["Message"] = $"Something went wrong: {e.Message}";
+                return View(model);
+            }
 
             return RedirectToAction("Index");
         }
@@ -127,6 +134,7 @@ namespace Project.MVC.Controllers
             var model = Mapper.Map<VehicleModelDTO>(selectedModel);
             ViewBag.MakeDropdown = await GetMakeDropDownAsync();
 
+            SetMessage();
             return View(model);
         }
 
@@ -142,9 +150,16 @@ namespace Project.MVC.Controllers
             var editedModel = await _modelService.FindAsync(model.Id);
             Mapper.Map(model, editedModel);
 
-            int result = await _modelService.UpdateAsync(editedModel);
-
-            SetMessage(result, $"Model: {model.Name} successfully updated.");
+            try
+            {
+                await _modelService.UpdateAsync(editedModel);
+                TempData["Message"] = $"Model: {model.Name} successfully updated.";
+            }
+            catch (Exception e)
+            {
+                TempData["Message"] = $"Something went wrong: {e.Message}";
+                return View(model);
+            }
 
             return RedirectToAction("Index");
         }
@@ -166,6 +181,8 @@ namespace Project.MVC.Controllers
             {
                 return HttpNotFound();
             }
+
+            SetMessage();
             return View(Mapper.Map<VehicleModelDTO>(selectedModel));
         }
 
@@ -175,9 +192,16 @@ namespace Project.MVC.Controllers
         {
             var modelToRemove = await _modelService.FindAsync(id);
 
-            int result = await _modelService.RemoveAsync(modelToRemove);
-
-            SetMessage(result, $"Model: {modelToRemove.Name} successfully deleted.");
+            try
+            {
+                await _modelService.RemoveAsync(modelToRemove);
+                TempData["Message"] = $"Model: {modelToRemove.Name} successfully deleted.";
+            }
+            catch (Exception e)
+            {
+                TempData["Message"] = $"Something went wrong: {e.Message}";
+                return View(id);
+            }
 
             return RedirectToAction("Index");
         }
@@ -199,15 +223,9 @@ namespace Project.MVC.Controllers
             return new SelectList(await _makeService.GetMakeDropdown(), "Id", "Name");
         }
 
-        private void SetMessage(int result, string message)
+        private void SetMessage()
         {
-            string msg = "Something went wrong!";
-
-            if (result > 0)
-            {
-                msg = message;
-            }
-            TempData["Message"] = message;
+            TempData["Message"] = TempData["Message"] ?? string.Empty;
         }
     }
 }

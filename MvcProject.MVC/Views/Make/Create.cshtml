@@ -1,9 +1,12 @@
 ﻿@model Project.MVC.Models.VehicleMakeDTO
 
-@using (Html.BeginForm()) 
+@{ string msg = TempData["Message"].ToString();
+    Html.RenderPartial("_Message", msg); }
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Create New Vehicle Make</h4>
         <hr />

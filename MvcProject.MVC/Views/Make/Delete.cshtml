@@ -7,6 +7,8 @@
 <h2>@ViewBag.Title</h2>
 
 <h3>Are you sure you want to delete this?</h3>
+
+@{ Html.RenderPartial("_Message", (string)TempData["Message"]); }
 <div>
 
     <hr />
@@ -61,10 +63,10 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.Id)
-    <div class="form-actions no-color">
+        <div class="form-actions no-color">
 
-        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-success" })
-        <input type="submit" value="Delete" class="btn btn-danger" />
-    </div>
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-success" })
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </div>
     }
 </div>

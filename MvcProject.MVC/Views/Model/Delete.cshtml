@@ -6,6 +6,8 @@
 
 <h2>Delete @Model.Name</h2>
 
+@{ Html.RenderPartial("_Message", (string)TempData["Message"]); }
+
 <h3>Are you sure you want to delete this model?</h3>
 <div>
     <hr />
@@ -36,7 +38,8 @@
 
     </dl>
 
-    @using (Html.BeginForm("Delete", "Model", FormMethod.Post)) {
+    @using (Html.BeginForm("Delete", "Model", FormMethod.Post))
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">

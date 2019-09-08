@@ -5,7 +5,7 @@
     ViewBag.Title = "Vehicle Models";
 }
 
-@{ Html.RenderPartial("_Message", (string)ViewBag.Message); }
+@{ Html.RenderPartial("_Message", (string)TempData["Message"]); }
 
 <h2>@ViewBag.Title</h2>
 

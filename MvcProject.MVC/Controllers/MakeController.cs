@@ -71,8 +71,7 @@ namespace Project.MVC.Controllers
                 model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
             }
 
-            TempData["Message"] = TempData["Message"] ?? "";
-            ViewBag.Message = string.IsNullOrEmpty(TempData["Message"].ToString()) ? "" : TempData["Message"].ToString();
+            SetMessage();
 
             ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
@@ -93,6 +92,8 @@ namespace Project.MVC.Controllers
         public ActionResult Create()
         {
             var makeDTO = DependencyResolver.Current.GetService<VehicleMakeDTO>();
+
+            SetMessage();
             return View(makeDTO);
         }
 
@@ -100,6 +101,7 @@ namespace Project.MVC.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([Bind(Include = "Name, Abrv")] VehicleMakeDTO model)
         {
+            
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -107,9 +109,16 @@ namespace Project.MVC.Controllers
             var newMake = DependencyResolver.Current.GetService<IVehicleMake>();
             Mapper.Map(model, newMake);
 
-            var result = await _makeService.AddAsync(newMake);
-
-            SetMessage(result, $"{model.Name} ({model.Abrv}) successfully added to the database.");
+            try
+            {
+                await _makeService.AddAsync(newMake);
+                TempData["Message"] = $"Make: {model.Name} ({model.Abrv}) successfully added to the database.";
+            }
+            catch (Exception e)
+            {
+                TempData["Message"] = $"Something went wrong: {e.Message}";
+                return View(model);
+            }
 
             return RedirectToAction("Index");
         }
@@ -131,7 +140,8 @@ namespace Project.MVC.Controllers
             {
                 return HttpNotFound();
             }
-            
+
+            SetMessage();
             return View(Mapper.Map<VehicleMakeDTO>(selectedMake));
         }
 
@@ -146,9 +156,16 @@ namespace Project.MVC.Controllers
             var makeToUpdate = await _makeService.FindAsync(model.Id);
             Mapper.Map(model, makeToUpdate);
 
-            var result = await _makeService.UpdateAsync(makeToUpdate);
-
-            SetMessage(result, $"{model.Name} ({model.Abrv}) successfully updated.");
+            try
+            {
+                await _makeService.UpdateAsync(makeToUpdate);
+                TempData["Message"] = $"Make: {model.Name} ({model.Abrv}) successfully updated.";
+            }
+            catch (Exception e)
+            {
+                TempData["Message"] = $"Something went wrong: {e.Message}";
+                return View(model);
+            }
             
             return RedirectToAction("Index");
         }
@@ -173,7 +190,7 @@ namespace Project.MVC.Controllers
 
             var model = Mapper.Map<VehicleMakeDTO>(selectedMake);
             model.VehicleModels = Mapper.Map<IEnumerable<VehicleModelDTO>>(await _modelService.GetAllByMakeAsync(model.Id));
-
+            SetMessage();
             return View(model);
         }
 
@@ -183,25 +200,25 @@ namespace Project.MVC.Controllers
         {
             var makeToRemove = await _makeService.FindAsync(id);
 
-            var result = await _makeService.RemoveAsync(makeToRemove);
-
-            SetMessage(result, $"{makeToRemove.Name} ({makeToRemove.Abrv}) successfully deleted.");
+            try
+            {
+                await _makeService.RemoveAsync(makeToRemove);
+                TempData["Message"] = $"Make: {makeToRemove.Name} ({makeToRemove.Abrv}) successfully deleted.";
+            }
+            catch (Exception e)
+            {
+                TempData["Message"] = $"Something went wrong: {e.Message}";
+                return View(id);
+            }
 
             return RedirectToAction("Index");
         }
         #endregion
 
-        private void SetMessage(int result, string message)
+        private void SetMessage()
         {
-            string msg = "Something went wrong!";
-
-            if (result > 0)
-            {
-                msg = message;
-            }
-            TempData["Message"] = message;
+            TempData["Message"] = TempData["Message"] ?? string.Empty;
         }
-
 
         protected override void Dispose(bool disposing)
         {

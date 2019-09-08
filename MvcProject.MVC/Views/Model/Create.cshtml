@@ -1,9 +1,11 @@
 ﻿@model Project.MVC.Models.VehicleModelDTO
 
-@using (Html.BeginForm("Create", "Model", FormMethod.Post)) 
+@{ Html.RenderPartial("_Message", (string)TempData["Message"]); }
+
+@using (Html.BeginForm("Create", "Model", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>ModelCreateEditViewModel</h4>
         <hr />
