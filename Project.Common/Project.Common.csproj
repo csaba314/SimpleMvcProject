@@ -45,15 +45,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DIModule.cs" />
+    <Compile Include="ParamContainers\FilteringFactory.cs" />
     <Compile Include="ParamContainers\FilteringParams.cs" />
+    <Compile Include="ParamContainers\IFilteringFactory.cs" />
     <Compile Include="ParamContainers\IFilteringParams.cs" />
     <Compile Include="ParamContainers\IOptions.cs" />
+    <Compile Include="ParamContainers\IOptionsFactory.cs" />
+    <Compile Include="ParamContainers\IPagingFactory.cs" />
     <Compile Include="ParamContainers\IPagingParams.cs" />
-    <Compile Include="ParamContainers\IParamsFactory.cs" />
+    <Compile Include="ParamContainers\ISortingFactory.cs" />
     <Compile Include="ParamContainers\ISortingParams.cs" />
     <Compile Include="ParamContainers\Options.cs" />
+    <Compile Include="ParamContainers\OptionsFactory.cs" />
+    <Compile Include="ParamContainers\PagingFactory.cs" />
     <Compile Include="ParamContainers\PagingParams.cs" />
-    <Compile Include="ParamContainers\ParamsFactory.cs" />
+    <Compile Include="ParamContainers\SortingFactory.cs" />
     <Compile Include="ParamContainers\SortingParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

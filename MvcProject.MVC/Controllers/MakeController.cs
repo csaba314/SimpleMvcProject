@@ -20,7 +20,9 @@ namespace Project.MVC.Controllers
 
         private IMakeServicesAsync _makeService;
         private IModelServicesAsync _modelService;
-        private IParamsFactory _paramsFactory;
+        private IFilteringFactory _filteringFactory;
+        private ISortingFactory _sortingFactory;
+        private IPagingFactory _pagingFactory;
 
         #endregion
 
@@ -29,11 +31,15 @@ namespace Project.MVC.Controllers
         public MakeController(
             IMakeServicesAsync makeService, 
             IModelServicesAsync modelService,
-            IParamsFactory paramsFactory)
+            IFilteringFactory filteringFactory,
+            ISortingFactory sortingFactory,
+            IPagingFactory pagingFactory)
         {
             _modelService = modelService;
             _makeService = makeService;
-            _paramsFactory = paramsFactory;
+            _filteringFactory = filteringFactory;
+            _sortingFactory = sortingFactory;
+            _pagingFactory = pagingFactory;
         }
         #endregion
 
@@ -52,20 +58,19 @@ namespace Project.MVC.Controllers
             var model = new IndexViewModel<VehicleMakeDTO, VehicleModelDTO>();
 
             
-            var filteringParams = _paramsFactory.FilteringParamsInstance(searchString, currentFilter);
-            var pagingParams = _paramsFactory.PagingParamsInstance(pageNumber, pageSize);
-            var sortingParams = _paramsFactory.SortingParamsInstance(sorting);
-            var options = _paramsFactory.OptionsInstance("VehicleModel");
+            var filteringParams = _filteringFactory.Build(searchString, currentFilter);
+            var pagingParams = _pagingFactory.Build(pageNumber, pageSize);
+            var sortingParams = _sortingFactory.Build(sorting);
 
             IPagedList<IVehicleMake> pagedDomainList;
 
             if (id > 0)
             {
-                pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams, options);
+                pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
                 var modelsList = await _modelService.GetAllByMakeAsync(id);
                 model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
             }
-            pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams, options);
+            pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
 
             var mappedList = Mapper.Map<IEnumerable<VehicleMakeDTO>>(pagedDomainList);
 

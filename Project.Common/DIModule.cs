@@ -13,8 +13,12 @@ namespace Project.Common
                 .Where(t => t.Name.EndsWith("Params") && t.Namespace.EndsWith("ParamContainers"))
                 .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
 
+            // Register parameter factories
+            builder.RegisterAssemblyTypes(typeof(Options).Assembly)
+                .Where(t => t.Name.EndsWith("Factory") && t.Namespace.EndsWith("ParamContainers"))
+                .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
+
             builder.RegisterType<Options>().As<IOptions>();
-            builder.RegisterType<ParamsFactory>().As<IParamsFactory>();
         }
     }
 }

@@ -32,8 +32,7 @@ namespace Project.Service.Services
         public async Task<IPagedList<IVehicleMake>> GetAsync(
             IFilteringParams filteringParams,
             IPagingParams pagingParams,
-            ISortingParams sortingParams,
-            IOptions options)
+            ISortingParams sortingParams)
         {
 
             IQueryable<VehicleMake> makeList = await _repository.GetAllAsync<VehicleMake>();
