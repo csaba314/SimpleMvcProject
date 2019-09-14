@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Project.Service
 {
-    public class ServiceModule : Autofac.Module
+    public class DIModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {

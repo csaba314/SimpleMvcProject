@@ -75,7 +75,7 @@
     <Compile Include="Model\Model\VehicleModel.cs" />
     <Compile Include="Model\ProjectDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceModule.cs" />
+    <Compile Include="DIModule.cs" />
     <Compile Include="Services\IRepository.cs" />
     <Compile Include="Services\IUnitOfWork.cs" />
     <Compile Include="Services\Make\IMakeServicesAsync.cs" />

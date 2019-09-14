@@ -4,8 +4,7 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using Project.MVC.Models;
 using Project.Service.Model;
-using Project.Common;
-using Project.Service;
+
 
 
 namespace Project.MVC.App_Start
@@ -23,10 +22,10 @@ namespace Project.MVC.App_Start
 
             builder.RegisterType<ProjectDbContext>().AsSelf();
 
-            // register Common module
-            builder.RegisterModule<CommonModule>();
-            // register Service module
-            builder.RegisterModule<ServiceModule>();
+            // register Common DIModule
+            builder.RegisterModule<Project.Common.DIModule>();
+            // register Service DIModule
+            builder.RegisterModule<Project.Service.DIModule>();
 
             var container = builder.Build();
 

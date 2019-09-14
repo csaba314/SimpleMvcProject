@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Project.Common
 {
-    public class CommonModule : Autofac.Module
+    public class DIModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {

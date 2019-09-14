@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonModule.cs" />
+    <Compile Include="DIModule.cs" />
     <Compile Include="ParamContainers\FilteringParams.cs" />
     <Compile Include="ParamContainers\IFilteringParams.cs" />
     <Compile Include="ParamContainers\IOptions.cs" />
