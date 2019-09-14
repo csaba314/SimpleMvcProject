@@ -51,7 +51,7 @@ namespace Project.MVC.Controllers
             var filteringParams = _paramsFactory.FilteringParamsInstance(searchString, currentFilter);
             var pagingParams = _paramsFactory.PagingParamsInstance(pageNumber, pageSize);
             var sortingParams = _paramsFactory.SortingParamsInstance(sorting);
-            var options = _paramsFactory.OptionsInstance(true);
+            var options = _paramsFactory.OptionsInstance(include: "VehicleMake");
 
             var pagedDomainList = await _modelService.GetAsync(filteringParams, pagingParams, sortingParams, options);
 

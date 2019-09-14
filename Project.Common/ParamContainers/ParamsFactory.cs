@@ -37,9 +37,9 @@
             _pagingParams.PageSize = pageSize;
             return _pagingParams;
         }
-        public IOptions OptionsInstance(bool loadMakesWithModel)
+        public IOptions OptionsInstance(string include)
         {
-            _options.LoadMakesWithModel = loadMakesWithModel;
+            _options.Include = include;
             return _options;
         }
 

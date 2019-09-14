@@ -38,9 +38,9 @@ namespace Project.Service.Services
         {
             IQueryable<VehicleModel> modelList = await _repository.GetAllAsync<VehicleModel>();
 
-            if (options.LoadMakesWithModel)
+            if (!string.IsNullOrEmpty(options.Include))
             {
-                modelList = modelList.Include(m => m.VehicleMake);
+                modelList = modelList.Include(options.Include);
             }
 
             // Filtering

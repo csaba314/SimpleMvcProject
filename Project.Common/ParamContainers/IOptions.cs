@@ -2,6 +2,6 @@
 {
     public interface IOptions
     {
-        bool LoadMakesWithModel { get; set; }
+        string Include { get; set; }
     }
 }
