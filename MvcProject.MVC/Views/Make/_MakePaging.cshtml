@@ -1,8 +1,5 @@
 ﻿@model Project.MVC.Models.IndexViewModel<VehicleMakeDTO, VehicleModelDTO>
 @using Project.MVC.Models
-@{
-    int makeId = Model.Entity == null ? 0 : Model.Entity.Id;
-}
 @using PagedList.Mvc
 
 <table>
@@ -18,7 +15,7 @@
 
                 @Html.Hidden("sorting", Model.Sorting)
                 @Html.Hidden("currentFilter", Model.CurrentFilter)
-                @Html.Hidden("id", makeId)
+                @Html.Hidden("id", Model.Id)
             </td>
             <td style="column-width:15px;"></td>
             <td>
@@ -30,7 +27,7 @@
                                                                                                       sorting = Model.Sorting,
                                                                                                       currentFilter = Model.CurrentFilter,
                                                                                                       pageSize = Model.EntityList.PageSize,
-                                                                                                      id = makeId }),
+                                                                                                      id = Model.Id }),
                                                                 new PagedListRenderOptions { DisplayPageCountAndCurrentLocation = true } )
             </td>
         }

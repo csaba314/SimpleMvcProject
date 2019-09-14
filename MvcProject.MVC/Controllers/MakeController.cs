@@ -55,36 +55,21 @@ namespace Project.MVC.Controllers
             var filteringParams = _paramsFactory.FilteringParamsInstance(searchString, currentFilter);
             var pagingParams = _paramsFactory.PagingParamsInstance(pageNumber, pageSize);
             var sortingParams = _paramsFactory.SortingParamsInstance(sorting);
+            var options = _paramsFactory.OptionsInstance("VehicleModel");
 
             IPagedList<IVehicleMake> pagedDomainList;
 
             if (id > 0)
             {
-                pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
-                model.Entity = Mapper.Map<VehicleMakeDTO>(await _makeService.FindAsync(id));
+                pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams, options);
                 var modelsList = await _modelService.GetAllByMakeAsync(id);
                 model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
             }
-            pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
+            pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams, options);
 
             var mappedList = Mapper.Map<IEnumerable<VehicleMakeDTO>>(pagedDomainList);
 
             model.EntityList = new StaticPagedList<VehicleMakeDTO>(mappedList, pagedDomainList.GetMetaData());
-
-            
-
-
-            //var pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
-            //var mappedList = Mapper.Map<IEnumerable<VehicleMakeDTO>>(pagedDomainList);
-
-            //model.EntityList = new StaticPagedList<VehicleMakeDTO>(mappedList, pagedDomainList.GetMetaData());
-
-            //if (id > 0)
-            //{
-            //    model.Entity = Mapper.Map<VehicleMakeDTO>(await _makeService.FindAsync(id));
-            //    var modelsList = await _modelService.GetAllByMakeAsync(id);
-            //    model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
-            //}
 
             SetMessage();
 
@@ -100,6 +85,24 @@ namespace Project.MVC.Controllers
             return View(model);
         }
 
+        #endregion
+
+        #region Details
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var model = Mapper.Map<VehicleMakeDTO>(await _makeService.FindAsync((int)id));
+
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
+        }
         #endregion
 
         #region Create

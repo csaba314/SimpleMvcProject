@@ -7,7 +7,6 @@ namespace Project.MVC.Models
     public class IndexViewModel<TEntity, TChildEntity>
     {
         public IPagedList<TEntity> EntityList { get; set; }
-        public TEntity Entity { get; set; }
 
         public int Id { get; set; }
         public string Sorting { get; set; }

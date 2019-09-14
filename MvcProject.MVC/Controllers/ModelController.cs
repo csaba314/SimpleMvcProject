@@ -74,6 +74,24 @@ namespace Project.MVC.Controllers
 
         #endregion
 
+        #region Details
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var model = Mapper.Map<VehicleModelDTO>(await _modelService.FindAsync((int)id));
+
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
+        }
+        #endregion
+
         #region Create
 
         // GET: /Model/Create

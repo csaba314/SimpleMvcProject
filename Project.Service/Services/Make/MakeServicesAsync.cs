@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data.Entity;
 
 namespace Project.Service.Services
 {
@@ -19,15 +20,20 @@ namespace Project.Service.Services
             _unitOfWork = unitOfWork;
         }
 
-        public Task<VehicleMake> FindAsync(int id)
+        public async Task<VehicleMake> FindAsync(int id)
         {
-            return _repository.GetAsync<VehicleMake>(id);
+            var make = await _repository.GetAsync<VehicleMake>(id);
+            var models = await _repository.GetAllAsync<VehicleModel>();
+            make.VehicleModels = models.Where(x => x.VehicleMakeId == make.Id).ToList();
+
+            return make;
         }
 
         public async Task<IPagedList<IVehicleMake>> GetAsync(
             IFilteringParams filteringParams,
             IPagingParams pagingParams,
-            ISortingParams sortingParams)
+            ISortingParams sortingParams,
+            IOptions options)
         {
 
             IQueryable<VehicleMake> makeList = await _repository.GetAllAsync<VehicleMake>();

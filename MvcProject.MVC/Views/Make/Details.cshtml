@@ -1,0 +1,55 @@
+﻿@model Project.MVC.Models.VehicleMakeDTO
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>VehicleMakeDTO</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Abrv)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Abrv)
+        </dd>
+
+    </dl>
+</div>
+@if (Model.VehicleModels.Count()>0)
+{
+
+    <p>Models belonging to @Model.Name</p>
+    <table class="table table-bordered">
+        <tr>
+            <td>Model ID</td>
+            <td>Model Name</td>
+            <td>Model Abbreviation</td>
+        </tr>
+        @foreach (var item in Model.VehicleModels)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => item.Id)</td>
+                <td>@Html.DisplayFor(m => item.Name)</td>
+                <td>@Html.DisplayFor(m => item.Abrv)</td>
+            </tr>
+        }
+    </table>
+}
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
