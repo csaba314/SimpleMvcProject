@@ -18,22 +18,28 @@
             _options = options;
         }
 
-        public ISortingParams SortingParamsInstance()
+        public ISortingParams SortingParamsInstance(string sorting)
         {
+            _sortingParams.Sorting = sorting;
             return _sortingParams;
         }
 
-        public IFilteringParams FilteringParamsInstance()
+        public IFilteringParams FilteringParamsInstance(string searchString, string currentFilter)
         {
+            _filteringParams.SearchString = searchString;
+            _filteringParams.CurrentFilter = currentFilter;
             return _filteringParams;
         }
 
-        public IPagingParams PagingParamsInstance()
+        public IPagingParams PagingParamsInstance(int pageNumber, int pageSize)
         {
+            _pagingParams.PageNumber = pageNumber;
+            _pagingParams.PageSize = pageSize;
             return _pagingParams;
         }
-        public IOptions IOptionsInstance()
+        public IOptions OptionsInstance(bool loadMakesWithModel)
         {
+            _options.LoadMakesWithModel = loadMakesWithModel;
             return _options;
         }
 

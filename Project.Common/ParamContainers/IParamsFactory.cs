@@ -2,9 +2,9 @@
 {
     public interface IParamsFactory
     {
-        IFilteringParams FilteringParamsInstance();
-        IOptions IOptionsInstance();
-        IPagingParams PagingParamsInstance();
-        ISortingParams SortingParamsInstance();
+        IFilteringParams FilteringParamsInstance(string searchString, string currentFilter);
+        IOptions OptionsInstance(bool loadMakesWithModel);
+        IPagingParams PagingParamsInstance(int pageNumber, int pageSize);
+        ISortingParams SortingParamsInstance(string sorting);
     }
 }

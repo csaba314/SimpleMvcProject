@@ -48,17 +48,20 @@ namespace Project.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleMakeDTO, VehicleModelDTO>>();
+            var model = new IndexViewModel<VehicleMakeDTO, VehicleModelDTO>();
 
-            ViewModelManager.SetParams(ref model, _paramsFactory, searchString, currentFilter, sorting, pageSize, pageNumber);
+            
+            var filteringParams = _paramsFactory.FilteringParamsInstance(searchString, currentFilter);
+            var pagingParams = _paramsFactory.PagingParamsInstance(pageNumber, pageSize);
+            var sortingParams = _paramsFactory.SortingParamsInstance(sorting);
 
 
-            var pagedDomainList = await _makeService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams);
+            var pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
 
             if (pagedDomainList.PageNumber > pagedDomainList.PageCount)
             {
-                model.PagingParams.PageNumber = 1;
-                pagedDomainList = await _makeService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams);
+                model.PageNumber = 1;
+                pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
             }
 
             model.EntityList = PagedListMapper.ToMappedPagedList<IVehicleMake, VehicleMakeDTO>(pagedDomainList);
@@ -78,8 +81,8 @@ namespace Project.MVC.Controllers
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
 
-            model.FilteringParams.CurrentFilter = searchString;
-            model.SortingParams.Sorting = sorting;
+            model.CurrentFilter = searchString;
+            model.Sorting = sorting;
 
             return View(model);
         }
@@ -91,7 +94,7 @@ namespace Project.MVC.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var makeDTO = DependencyResolver.Current.GetService<VehicleMakeDTO>();
+            var makeDTO = new VehicleMakeDTO();
 
             SetMessage();
             return View(makeDTO);

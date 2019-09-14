@@ -168,7 +168,6 @@
     <Compile Include="Models\VehicleModelDTO.cs" />
     <Compile Include="PresentationService\PagedListMapper.cs" />
     <Compile Include="PresentationService\PagingHelper.cs" />
-    <Compile Include="PresentationService\ViewModelManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

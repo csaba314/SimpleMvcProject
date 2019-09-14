@@ -46,30 +46,32 @@ namespace Project.MVC.Controllers
                 searchString = currentFilter;
             }
 
-            var model = DependencyResolver.Current.GetService<IndexViewModel<VehicleModelDTO, string>>();
+            var model = new IndexViewModel<VehicleModelDTO, string>();
 
-            ViewModelManager.SetParams(ref model, _paramsFactory, searchString, currentFilter, sorting, pageSize, pageNumber, true);
+            var filteringParams = _paramsFactory.FilteringParamsInstance(searchString, currentFilter);
+            var pagingParams = _paramsFactory.PagingParamsInstance(pageNumber, pageSize);
+            var sortingParams = _paramsFactory.SortingParamsInstance(sorting);
+            var options = _paramsFactory.OptionsInstance(true);
 
-
-            var pagedDomainList = await _modelService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams, model.Options);
+            var pagedDomainList = await _modelService.GetAsync(filteringParams, pagingParams, sortingParams, options);
 
             if (pagedDomainList.PageNumber > pagedDomainList.PageCount)
             {
-                model.PagingParams.PageNumber = 1;
-                pagedDomainList = await _modelService.GetAsync(model.FilteringParams, model.PagingParams, model.SortingParams, model.Options);
+                model.PageNumber = 1;
+                pagedDomainList = await _modelService.GetAsync(filteringParams, pagingParams, sortingParams, options);
             }
 
             model.EntityList = PagedListMapper.ToMappedPagedList<IVehicleModel, VehicleModelDTO>(pagedDomainList);
 
             SetMessage();
 
-            model.FilteringParams.CurrentFilter = searchString;
+            model.CurrentFilter = searchString;
             ViewBag.PageSizeDropdown = new SelectList(PagingHelper.PageSizeDropdown);
             ViewBag.IdSorting = sorting == "id" ? "id_desc" : "id";
             ViewBag.NameSorting = string.IsNullOrEmpty(sorting) ? "name_desc" : "";
             ViewBag.AbrvSorting = sorting == "abrv" ? "abrv_desc" : "abrv";
             ViewBag.MakeSorting = sorting == "make" ? "make_desc" : "make";
-            model.SortingParams.Sorting = sorting;
+            model.Sorting = sorting;
 
             return View(model);
         }
@@ -82,7 +84,7 @@ namespace Project.MVC.Controllers
         [HttpGet]
         public async Task<ActionResult> Create()
         {
-            var modelDTO = DependencyResolver.Current.GetService<VehicleModelDTO>();
+            var modelDTO = new VehicleModelDTO();
             ViewBag.MakeDropdown = await GetMakeDropDownAsync();
             SetMessage();
             return View(modelDTO);

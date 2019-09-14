@@ -9,10 +9,10 @@ namespace Project.MVC.Models
         public IPagedList<TEntity> EntityList { get; set; }
         public TEntity Entity { get; set; }
 
-        public ISortingParams SortingParams { get; set; }
-        public IFilteringParams FilteringParams { get; set; }
-        public IPagingParams PagingParams { get; set; }
-        public IOptions Options { get; set; }
+        public string Sorting { get; set; }
+        public string CurrentFilter { get; set; }
+        public int PageSize { get; set; }
+        public int PageNumber { get; set; }
 
         public IEnumerable<TChildEntity> ChildEntityList { get; set; }
     }

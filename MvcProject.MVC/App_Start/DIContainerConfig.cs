@@ -23,12 +23,6 @@ namespace Project.MVC.App_Start
 
             builder.RegisterType<ProjectDbContext>().AsSelf();
 
-            // Register viewModels and DTOs
-            builder.RegisterType<IndexViewModel<VehicleMakeDTO, VehicleModelDTO>>().AsSelf();
-            builder.RegisterType<IndexViewModel<VehicleModelDTO, string>>().AsSelf();
-            builder.RegisterType<VehicleMakeDTO>().AsSelf();
-            builder.RegisterType<VehicleModelDTO>().AsSelf();
-
             // register Common module
             builder.RegisterModule<CommonModule>();
             // register Service module
