@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using Project.MVC.PresentationService;
 using System.Threading.Tasks;
 using Project.Common.ParamContainers;
+using System.Collections.Generic;
+using PagedList;
 
 namespace Project.MVC.Controllers
 {
@@ -55,14 +57,8 @@ namespace Project.MVC.Controllers
 
             var pagedDomainList = await _modelService.GetAsync(filteringParams, pagingParams, sortingParams, options);
 
-            if (pagedDomainList.PageNumber > pagedDomainList.PageCount)
-            {
-                model.PageNumber = 1;
-                pagedDomainList = await _modelService.GetAsync(filteringParams, pagingParams, sortingParams, options);
-            }
-
-            model.EntityList = PagedListMapper.ToMappedPagedList<IVehicleModel, VehicleModelDTO>(pagedDomainList);
-
+            model.EntityList = new StaticPagedList<VehicleModelDTO>(Mapper.Map<IEnumerable<VehicleModelDTO>>(pagedDomainList),
+                                                                    pagedDomainList.GetMetaData());
             SetMessage();
 
             model.CurrentFilter = searchString;
@@ -92,13 +88,13 @@ namespace Project.MVC.Controllers
 
         // POST: /Model/Create
         [HttpPost]
-        public async Task<ActionResult> Create([Bind(Include = "Name, VehicleMakeId")] VehicleModelDTO model)
+        public async Task<ActionResult> Create([Bind(Include = "Name, Abrv, VehicleMakeId")] VehicleModelDTO model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var newModel = DependencyResolver.Current.GetService<IVehicleModel>();
+            var newModel = new VehicleModel();
             Mapper.Map(model, newModel);
 
             try
@@ -142,7 +138,7 @@ namespace Project.MVC.Controllers
 
         //POST: /Model/Edit/1
         [HttpPost]
-        public async Task<ActionResult> Edit([Bind(Include = "Id, Name, VehicleMakeId")] VehicleModelDTO model)
+        public async Task<ActionResult> Edit([Bind(Include = "Id, Name, Abrv, VehicleMakeId")] VehicleModelDTO model)
         {
             if (!ModelState.IsValid)
             {

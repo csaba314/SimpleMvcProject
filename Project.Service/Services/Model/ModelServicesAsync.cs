@@ -95,7 +95,6 @@ namespace Project.Service.Services
             {
                 try
                 {
-                    entity.Abrv = SetModelAbrv(entity.Name);
                     await _unitOfWork.AddAsync<VehicleModel>(entity as VehicleModel);
                     return await _unitOfWork.SaveChangesAsync();
                 }
@@ -116,7 +115,6 @@ namespace Project.Service.Services
             {
                 try
                 {
-                    entity.Abrv = SetModelAbrv(entity.Name);
                     await _unitOfWork.UpdateAsync<VehicleModel>(entity as VehicleModel);
                     return await _unitOfWork.SaveChangesAsync();
                 }
@@ -168,12 +166,6 @@ namespace Project.Service.Services
             {
                 throw new ArgumentException();
             }
-        }
-
-        private string SetModelAbrv(string name)
-        {
-
-            return "VM-" + name.Substring(0, 2);
         }
 
         public void Dispose()

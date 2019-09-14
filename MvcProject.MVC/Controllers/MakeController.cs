@@ -10,6 +10,7 @@ using Project.Service.Model;
 using Project.MVC.PresentationService;
 using System.Threading.Tasks;
 using Project.Common.ParamContainers;
+using PagedList;
 
 namespace Project.MVC.Controllers
 {
@@ -55,24 +56,35 @@ namespace Project.MVC.Controllers
             var pagingParams = _paramsFactory.PagingParamsInstance(pageNumber, pageSize);
             var sortingParams = _paramsFactory.SortingParamsInstance(sorting);
 
-
-            var pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
-
-            if (pagedDomainList.PageNumber > pagedDomainList.PageCount)
-            {
-                model.PageNumber = 1;
-                pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
-            }
-
-            model.EntityList = PagedListMapper.ToMappedPagedList<IVehicleMake, VehicleMakeDTO>(pagedDomainList);
-
+            IPagedList<IVehicleMake> pagedDomainList;
 
             if (id > 0)
             {
+                pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
                 model.Entity = Mapper.Map<VehicleMakeDTO>(await _makeService.FindAsync(id));
                 var modelsList = await _modelService.GetAllByMakeAsync(id);
                 model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
             }
+            pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
+
+            var mappedList = Mapper.Map<IEnumerable<VehicleMakeDTO>>(pagedDomainList);
+
+            model.EntityList = new StaticPagedList<VehicleMakeDTO>(mappedList, pagedDomainList.GetMetaData());
+
+            
+
+
+            //var pagedDomainList = await _makeService.GetAsync(filteringParams, pagingParams, sortingParams);
+            //var mappedList = Mapper.Map<IEnumerable<VehicleMakeDTO>>(pagedDomainList);
+
+            //model.EntityList = new StaticPagedList<VehicleMakeDTO>(mappedList, pagedDomainList.GetMetaData());
+
+            //if (id > 0)
+            //{
+            //    model.Entity = Mapper.Map<VehicleMakeDTO>(await _makeService.FindAsync(id));
+            //    var modelsList = await _modelService.GetAllByMakeAsync(id);
+            //    model.ChildEntityList = modelsList.Select(x => Mapper.Map<VehicleModelDTO>(x));
+            //}
 
             SetMessage();
 
@@ -83,6 +95,7 @@ namespace Project.MVC.Controllers
 
             model.CurrentFilter = searchString;
             model.Sorting = sorting;
+            model.Id = id;
 
             return View(model);
         }
@@ -109,7 +122,7 @@ namespace Project.MVC.Controllers
             {
                 return View(model);
             }
-            var newMake = DependencyResolver.Current.GetService<IVehicleMake>();
+            var newMake = new VehicleMake();
             Mapper.Map(model, newMake);
 
             try

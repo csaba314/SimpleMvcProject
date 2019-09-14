@@ -9,6 +9,7 @@ namespace Project.MVC.Models
         public IPagedList<TEntity> EntityList { get; set; }
         public TEntity Entity { get; set; }
 
+        public int Id { get; set; }
         public string Sorting { get; set; }
         public string CurrentFilter { get; set; }
         public int PageSize { get; set; }

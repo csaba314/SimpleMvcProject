@@ -19,7 +19,6 @@
                 @Html.Hidden("sorting", Model.Sorting)
                 @Html.Hidden("currentFilter", Model.CurrentFilter)
                 @Html.Hidden("id", makeId)
-                @Html.Hidden("pageNumber", Model.EntityList.PageNumber)
             </td>
             <td style="column-width:15px;"></td>
             <td>
@@ -28,10 +27,10 @@
             <td style="width:70px;"></td>
             <td>
                 @Html.PagedListPager(Model.EntityList, pageNumber => Url.Action("Index","Make", new { pageNumber ,
-                                                                                                    sorting = Model.Sorting,
-                                                                                                    currentFilter = Model.CurrentFilter,
-                                                                                                    pageSize = Model.EntityList.PageSize,
-                                                                                                    id = makeId }),
+                                                                                                      sorting = Model.Sorting,
+                                                                                                      currentFilter = Model.CurrentFilter,
+                                                                                                      pageSize = Model.EntityList.PageSize,
+                                                                                                      id = makeId }),
                                                                 new PagedListRenderOptions { DisplayPageCountAndCurrentLocation = true } )
             </td>
         }
