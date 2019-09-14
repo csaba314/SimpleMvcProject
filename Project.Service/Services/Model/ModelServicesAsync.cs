@@ -11,23 +11,23 @@ namespace Project.Service.Services
 {
     public class ModelServicesAsync : IModelServicesAsync
     {
-        private readonly IUnitOfWork<VehicleModel> _modelUOW;
-        private readonly IUnitOfWork<VehicleMake> _makeUOW;
+        private readonly IRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ModelServicesAsync(IUnitOfWork<VehicleModel> modelServices, IUnitOfWork<VehicleMake> makeServices)
+        public ModelServicesAsync(IRepository repository, IUnitOfWork unitOfWork)
         {
-            _modelUOW = modelServices;
-            _makeUOW = makeServices;
+            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public Task<VehicleModel> FindAsync(int id)
         {
-            return _modelUOW.GetAsync(id);
+            return _repository.GetAsync<VehicleModel>(id);
         }
 
         public async Task<IEnumerable<IVehicleModel>> GetAllByMakeAsync(int makeId)
         {
-            IQueryable<VehicleModel> list = await _modelUOW.GetAllAsync();
+            IQueryable<VehicleModel> list = await _repository.GetAllAsync<VehicleModel>();
             return list.Where(m => m.VehicleMakeId == makeId).OrderBy(m => m.Name).ToList();
         }
 
@@ -36,7 +36,7 @@ namespace Project.Service.Services
                                                                 ISortingParams sortingParams,
                                                                 IOptions options)
         {
-            IQueryable<VehicleModel> modelList = await _modelUOW.GetAllAsync();
+            IQueryable<VehicleModel> modelList = await _repository.GetAllAsync<VehicleModel>();
 
             if (options.LoadMakesWithModel)
             {
@@ -95,9 +95,9 @@ namespace Project.Service.Services
             {
                 try
                 {
-                    entity.Abrv = await SetModelAbrv(entity.VehicleMakeId);
-                    await _modelUOW.AddAsync(entity as VehicleModel);
-                    return await _modelUOW.SaveChangesAsync();
+                    entity.Abrv = SetModelAbrv(entity.Name);
+                    await _unitOfWork.AddAsync<VehicleModel>(entity as VehicleModel);
+                    return await _unitOfWork.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -116,9 +116,9 @@ namespace Project.Service.Services
             {
                 try
                 {
-                    entity.Abrv = await SetModelAbrv(entity.VehicleMakeId);
-                    await _modelUOW.UpdateAsync(entity as VehicleModel);
-                    return await _modelUOW.SaveChangesAsync();
+                    entity.Abrv = SetModelAbrv(entity.Name);
+                    await _unitOfWork.UpdateAsync<VehicleModel>(entity as VehicleModel);
+                    return await _unitOfWork.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -138,10 +138,10 @@ namespace Project.Service.Services
             {
                 foreach (var item in entities)
                 {
-                    await _modelUOW.UpdateAsync(item as VehicleModel);
+                    await _unitOfWork.UpdateAsync<VehicleModel>(item as VehicleModel);
                 }
 
-                return await _modelUOW.SaveChangesAsync();
+                return await _unitOfWork.SaveChangesAsync();
             }
             else
             {
@@ -156,8 +156,8 @@ namespace Project.Service.Services
             {
                 try
                 {
-                    await _modelUOW.RemoveAsync(entity as VehicleModel);
-                    return await _modelUOW.SaveChangesAsync();
+                    await _unitOfWork.RemoveAsync<VehicleModel>(entity as VehicleModel);
+                    return await _unitOfWork.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -170,17 +170,16 @@ namespace Project.Service.Services
             }
         }
 
-        private async Task<string> SetModelAbrv(int makeId)
+        private string SetModelAbrv(string name)
         {
-            var parentEntity = await _makeUOW.GetAsync(makeId);
-            return parentEntity.Abrv;
 
+            return "VM-" + name.Substring(0, 2);
         }
 
         public void Dispose()
         {
-            _modelUOW.Dispose();
-            _makeUOW.Dispose();
+            _unitOfWork.Dispose();
+            _repository.Dispose();
         }
     }
 }

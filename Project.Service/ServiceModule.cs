@@ -21,8 +21,8 @@ namespace Project.Service
                 .As(t => t.GetInterfaces().FirstOrDefault(i => i.Name == "I" + t.Name));
 
             // Register generic Services 
-            builder.RegisterGeneric(typeof(UnitOfWork<>))
-                .As(typeof(IUnitOfWork<>));
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>();
+            builder.RegisterType<Repository>().As<IRepository>();
         }
     }
 }

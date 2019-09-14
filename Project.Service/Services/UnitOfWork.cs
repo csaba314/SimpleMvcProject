@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Services
 {
-    internal class UnitOfWork<TEntity> : IUnitOfWork<TEntity> where TEntity : class
+    internal class UnitOfWork : IUnitOfWork 
     {
 
         private readonly ProjectDbContext _context;
@@ -20,17 +20,9 @@ namespace Project.Service.Services
             this._context = context;
         }
 
-        public Task<TEntity> GetAsync(int id)
-        {
-            return _context.Set<TEntity>().FindAsync(id);
-        }
 
-        public Task<DbSet<TEntity>> GetAllAsync()
-        {
-            return Task.FromResult(_context.Set<TEntity>());
-        }
 
-        public Task<int> AddAsync(TEntity entity)
+        public Task<int> AddAsync<TEntity>(TEntity entity) where TEntity : class
         {
             try
             {
@@ -53,7 +45,7 @@ namespace Project.Service.Services
             }
         }
 
-        public Task<int> UpdateAsync(TEntity entity)
+        public Task<int> UpdateAsync<TEntity>(TEntity entity) where TEntity : class
         {
             try
             {
@@ -75,7 +67,7 @@ namespace Project.Service.Services
             }
         }
 
-        public Task<int> RemoveAsync(TEntity entity)
+        public Task<int> RemoveAsync<TEntity>(TEntity entity) where TEntity : class
         {
             try
             {

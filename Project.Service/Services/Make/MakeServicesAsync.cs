@@ -10,19 +10,18 @@ namespace Project.Service.Services
 {
     public class MakeServicesAsync : IMakeServicesAsync
     {
-        private readonly IModelServicesAsync _modelServices;
-        private readonly IUnitOfWork<VehicleMake> _makeUOW;
+        private readonly IRepository _repository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public MakeServicesAsync(IModelServicesAsync modelServices, IUnitOfWork<VehicleMake> makeServices)
+        public MakeServicesAsync(IRepository repository, IUnitOfWork unitOfWork)
         {
-            _modelServices = modelServices;
-            _makeUOW = makeServices;
+            _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         public Task<VehicleMake> FindAsync(int id)
         {
-            return _makeUOW.GetAsync(id);
-
+            return _repository.GetAsync<VehicleMake>(id);
         }
 
         public async Task<IPagedList<IVehicleMake>> GetAsync(
@@ -31,7 +30,7 @@ namespace Project.Service.Services
             ISortingParams sortingParams)
         {
 
-            IQueryable<VehicleMake> makeList = await _makeUOW.GetAllAsync();
+            IQueryable<VehicleMake> makeList = await _repository.GetAllAsync<VehicleMake>();
 
             // Filtering
             if (!String.IsNullOrEmpty(filteringParams.SearchString))
@@ -76,8 +75,8 @@ namespace Project.Service.Services
             {
                 try
                 {
-                    await _makeUOW.AddAsync(entity as VehicleMake);
-                    return await _makeUOW.SaveChangesAsync();
+                    await _unitOfWork.AddAsync<VehicleMake>(entity as VehicleMake);
+                    return await _unitOfWork.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -96,21 +95,9 @@ namespace Project.Service.Services
             {
                 try
                 {
-                    // get the list of unmodified child entities
-                    var modifiedChildModels = await _modelServices.GetAllByMakeAsync(entity.Id);
+                    await _unitOfWork.UpdateAsync<VehicleMake>(entity as VehicleMake);
 
-                    foreach (var item in modifiedChildModels)
-                    {
-                        // change each child entity
-                        item.Abrv = entity.Abrv;
-                    }
-                    // update all child entities
-                    await _modelServices.UpdateRange(modifiedChildModels);
-
-                    // update parent entity
-                    await _makeUOW.UpdateAsync(entity as VehicleMake);
-
-                    return await _makeUOW.SaveChangesAsync();
+                    return await _unitOfWork.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -130,9 +117,9 @@ namespace Project.Service.Services
             {
                 try
                 {
-                    await _makeUOW.RemoveAsync(entity as VehicleMake);
+                    await _unitOfWork.RemoveAsync<VehicleMake>(entity as VehicleMake);
                     
-                    return await _makeUOW.SaveChangesAsync();
+                    return await _unitOfWork.SaveChangesAsync();
                 }
                 catch (Exception e)
                 {
@@ -147,14 +134,14 @@ namespace Project.Service.Services
 
         public async Task<IEnumerable<IVehicleMake>> GetMakeDropdown()
         {
-            var list = await _makeUOW.GetAllAsync();
+            var list = await _repository.GetAllAsync<VehicleMake>();
             return list.OrderBy(x => x.Name).ToList();
         }
 
         public void Dispose()
         {
-            _modelServices.Dispose();
-            _makeUOW.Dispose();
+            _repository.Dispose();
+            _unitOfWork.Dispose();
         }
     }
 }

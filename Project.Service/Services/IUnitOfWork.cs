@@ -4,13 +4,11 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Services
 {
-    public interface IUnitOfWork<TEntity> : IDisposable where TEntity : class
+    public interface IUnitOfWork : IDisposable 
     {
-        Task<TEntity> GetAsync(int id);
-        Task<DbSet<TEntity>> GetAllAsync();
-        Task<int> AddAsync(TEntity entity);
-        Task<int> UpdateAsync(TEntity entity);
-        Task<int> RemoveAsync(TEntity entity);
+        Task<int> AddAsync<TEntity>(TEntity entity) where TEntity : class;
+        Task<int> UpdateAsync<TEntity>(TEntity entity) where TEntity : class;
+        Task<int> RemoveAsync<TEntity>(TEntity entity) where TEntity : class;
         Task<int> SaveChangesAsync();
     }
 }
