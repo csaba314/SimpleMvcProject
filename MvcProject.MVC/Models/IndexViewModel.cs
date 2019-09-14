@@ -1,5 +1,4 @@
 ﻿using PagedList;
-using Project.Common.ParamContainers;
 using System.Collections.Generic;
 
 namespace Project.MVC.Models
@@ -11,8 +10,6 @@ namespace Project.MVC.Models
         public int Id { get; set; }
         public string Sorting { get; set; }
         public string CurrentFilter { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
 
         public IEnumerable<TChildEntity> ChildEntityList { get; set; }
     }

@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
-using Project.MVC.Models;
 using Project.Service.Model;
 
 
