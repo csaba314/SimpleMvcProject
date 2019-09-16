@@ -1,4 +1,6 @@
-﻿namespace Project.Common.ParamContainers
+﻿using System;
+
+namespace Project.Common.ParamContainers
 {
     public class PagingFactory : IPagingFactory
     { 
@@ -6,7 +8,7 @@
 
         public PagingFactory(IPagingParams pagingParams)
         {
-            _pagingParams = pagingParams;
+            _pagingParams = pagingParams ?? throw new ArgumentNullException(nameof(IPagingParams));
         }
 
         public IPagingParams Build(int pageNumber, int pageSize)

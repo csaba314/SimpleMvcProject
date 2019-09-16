@@ -13,13 +13,15 @@ namespace Project.Service.Services
         private readonly IRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MakeServicesAsync(IRepository repository, IUnitOfWork unitOfWork)
+        public MakeServicesAsync(
+            IRepository repository, 
+            IUnitOfWork unitOfWork)
         {
-            _repository = repository;
-            _unitOfWork = unitOfWork;
+            _repository = repository ?? throw new ArgumentNullException(nameof(IRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
         }
 
-        public async Task<VehicleMake> FindAsync(int id)
+        public async Task<IVehicleMake> FindAsync(int id)
         {
             var make = await _repository.GetAsync<VehicleMake>(id);
             var models = await _repository.GetAllAsync<VehicleModel>();
@@ -28,7 +30,7 @@ namespace Project.Service.Services
             return make;
         }
 
-        public async Task<IPagedList<IVehicleMake>> GetAsync(
+        public async Task<IPagedList<IVehicleMake>> GetAllAsync(
             IFilteringParams filteringParams,
             IPagingParams pagingParams,
             ISortingParams sortingParams)

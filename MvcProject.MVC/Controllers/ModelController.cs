@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Project.MVC.Models;
-using Project.Service.Model;
 using Project.Service.Services;
 using System;
 using System.Net;
@@ -17,12 +16,12 @@ namespace Project.MVC.Controllers
     {
         #region Private Properties
 
-        private IMakeServicesAsync _makeService;
-        private IModelServicesAsync _modelService;
-        private IFilteringFactory _filteringFactory;
-        private ISortingFactory _sortingFactory;
-        private IPagingFactory _pagingFactory;
-        private IOptionsFactory _optionsFactory;
+        private readonly IMakeServicesAsync _makeService;
+        private readonly IModelServicesAsync _modelService;
+        private readonly IFilteringFactory _filteringFactory;
+        private readonly ISortingFactory _sortingFactory;
+        private readonly IPagingFactory _pagingFactory;
+        private readonly IOptionsFactory _optionsFactory;
 
         #endregion
 
@@ -36,12 +35,12 @@ namespace Project.MVC.Controllers
             IPagingFactory pagingFactory,
             IOptionsFactory optionsFactory)
         {
-            _modelService = modelService;
-            _makeService = makeService;
-            _filteringFactory = filteringFactory;
-            _sortingFactory = sortingFactory;
-            _pagingFactory = pagingFactory;
-            _optionsFactory = optionsFactory;
+            _makeService = makeService ?? throw new ArgumentNullException(nameof(IMakeServicesAsync));
+            _modelService = modelService ?? throw new ArgumentNullException(nameof(IModelServicesAsync));
+            _filteringFactory = filteringFactory ?? throw new ArgumentNullException(nameof(IFilteringFactory));
+            _sortingFactory = sortingFactory ?? throw new ArgumentNullException(nameof(ISortingFactory));
+            _pagingFactory = pagingFactory ?? throw new ArgumentNullException(nameof(IPagingFactory));
+            _optionsFactory = optionsFactory ?? throw new ArgumentNullException(nameof(IOptionsFactory));
         }
         #endregion
 
@@ -65,7 +64,7 @@ namespace Project.MVC.Controllers
             var sortingParams = _sortingFactory.Build(sorting);
             var options = _optionsFactory.Build(include: "VehicleMake");
 
-            var pagedDomainList = await _modelService.GetAsync(filteringParams, pagingParams, sortingParams, options);
+            var pagedDomainList = await _modelService.GetAllAsync(filteringParams, pagingParams, sortingParams, options);
 
             model.EntityList = new StaticPagedList<VehicleModelDTO>(Mapper.Map<IEnumerable<VehicleModelDTO>>(pagedDomainList),
                                                                     pagedDomainList.GetMetaData());

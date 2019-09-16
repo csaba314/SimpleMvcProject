@@ -14,7 +14,7 @@ namespace Project.Service.Services
         Task<int> AddAsync(IVehicleModel entity);
         Task<VehicleModel> FindAsync(int id);
         Task<IEnumerable<IVehicleModel>> GetAllByMakeAsync(int makeId);
-        Task<IPagedList<IVehicleModel>> GetAsync(IFilteringParams filteringParams, IPagingParams pagingParams, ISortingParams sortingParams, IOptions options);
+        Task<IPagedList<IVehicleModel>> GetAllAsync(IFilteringParams filteringParams, IPagingParams pagingParams, ISortingParams sortingParams, IOptions options);
         Task<int> RemoveAsync(IVehicleModel entity);
         Task<int> UpdateAsync(IVehicleModel entity);
         Task<int> UpdateRange(IEnumerable<IVehicleModel> entities);

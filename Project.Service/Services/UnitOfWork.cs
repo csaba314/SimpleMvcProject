@@ -13,14 +13,8 @@ namespace Project.Service.Services
 
         public UnitOfWork(ProjectDbContext context)
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException();
-            }
-            this._context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(ProjectDbContext));
         }
-
-
 
         public Task<int> AddAsync<TEntity>(TEntity entity) where TEntity : class
         {

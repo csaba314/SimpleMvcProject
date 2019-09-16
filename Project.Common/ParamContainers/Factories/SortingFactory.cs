@@ -1,4 +1,6 @@
-﻿namespace Project.Common.ParamContainers
+﻿using System;
+
+namespace Project.Common.ParamContainers
 {
     public class SortingFactory : ISortingFactory
     {
@@ -6,7 +8,7 @@
 
         public SortingFactory(ISortingParams sortingParams)
         {
-            _sortingParams = sortingParams;
+            _sortingParams = sortingParams ?? throw new ArgumentNullException(nameof(ISortingParams));
         }
         public ISortingParams Build(string sorting)
         {

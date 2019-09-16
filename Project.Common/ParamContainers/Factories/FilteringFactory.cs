@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Common.ParamContainers
 {
@@ -12,7 +8,7 @@ namespace Project.Common.ParamContainers
 
         public FilteringFactory(IFilteringParams filteringParams)
         {
-            _filteringParams = filteringParams;
+            _filteringParams = filteringParams ?? throw new ArgumentNullException(nameof(IFilteringParams));
         }
 
         public IFilteringParams Build(string searchString, string currentFilter)

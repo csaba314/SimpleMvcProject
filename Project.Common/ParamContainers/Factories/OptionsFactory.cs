@@ -1,4 +1,6 @@
-﻿namespace Project.Common.ParamContainers
+﻿using System;
+
+namespace Project.Common.ParamContainers
 {
     public class OptionsFactory : IOptionsFactory
     {
@@ -6,7 +8,7 @@
 
         public OptionsFactory(IOptions options)
         {
-            _options = options;
+            _options = options ?? throw new ArgumentNullException(nameof(IOptions));
         }
 
         public IOptions Build(string include)

@@ -16,11 +16,14 @@ namespace Project.Service.Services
 
         public IVehicleModel VehicleModel { get; }
 
-        public ModelServicesAsync(IRepository repository, IUnitOfWork unitOfWork, IVehicleModel vehicleModel)
+        public ModelServicesAsync(
+            IRepository repository, 
+            IUnitOfWork unitOfWork, 
+            IVehicleModel vehicleModel)
         {
-            _repository = repository;
-            _unitOfWork = unitOfWork;
-            VehicleModel = vehicleModel;
+            _repository = repository ?? throw new ArgumentNullException(nameof(IRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(IUnitOfWork));
+            VehicleModel = vehicleModel ?? throw new ArgumentNullException(nameof(IVehicleModel));
         }
 
         public Task<VehicleModel> FindAsync(int id)
@@ -34,7 +37,7 @@ namespace Project.Service.Services
             return list.Where(m => m.VehicleMakeId == makeId).OrderBy(m => m.Name).ToList();
         }
 
-        public async Task<IPagedList<IVehicleModel>> GetAsync(IFilteringParams filteringParams,
+        public async Task<IPagedList<IVehicleModel>> GetAllAsync(IFilteringParams filteringParams,
                                                                 IPagingParams pagingParams,
                                                                 ISortingParams sortingParams,
                                                                 IOptions options)
