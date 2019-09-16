@@ -14,10 +14,13 @@ namespace Project.Service.Services
         private readonly IRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ModelServicesAsync(IRepository repository, IUnitOfWork unitOfWork)
+        public IVehicleModel VehicleModel { get; }
+
+        public ModelServicesAsync(IRepository repository, IUnitOfWork unitOfWork, IVehicleModel vehicleModel)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
+            VehicleModel = vehicleModel;
         }
 
         public Task<VehicleModel> FindAsync(int id)

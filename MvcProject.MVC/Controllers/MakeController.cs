@@ -23,6 +23,7 @@ namespace Project.MVC.Controllers
         private IFilteringFactory _filteringFactory;
         private ISortingFactory _sortingFactory;
         private IPagingFactory _pagingFactory;
+        private IVehicleMake _vehicleMake;
 
         #endregion
 
@@ -33,13 +34,15 @@ namespace Project.MVC.Controllers
             IModelServicesAsync modelService,
             IFilteringFactory filteringFactory,
             ISortingFactory sortingFactory,
-            IPagingFactory pagingFactory)
+            IPagingFactory pagingFactory,
+            IVehicleMake vehicleMake)
         {
             _modelService = modelService;
             _makeService = makeService;
             _filteringFactory = filteringFactory;
             _sortingFactory = sortingFactory;
             _pagingFactory = pagingFactory;
+            _vehicleMake = vehicleMake;
         }
         #endregion
 
@@ -130,7 +133,7 @@ namespace Project.MVC.Controllers
             {
                 return View(model);
             }
-            var newMake = new VehicleMake();
+            var newMake = _vehicleMake;
             Mapper.Map(model, newMake);
 
             try

@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
-using Project.Service.Model;
 
 
 
@@ -18,8 +17,6 @@ namespace Project.MVC.App_Start
             // Register MVC controllers. (MvcApplication is the name of the class in Global.asax.)
             builder.RegisterControllers(typeof(MvcApplication).Assembly)
                 .Where(c => c.Name.EndsWith("Controller"));
-
-            builder.RegisterType<ProjectDbContext>().AsSelf();
 
             // register Common DIModule
             builder.RegisterModule<Project.Common.DIModule>();

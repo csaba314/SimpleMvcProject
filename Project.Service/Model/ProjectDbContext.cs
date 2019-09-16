@@ -9,12 +9,14 @@ namespace Project.Service.Model
         {
         }
 
-        public ProjectDbContext GetDbContext()
-        {
-            return new ProjectDbContext();
-        }
-
         public DbSet<VehicleMake> VehicleMakes { get; set; }
         public DbSet<VehicleModel> VehicleModels { get; set; }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
     }
+
+    
 }

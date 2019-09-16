@@ -9,6 +9,8 @@ namespace Project.Service.Services
 {
     public interface IModelServicesAsync : IDisposable
     {
+        IVehicleModel VehicleModel { get;}
+
         Task<int> AddAsync(IVehicleModel entity);
         Task<VehicleModel> FindAsync(int id);
         Task<IEnumerable<IVehicleModel>> GetAllByMakeAsync(int makeId);

@@ -45,6 +45,7 @@ namespace Project.MVC.Controllers
         }
         #endregion
 
+        
 
         #region Index
         // GET: /Model
@@ -121,7 +122,7 @@ namespace Project.MVC.Controllers
             {
                 return View(model);
             }
-            var newModel = new VehicleModel();
+            var newModel = _modelService.VehicleModel;
             Mapper.Map(model, newModel);
 
             try
